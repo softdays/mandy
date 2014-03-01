@@ -1,20 +1,16 @@
 Spatule, collaborative imputations management tool
 ==================================================
 
-Spatule is a Flex/PHP webapp to manage generic imputations.
+Spatule is a Jersey/Angular webapp to manage generic imputations.
 
 ```
-Spatule UI has been realized using Flex SDK 4.5.
-Spatule REST API is powered by Silex framework works on PHP 5.3.2 or later.
+UI is powered by  AngularJS + Bootstrap frameworks.
+The REST API uses a Java stack (Jersey, Spring, Hibernate) connected to a MySql database.
 ```
-
-## Testing Spatule App
-
-Spatule is deployed online and can be used for [`demo`][3] purposes.
 
 ## More Information
 
-Read the [documentation][1] for more information.
+TODO
 
 ## Licenses
 

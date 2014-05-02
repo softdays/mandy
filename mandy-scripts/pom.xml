@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>        
+        <groupId>org.softdays.mandy</groupId>
+		<artifactId>mandy-parent</artifactId>
+        <version>1.0</version>
+    </parent>    
+
+    <artifactId>mandy-scripts</artifactId>
+    <packaging>pom</packaging>
+	
+    <build>
+         <plugins>
+             <plugin>
+                 <groupId>org.dbmaintain</groupId>
+                 <artifactId>dbmaintain-maven-plugin</artifactId>
+                 <version>2.4</version>
+                 <configuration>
+                     <databases>
+                         <database>
+                             <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                             <userName>root</userName>
+                             <password></password>
+                             <url>jdbc:mysql://localhost:3306/mandy</url>
+                             <schemaNames>mandy</schemaNames>
+                         </database>
+                     </databases>
+                     <scriptLocations>src/main/scripts</scriptLocations>
+                     <autoCreateDbMaintainScriptsTable>true</autoCreateDbMaintainScriptsTable>
+                     <scriptEncoding>UTF-8</scriptEncoding>
+                 </configuration>
+                 <executions>
+                     <execution>
+                         <phase>install</phase>
+                         <goals>
+                             <goal>updateDatabase</goal>
+                         </goals>
+                     </execution>
+                 </executions>
+                 <dependencies>
+                     <dependency>
+                         <groupId>mysql</groupId>
+                         <artifactId>mysql-connector-java</artifactId>
+                         <version>5.0.8</version>
+                     </dependency>
+                 </dependencies>
+             </plugin>
+         </plugins>
+     </build>
+    <properties>
+        <jersey-version>1.17.1</jersey-version>
+    </properties>
+</project>

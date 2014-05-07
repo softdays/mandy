@@ -8,12 +8,12 @@ Mandy is an HTML5 webapp using a REST backend.
 
 ## More Information
 
-UI is powered by  AngularJS/Bootstrap frameworks.
-REST API uses a Java stack (Jersey, Spring, Hibernate) connected to a MySql database.
+UI is powered by  AngularJS+Bootstrap frameworks.
+REST API uses a Java stack (Jersey+Spring+Hibernate) connected to a MySql database.
 
 ## Licenses
 
-Mandy UI is licensed under the [GNU General Public License][5].  
+Mandy GUI is licensed under the [GNU General Public License][5].  
 Mandy API is licensed under the [GNU Lesser General Public License][6].
 
 ## Contact

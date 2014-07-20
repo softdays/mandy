@@ -1,11 +1,12 @@
 
-  insert into alokate.activity (label, position)
+  insert into mandy.activity (label, position)
   values
     ('Congé payé', 100),
     ('Congé maladie', 110),
     ('Enfant malade', 120),
     ('Formation', 130),
     ('ABSENCES', 200),
+	('VIESCOLAIRE', 225),
     ('COMMUN', 250),
     ('GIN-WEB', 300),
     ('LPC', 350),

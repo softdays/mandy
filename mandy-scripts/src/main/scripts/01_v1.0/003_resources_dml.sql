@@ -1,8 +1,5 @@
 
-  insert into alokate.resource (first_name, last_name)
+  insert into mandy.resource (first_name, last_name)
   values
-    ('Rémi', 'Patriarche'),
-    ('Franck', 'Hespel'),
-    ('Ludovic', 'Morales'),
-    ('François', 'Charbonnier'),
-    ('Christophe', 'Onillon');
+    ('User1FirstName', 'User1LastName'),
+    ('User2FirstName', 'User2LastName');

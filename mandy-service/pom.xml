@@ -1,87 +1,146 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.softdays.mandy</groupId>
-        <artifactId>mandy-parent</artifactId>
-        <version>1.0</version>
-    </parent>
+	<parent>
+		<groupId>org.softdays.mandy</groupId>
+		<artifactId>mandy-parent</artifactId>
+		<version>1.0</version>
+	</parent>
 
-    <artifactId>mandy-service</artifactId>
+	<artifactId>mandy-service</artifactId>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
+	<name>Mandy Service Layer</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.dozer</groupId>
+			<artifactId>dozer</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.dozer</groupId>
+			<artifactId>dozer-spring</artifactId>
+		</dependency>
+		<!-- Pour disposer des annotations @JsonManagedReference, @JsonIgnore -->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<version>1.9.2</version>
+		</dependency>
+		<!-- Pour disposer de  l'annotation @JsonSerialize -->
+		<dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.2</version>
         </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.dozer</groupId>
-            <artifactId>dozer</artifactId>
-        </dependency>
-    </dependencies>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mnode.ical4j</groupId>
+			<artifactId>ical4j</artifactId>
+			<version>1.0.5.2</version>
+		</dependency>
+		<!-- TESTING -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.ninja-squad</groupId>
+			<artifactId>DbSetup</artifactId>
+			<version>1.3.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.3.176</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.dbunit</groupId>
+			<artifactId>dbunit</artifactId>
+			<version>2.5.0</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <!-- run "mvn hibernate3:hbm2ddl" to generate -->
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>hibernate3-maven-plugin</artifactId>
-                <version>3.0</version>
-                <configuration>
-                    <hibernatetool>
-                        <jpaconfiguration persistenceunit="Default" />
-                        <hbm2ddl export="false" create="true"
-                                 update="false" format="true" outputfilename="base.ddl" />
+	<build>
+		<plugins>
+			<plugin>
+				<!-- run "mvn hibernate3:hbm2ddl" to generate -->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>hibernate3-maven-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<hibernatetool>
+						<jpaconfiguration persistenceunit="Default" />
+						<hbm2ddl export="false" create="true" update="false"
+							format="true" outputfilename="base.ddl" />
 
-                    </hibernatetool>
-                </configuration>
-                <!--
-                Contournement pour faire fonctionner hibernate3:hbm2ddl avec HB4-JPA
-                http://doingenterprise.blogspot.fr/2012/05/schema-generation-with-hibernate-4-jpa.html
-                -->
-                <dependencies>
-                    <dependency>
-                        <groupId>org.hibernate</groupId>
-                        <artifactId>hibernate-tools</artifactId>
-                        <version>3.2.4.GA</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.hibernate</groupId>
-                        <artifactId>hibernate-entitymanager</artifactId>
-                        <version>3.6.10.Final</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.hibernate</groupId>
-                        <artifactId>hibernate-core</artifactId>
-                        <version>3.6.10.Final</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>log4j</groupId>
-                        <artifactId>log4j</artifactId>
-                        <version>1.2.14</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                        <version>1.1.1</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
-        </plugins>
-    </build>
-
-
+					</hibernatetool>
+				</configuration>
+				<!-- Contournement pour faire fonctionner hibernate3:hbm2ddl avec HB4-JPA 
+					http://doingenterprise.blogspot.fr/2012/05/schema-generation-with-hibernate-4-jpa.html -->
+				<dependencies>
+					<dependency>
+						<groupId>org.hibernate</groupId>
+						<artifactId>hibernate-tools</artifactId>
+						<version>3.2.4.GA</version>
+					</dependency>
+					<dependency>
+						<groupId>org.hibernate</groupId>
+						<artifactId>hibernate-entitymanager</artifactId>
+						<version>3.6.10.Final</version>
+					</dependency>
+					<dependency>
+						<groupId>org.hibernate</groupId>
+						<artifactId>hibernate-core</artifactId>
+						<version>3.6.10.Final</version>
+					</dependency>
+					<dependency>
+						<groupId>log4j</groupId>
+						<artifactId>log4j</artifactId>
+						<version>1.2.14</version>
+					</dependency>
+					<dependency>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+						<version>1.1.1</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
 </project>

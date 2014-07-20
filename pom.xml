@@ -13,7 +13,6 @@
 
 	<modules>
 		<module>mandy-service</module>
-		<module>mandy-atdd</module>
 		<module>mandy-webapp</module>
 	</modules>
 

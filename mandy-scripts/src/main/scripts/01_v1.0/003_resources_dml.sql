@@ -1,5 +1,7 @@
-
-  insert into mandy.resource (first_name, last_name)
+ 
+  insert into mandy.resource (uid, first_name, last_name, role)
   values
-    ('User1FirstName', 'User1LastName'),
-    ('User2FirstName', 'User2LastName');
+    ('repatriarche', 'Rémi', 'Patriarche', 'ROLE_ADMIN'),
+    ('fcharbonnier1', 'François', 'Charbonnier', 'ROLE_MANAGER'),
+	('lumorales', 'Ludovic', 'Morales', 'ROLE_USER'),
+	('chonillo', 'Christophe', 'Onillon', 'ROLE_USER');

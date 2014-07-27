@@ -55,13 +55,13 @@ public class CommonOperations {
 	    "MANDY.RESOURCE")
 	    // .withGeneratedValue("ID", ValueGenerators.sequence())
 
-	    .columns("ID", "UID", "LAST_NAME", "FIRST_NAME", "ADMIN")
+	    .columns("ID", "UID", "LAST_NAME", "FIRST_NAME", "ROLE")
 
-	    .values(ID_RPA, UID_RPA, "Patriarche", "Rémi", 0)
-	    .values(ID_CHO, UID_CHO, "Onillon", "Christophe", 0)
-	    .values(ID_FCH, UID_FCH, "Charbonnier", "François", 1)
-	    .values(ID_FPI, UID_FPI, "Picollet", "Fleur", 0)
-	    .values(ID_LMO, UID_LMO, "Morales", "Ludovic", 0)
+	    .values(ID_RPA, UID_RPA, "Patriarche", "Rémi", "ROLE_ADMIN")
+	    .values(ID_CHO, UID_CHO, "Onillon", "Christophe", "ROLE_USER")
+	    .values(ID_FCH, UID_FCH, "Charbonnier", "François", "ROLE_MANAGER")
+	    .values(ID_FPI, UID_FPI, "Picollet", "Fleur", "ROLE_USER")
+	    .values(ID_LMO, UID_LMO, "Morales", "Ludovic", "ROLE_USER")
 
 	    .build());
 

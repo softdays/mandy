@@ -5,7 +5,7 @@ import javax.ws.rs.core.MediaType;
 public class MandyConstants {
 
     public static final String ENCODING = "utf-8";
-    private static final String CHARSET = ";charset=" + ENCODING;
+    public static final String CHARSET = ";charset=" + ENCODING;
     public static final String JSON_UTF8 = MediaType.APPLICATION_JSON + CHARSET;
 
     public static final String URI_ROOT = "/";

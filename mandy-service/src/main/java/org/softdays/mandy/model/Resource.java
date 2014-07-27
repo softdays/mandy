@@ -4,6 +4,8 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -19,20 +21,29 @@ import javax.persistence.Table;
 @Table(name = "RESOURCE")
 public class Resource extends AbstractEntity {
 
+    public enum Role {
+	ROLE_USER, ROLE_MANAGER, ROLE_ADMIN;
+
+	public String getName() {
+	    return this.name();
+	}
+    }
+
     /**
      * Identifiant LDAP.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, length = 25)
     private String uid;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String lastName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String firstName;
 
-    @Column(nullable = false)
-    private boolean admin;
+    @Column(columnDefinition = "varchar(25) not null default 'ROLE_USER'")
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToMany(mappedBy = "resource")
     private Set<Imputation> imputations;
@@ -47,10 +58,20 @@ public class Resource extends AbstractEntity {
 	super();
     }
 
-    public Resource(Long id, String name, String firstname) {
+    public Resource(String uid, String lastname, String firstname) {
 	this();
-	this.lastName = name;
+	this.uid = uid;
+	this.lastName = lastname;
 	this.firstName = firstname;
+	this.role = Role.ROLE_USER;
+    }
+
+    public String getUid() {
+	return uid;
+    }
+
+    public void setUid(String uid) {
+	this.uid = uid;
     }
 
     public String getLastName() {
@@ -69,12 +90,12 @@ public class Resource extends AbstractEntity {
 	this.firstName = firstName;
     }
 
-    public boolean isAdmin() {
-	return admin;
+    public Role getRole() {
+	return role;
     }
 
-    public void setAdmin(boolean admin) {
-	this.admin = admin;
+    public void setRole(Role role) {
+	this.role = role;
     }
 
     public Set<Imputation> getImputations() {
@@ -93,29 +114,4 @@ public class Resource extends AbstractEntity {
 	this.activities = activities;
     }
 
-    @Override
-    public boolean equals(Object o) {
-	if (this == o)
-	    return true;
-	if (!(o instanceof Resource))
-	    return false;
-
-	Resource resource = (Resource) o;
-
-	if (firstName != null ? !firstName.equals(resource.firstName)
-		: resource.firstName != null)
-	    return false;
-	if (lastName != null ? !lastName.equals(resource.lastName)
-		: resource.lastName != null)
-	    return false;
-
-	return true;
-    }
-
-    @Override
-    public int hashCode() {
-	int result = lastName != null ? lastName.hashCode() : 0;
-	result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
-	return result;
-    }
 }

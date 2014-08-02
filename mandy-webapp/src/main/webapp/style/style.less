@@ -1,4 +1,76 @@
 @import "../frameworks/bootstrap/less/bootstrap";
 
+/* Bootstrap overrides */
+@icon-font-path: "../frameworks/bootstrap/fonts/";
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+.title {
+	h4 {
+	   color:@gray;
+	}
+}
+
+.user-info  {
+	
+	& > * {
+	   display: inline-block;
+	}	
+	
+	.label {
+		position: relative;
+		top: -1px;
+	}
+}
+
+@datagrid-border: 1px solid black; 
+
+#datagrid {
+	margin: 25px;
+	
+	.datagrid-table {
+	   border: @datagrid-border;
+	   border-collapse: collapsed;
+	   width:100%;
+	   
+	   .weeks, .days {	
+	       width:100%; 
+	       border-bottom: @datagrid-border;
+	       border-collapse: collapsed; 	       
+	       
+		   .week {
+	           font-weight: bold;
+	       }
+	   }
+	   
+	   span {
+	       display: inline-block;
+	       border-left: @datagrid-border;
+	       border-collapse: collapsed;
+	       padding: 2px 3px;
+	   }
+	   
+	    span:first-child {
+           border-left: none;
+       }
+       
+       span.day {
+           text-align: center;
+           
+           & .current-month {
+                background-color: red;
+           }
+       }
+       
+       div:last-child {
+            border-bottom: none;
+       }
+	   
+	}
+}
+
+
 
 

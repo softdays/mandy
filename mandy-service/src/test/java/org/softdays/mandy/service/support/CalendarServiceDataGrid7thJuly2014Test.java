@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.softdays.mandy.config.SpringConfiguration;
 import org.softdays.mandy.dto.calendar.DataGridDto;
+import org.softdays.mandy.dto.calendar.WeekDto;
 import org.softdays.mandy.service.CalendarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,7 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = SpringConfiguration.class)
-public class CalendarServiceDataGridTest {
+public class CalendarServiceDataGrid7thJuly2014Test {
 
     @Autowired
     private CalendarService calendarService;
@@ -44,8 +45,16 @@ public class CalendarServiceDataGridTest {
     }
 
     @Test
-    public void itShouldContainsFourWeeks() {
+    public void datagridShouldContainsFourWeeks() {
 	Assert.assertEquals(4, grid.getWeeks().size());
+    }
+
+    @Test
+    public void eachWeekShouldContainsFiveDays() {
+	for (WeekDto week : grid.getWeeks()) {
+	    Assert.assertEquals(5, week.getDays().size());
+	}
+
     }
 
     @Test

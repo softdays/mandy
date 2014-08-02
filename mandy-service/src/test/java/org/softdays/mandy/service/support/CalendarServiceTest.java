@@ -13,21 +13,21 @@ public class CalendarServiceTest {
 
     @Test
     public void getFirstMondayOfTheMonthCasNominal() {
-	Date firstMonday = calendarService.getFirstMondayOfMonth(givenDate);
+	Date firstMonday = calendarService.getFirstMondayBeforeStartOfMonth(givenDate);
 	Date expected = new DateTime(2014, 7, 7, 0, 0).toDate();
 	Assert.assertEquals(expected, firstMonday);
     }
 
     @Test
     public void getFirstMondayOfTheMonthLimiteInf() {
-	Date firstMonday = calendarService.getFirstMondayOfMonth(givenDate);
+	Date firstMonday = calendarService.getFirstMondayBeforeStartOfMonth(givenDate);
 	Date expected = new DateTime(2014, 7, 7, 0, 0).toDate();
 	Assert.assertEquals(expected, firstMonday);
     }
 
     @Test
     public void getFirstMondayOfTheMonthLimiteSup() {
-	Date firstMonday = calendarService.getFirstMondayOfMonth(givenDate);
+	Date firstMonday = calendarService.getFirstMondayBeforeStartOfMonth(givenDate);
 	Date expected = new DateTime(2014, 7, 7, 0, 0).toDate();
 	Assert.assertEquals(expected, firstMonday);
     }
@@ -35,7 +35,7 @@ public class CalendarServiceTest {
     @Test
     public void getFirstMondayOfTheMonthGivenDateEqualsFirstMonday() {
 	Date givenDate = new DateTime(2014, 7, 7, 0, 0).toDate();
-	Date firstMonday = calendarService.getFirstMondayOfMonth(givenDate);
+	Date firstMonday = calendarService.getFirstMondayBeforeStartOfMonth(givenDate);
 	Assert.assertEquals(givenDate, firstMonday);
     }
 

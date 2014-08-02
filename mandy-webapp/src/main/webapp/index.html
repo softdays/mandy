@@ -1,42 +1,55 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
-    <base href="/mandy/">
-    
-    <!--link rel="shortcut icon" href="images/favicon.png"-->
-    
-    <title>Mandy</title>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<base href="/mandy/">
 
-    <!-- Bootstrap -->
-    <!-- defer attribute: when present, it specifies that the script is executed when the page has finished parsing. -->
-    <script type="text/javascript" charset="UTF-8" defer="defer" src="frameworks/less/less-1.7.3.min.js"></script>
-    <link type="text/css" rel="stylesheet/less" media="screen" href="style/style.less" />
+<!--link rel="shortcut icon" href="images/favicon.png"-->
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
+<title>Mandy</title>
+
+<!-- Bootstrap + Less (no defer here) -->
+<link type="text/css" rel="stylesheet/less" media="screen" href="style/style.less" />
+<script type="text/javascript" charset="UTF-8" src="frameworks/less/less-1.7.3.min.js"></script>
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-  </head>
-  <body ng-controller="MainController">
+</head>
+<body ng-cloak class="ng-cloak">
 
 	<div class="container">
-		<div class="row clearfix">
-			<div class="col-md-12 column">
+		<div class="row title">
+			<div class="col-md-8">
 				<h1>Mandy</h1>
-				<h3>A simple app to track man-day consumption on projects and activities</h3>
-				<div ng-view></div>
+				<h4>A simple app to track man-day consumption on projects or activities</h4>
+			</div>
+			<div class="col-md-4 text-right user-info">
+				<h6>{{user.firstName}}&nbsp;{{user.lastName}}&nbsp;<span class="label label-default">{{user.role}}</span>&nbsp;</h6>
+				<a class="btn btn-default btn-xs" ng-href="{{contextRoot}}/j_spring_security_logout">
+				  <span class="glyphicon glyphicon-log-out"></span>
+				</a>
 			</div>
 		</div>
-	</div>	
-     
-     <!-- RequireJS setup -->
-     <script type="text/javascript" charset="UTF-8" defer="defer" 
-             src="frameworks/requirejs/require.min.js" 
-             data-main="scripts/main"></script>
-  </body>
+		<div class="row">
+			<ul class="nav nav-tabs" role="tablist">
+			  <li ng-class="{active: 1==selectedTab}"><a ng-href="#/datagrid">Grille de saisie</a></li>			  
+			  <li ng-class="{active: 2==selectedTab}" ng-show="admin"><a ng-href="#/admin">Administration</a></li>
+			  <li ng-class="{active: 3==selectedTab}"><a ng-href="#/settings">Préférences</a></li>
+			</ul>
+			<div class="col-md-12" ng-view></div>
+		</div>
+	</div>
+
+	<!-- RequireJS setup -->
+	<!-- defer attribute: when present, it specifies that the script is executed when the page has finished parsing. -->
+	<script type="text/javascript" charset="UTF-8" defer="defer"
+		src="frameworks/requirejs/require.min.js" data-main="scripts/main"></script>
+</body>
 </html>

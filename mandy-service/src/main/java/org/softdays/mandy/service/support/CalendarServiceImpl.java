@@ -24,7 +24,7 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     public DataGridDto getDataGridOfTheMonth(Date givenDate) {
-	Date start = getFirstMondayOfMonth(givenDate);
+	Date start = getFirstMondayBeforeStartOfMonth(givenDate);
 	Date end = getFirstSundayAfterEndOfMonth(givenDate);
 	Date currentDate = start;
 	DataGridDto dataGrid = new DataGridDto(givenDate);
@@ -44,11 +44,11 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
-    public Date getFirstMondayOfMonth(final Date givenDate) {
+    public Date getFirstMondayBeforeStartOfMonth(final Date givenDate) {
 	DateTime date = new DateTime(givenDate);
 	date = date.dayOfMonth().withMinimumValue();
 	while (date.getDayOfWeek() != DateTimeConstants.MONDAY) {
-	    date = date.plusDays(1);
+	    date = date.minusDays(1);
 	}
 
 	return date.toDate();

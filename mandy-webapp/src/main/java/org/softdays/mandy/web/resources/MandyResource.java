@@ -21,10 +21,14 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import org.softdays.mandy.config.Configuration;
 import org.softdays.mandy.dto.ActivityDto;
 import org.softdays.mandy.dto.CredentialsDto;
+import org.softdays.mandy.dto.ResourceDto;
 import org.softdays.mandy.dto.calendar.DataGridDto;
 import org.softdays.mandy.service.ActivityService;
 import org.softdays.mandy.service.CalendarService;
+import org.softdays.mandy.web.security.MyUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.sun.jersey.api.client.ClientResponse.Status;
@@ -70,6 +74,16 @@ public class MandyResource {
 	}
 
 	return httpResponse.build();
+    }
+
+    @GET
+    @Path("/user/session")
+    @Produces(MandyConstants.JSON_UTF8)
+    public ResourceDto currentUser() {
+	SecurityContext ctx = SecurityContextHolder.getContext();
+	MyUser user = (MyUser) ctx.getAuthentication().getPrincipal();
+
+	return user.getResource();
     }
 
     @GET

@@ -6,9 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonManagedReference;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.DateTime;
-import org.softdays.mandy.web.serializer.JsonDateSerializer;
 
 /**
  * Contains the working weeks of the month to which belongs the given date.
@@ -18,28 +16,38 @@ import org.softdays.mandy.web.serializer.JsonDateSerializer;
  */
 public class DataGridDto {
 
-    @JsonSerialize(using = JsonDateSerializer.class)
-    private Date dateRef;
+    private String year;
+
+    private String month;
 
     @JsonManagedReference
-    private List<WeekDto> weeks;
+    private List<WeekDto> weeks = new ArrayList<>();
 
     public DataGridDto() {
 	super();
 	weeks = new ArrayList<WeekDto>();
     }
 
-    public DataGridDto(final Date givenDate) {
-	this();
-	this.dateRef = new DateTime(givenDate).toDate();
+    public DataGridDto(Date base) {
+	DateTime date = new DateTime(base);
+	this.year = date.toString("yyyy");
+	this.month = date.toString("MM");
     }
 
-    public Date getDateRef() {
-	return dateRef;
+    public String getYear() {
+	return year;
     }
 
-    public void setDateRef(Date dateRef) {
-	this.dateRef = dateRef;
+    public void setYear(String year) {
+	this.year = year;
+    }
+
+    public String getMonth() {
+	return month;
+    }
+
+    public void setMonth(String month) {
+	this.month = month;
     }
 
     public List<WeekDto> getWeeks() {

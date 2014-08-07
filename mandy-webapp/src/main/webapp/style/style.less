@@ -1,4 +1,14 @@
+/* 
+
+Default font size 14px;
+
+*/
+
 @import "../frameworks/bootstrap/less/bootstrap";
+
+body {
+	font-size: 14px;
+}
 
 /* Bootstrap overrides */
 @icon-font-path: "../frameworks/bootstrap/fonts/";
@@ -21,53 +31,116 @@
 	
 	.label {
 		position: relative;
-		top: -1px;
+		top: -0.0714285714285714em;/* 1:14 */
 	}
 }
 
-@datagrid-border: 1px solid black; 
+@datagrid-border: 1px solid #2E2E2E; 
+@color-current-month: #D8F6CE;
+@color-sibling-month: #F5D0A9;
+@env2px: 0.1428571428571429em; /* 2:14 */
+@env3px: 0.2142857142857143em; /* 3:14 */
+@env5px: 0.3571428571428571em; /* 5:14 */
+@font-size-xs: 0.8em;
+@font-size-sm: 0.9em;
+@font-size-lg: 1.0em;
+@color-light-blue:#A9E2F3;
 
 #datagrid {
-	margin: 25px;
+	margin-top: 1.428571428571429em;/* 20:14 */
+	line-height:normal;
 	
-	.datagrid-table {
-	   border: @datagrid-border;
-	   border-collapse: collapsed;
-	   width:100%;
+	.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+	  background-color: @color-light-blue;
+	}
+	
+	.btn-toolbar {
+      text-align: center;
+      margin-bottom: 5px;
+      
+      #datagrid-current-month {  
+          background-color: @color-current-month;
+      }
+    }
+	
+	table {
+	   table-layout: fixed;
 	   
-	   .weeks, .days {	
-	       width:100%; 
-	       border-bottom: @datagrid-border;
-	       border-collapse: collapsed; 	       
+	   thead {
+	       	    
+	       th.month, th.header-activities {
+	           border-top: 1px solid white;
+			   border-left: 1px solid white;			   
+			   border-collapse: collapse;
+	       }
 	       
-		   .week {
-	           font-weight: bold;
+	       th.month {
+	           width: 100px;
+	           min-width: 100px;
+	           font-size: @font-size-lg;
+               border-bottom: 1px solid white;
+               vertical-align: middle;
+               padding: 0 0;
+               
+               * {
+                vertical-align: middle;
+               }
+               
+               & > span {
+                   display: inline-block;
+                   font-family:monospace;
+                   margin: 0;
+                   padding: 0;
+                   
+	               & > span {
+	                    display: block;
+	                    font-size: @font-size-xs;
+	                    position: relative;
+	                    padding: 0 2px;
+	                    
+	               }
+	               span:first-child {
+                       bottom: -2px;
+                   }	               
+	               span:last-child {
+	                   top: -2px;
+	                   font-weight: normal;
+	               }
+               }
+	       }
+	       
+	       th {
+	           &.day {
+	               text-align: center;
+	               background-color: @color-sibling-month;
+	               
+	               &.current-month {
+	                    background-color: @color-current-month;
+	               }
+	           }
 	       }
 	   }
 	   
-	   span {
-	       display: inline-block;
-	       border-left: @datagrid-border;
-	       border-collapse: collapsed;
-	       padding: 2px 3px;
+	   tbody {
+	       td {
+	           padding: @env2px @env3px;
+	           overflow: hidden;
+               text-overflow: ellipsis;
+	           white-space: nowrap;
+           }   
 	   }
 	   
-	    span:first-child {
-           border-left: none;
-       }
-       
-       span.day {
-           text-align: center;
-           
-           & .current-month {
-                background-color: red;
-           }
-       }
-       
-       div:last-child {
-            border-bottom: none;
-       }
-	   
+	   tfoot {
+	       tr {
+	           td {
+	               font-style: italic;
+	               padding-right: @env2px;
+	               font-size: @font-size-xs;
+	               text-align: right;
+	               padding-right: @env5px;
+	            }
+	       }
+        }	       
 	}
 }
 

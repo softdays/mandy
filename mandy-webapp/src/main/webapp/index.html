@@ -23,7 +23,6 @@
     <![endif]-->
 </head>
 <body ng-cloak class="ng-cloak">
-
 	<div class="container">
 		<div class="row title">
 			<div class="col-md-8">
@@ -32,8 +31,8 @@
 			</div>
 			<div class="col-md-4 text-right user-info">
 				<h6>{{user.firstName}}&nbsp;{{user.lastName}}&nbsp;<span class="label label-default">{{user.role}}</span>&nbsp;</h6>
-				<a class="btn btn-default btn-xs" ng-href="{{contextRoot}}/j_spring_security_logout">
-				  <span class="glyphicon glyphicon-log-out"></span>
+				<a ng-href="{{contextRoot}}/j_spring_security_logout">
+				  <button type="button" class="btn btn-default btn-xs glyphicon glyphicon-log-out" title="Se déconnecter"></button>
 				</a>
 			</div>
 		</div>

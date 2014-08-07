@@ -42,7 +42,7 @@ public class ImputationServiceImpl implements ImputationService {
     public Map<ActivityDto, List<ImputationDto>> findImputations(
 	    Long resourceId, Date date) {
 
-	Date startDate = calendarService.getFirstMondayBeforeStartOfMonth(date);
+	Date startDate = calendarService.getFirstMondayOfMonth(date);
 	Date endDate = calendarService.getFirstSundayAfterEndOfMonth(date);
 
 	List<Imputation> imputations = imputationDao

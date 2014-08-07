@@ -5,24 +5,27 @@
           http://dozer.sourceforge.net/schema/beanmapping.xsd">
 
     <mapping wildcard="false">
-        <class-a>org.softdays.mandy.model.Activity</class-a>
-        <class-b>org.softdays.mandy.dto.ActivityDto</class-b>
+        <class-a>org.softdays.mandy.model.Resource</class-a>
+        <class-b>org.softdays.mandy.dto.ResourceDto</class-b>
         <field>
             <a>id</a>
-            <b>id</b>
+            <b>resourceId</b>
         </field>
         <field>
-            <a>shortLabel</a>
-            <b>shortLabel</b>
+            <a>uid</a>
+            <b>login</b>
         </field>
         <field>
-            <a>longLabel</a>
-            <b>longLabel</b>
+            <a>lastName</a>
+            <b>lastName</b>
         </field>
         <field>
-            <a>type.name</a>
-            <b>type</b>
+            <a>firstName</a>
+            <b>firstName</b>
+        </field>
+        <field>
+            <a>role.name</a>
+            <b>role</b>
         </field>
     </mapping>
-
 </mappings>

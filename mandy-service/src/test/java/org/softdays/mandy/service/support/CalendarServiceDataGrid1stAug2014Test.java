@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 
 import org.joda.time.DateTime;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.softdays.mandy.config.SpringConfiguration;
@@ -18,30 +19,26 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = SpringConfiguration.class)
-public class CalendarServiceDataGrid7thJuly2014Test {
+@Ignore
+// Ignore: on ne soucie plus des cas spécifiques concernant la date de référence
+// car c'est toujours le premier jour du mois qui est passé en paramètre
+public class CalendarServiceDataGrid1stAug2014Test {
 
     @Autowired
     private CalendarService calendarService;
 
-    private Date givenDate = new DateTime(2014, 7, 19, 0, 0).toDate();
+    /**
+     * Intérêt du test : le jour référence est le dernier jour de la grille du
+     * mois précédent. On doit retourner la grille du mois de juillet car le
+     * 01/08/2014 est le dernier jour de la dernière semaine de juillet 2014.
+     */
+    private Date givenDate = new DateTime(2014, 8, 1, 0, 0).toDate();
 
     private DataGridDto grid;
 
     @PostConstruct
     public void init() {
 	grid = calendarService.getDataGridOfTheMonth(givenDate);
-    }
-
-    @Test
-    public void theReferenceDateShouldBeSaved() {
-	// sauvegarde de la date référence
-	Assert.assertEquals(givenDate, grid.getDateRef());
-    }
-
-    @Test
-    public void theReferenceDateShouldNotBeSavedByReference() {
-	// ne pas garder de référence sur un objet mutable
-	Assert.assertNotSame(givenDate, grid.getDateRef());
     }
 
     @Test
@@ -54,7 +51,6 @@ public class CalendarServiceDataGrid7thJuly2014Test {
 	for (WeekDto week : grid.getWeeks()) {
 	    Assert.assertEquals(5, week.getDays().size());
 	}
-
     }
 
     @Test

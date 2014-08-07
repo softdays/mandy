@@ -23,11 +23,12 @@ public class CalendarServiceImpl implements CalendarService {
     private SchoolHolidayService schoolHolidaysService;
 
     @Override
-    public DataGridDto getDataGridOfTheMonth(Date givenDate) {
-	Date start = getFirstMondayBeforeStartOfMonth(givenDate);
-	Date end = getFirstSundayAfterEndOfMonth(givenDate);
+    public DataGridDto getDataGridOfTheMonth(Date base) {
+	// Date base = this.determineBaseDate(givenDate);
+	Date start = getFirstMondayOfMonth(base);
+	Date end = getFirstSundayAfterEndOfMonth(base);
 	Date currentDate = start;
-	DataGridDto dataGrid = new DataGridDto(givenDate);
+	DataGridDto dataGrid = new DataGridDto(base);
 	WeekDto week = dataGrid.newWeek();
 	while (!currentDate.equals(end)) {
 	    if (!isEndOfWeek(currentDate)) {
@@ -43,12 +44,54 @@ public class CalendarServiceImpl implements CalendarService {
 	return dataGrid;
     }
 
+    /**
+     * Ici le coeur de l'algo de construction dela grille. Il s'agit de
+     * retourner le premier jour du mois correspondant à la grille à laquelle
+     * appartient la date donnée. Attention, la date donnée peut être une date
+     * du mois calendaire postérieur à celui de la grille de saisie à laquelle
+     * elle appartient. Le fait de proposer une saisie débutant systématiquement
+     * sur le premier lundi du mois courant fait qu'en début de mois, on peut
+     * être amené à présenter la grille correspondant au mois calendaire
+     * précédent.
+     */
+    protected Date determineBaseDate(Date givenDate) {
+	DateTime base = new DateTime(givenDate);
+	if (dateWeekContainsOneDayOfPreviousMonth(base)) {
+	    base = base.minusMonths(1);
+	}
+
+	return base.dayOfMonth().withMinimumValue().toDate();
+    }
+
+    /**
+     * Est-ce que la semaine du jour donné contient un jour du mois précédent le
+     * mois de la date donnée ?
+     * 
+     * Does the week to which belongs the given date contain one day of the the
+     * month which precedes the month of the given date?
+     */
+    protected boolean dateWeekContainsOneDayOfPreviousMonth(DateTime date) {
+	int week = date.getWeekOfWeekyear();
+	int month = date.getMonthOfYear();
+	DateTime prev = date.minusDays(1);
+	boolean sameMonth = true;
+	while (prev.getWeekOfWeekyear() == week && sameMonth) {
+	    sameMonth = prev.getMonthOfYear() == month;
+	    prev = prev.minusDays(1);
+	}
+	return !sameMonth;
+    }
+
+    private boolean isMonday(DateTime date) {
+	return date.getDayOfWeek() == DateTimeConstants.MONDAY;
+    }
+
     @Override
-    public Date getFirstMondayBeforeStartOfMonth(final Date givenDate) {
+    public Date getFirstMondayOfMonth(final Date givenDate) {
 	DateTime date = new DateTime(givenDate);
 	date = date.dayOfMonth().withMinimumValue();
-	while (date.getDayOfWeek() != DateTimeConstants.MONDAY) {
-	    date = date.minusDays(1);
+	while (!isMonday(date)) {
+	    date = date.plusDays(1);
 	}
 
 	return date.toDate();

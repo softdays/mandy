@@ -9,5 +9,13 @@ import org.softdays.mandy.dto.ActivityDto;
  */
 public interface ActivityService {
 
-    List<ActivityDto> getActivities();
+    /**
+     * Returns the activities to which the user is allocated.
+     * 
+     * @param userId
+     *            User (resource) identifier.
+     * 
+     * @return A list of {@link ActivityDto}
+     */
+    List<ActivityDto> getActivities(Long userId);
 }

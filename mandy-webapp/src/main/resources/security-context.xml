@@ -1,0 +1,83 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:s="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/security 
+        http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+	<!-- URLs accessibles sans authentification -->
+	<s:http pattern="/api/application.wadl" security="none" />
+
+	<s:http>
+		<s:intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
+		<s:intercept-url pattern="/**" access="IS_AUTHENTICATED_REMEMBERED" />
+		<s:form-login />
+		<s:logout delete-cookies="JSESSIONID" />
+	</s:http>
+
+
+	<!-- Simple namespace-based configuration -->
+
+	<s:ldap-server ldif="classpath:users.ldif" port="33389"
+		root="dc=springframework,dc=org" />
+
+	<!-- <s:authentication-manager> <s:ldap-authentication-provider user-search-base="ou=people" 
+		user-search-filter="uid={0}" /> </s:authentication-manager> -->
+
+	<s:authentication-manager>
+		<s:authentication-provider ref="ldapAuthProvider" />
+	</s:authentication-manager>
+
+
+	<!-- This bean points at the embedded directory server created by the ldap-server 
+		element above -->
+	<bean id="contextSource"
+		class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+		<constructor-arg value="ldap://localhost:33389/dc=springframework,dc=org" />
+	</bean>
+
+	<bean id="ldapAuthProvider"
+		class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider">
+		<constructor-arg>
+			<bean
+				class="org.springframework.security.ldap.authentication.BindAuthenticator">
+				<constructor-arg ref="contextSource" />
+				<property name="userSearch">
+					<bean id="userSearch"
+						class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
+						<constructor-arg index="0" value="ou=people" />
+						<constructor-arg index="1" value="(uid={0})" />
+						<constructor-arg index="2" ref="contextSource" />
+					</bean>
+				</property>
+			</bean>
+		</constructor-arg>
+		<constructor-arg ref="authoritiesPopulator" />
+		<property name="userDetailsContextMapper" ref="myUserDetailsContextMapper" />
+	</bean>
+
+	<!-- <bean id="authoritiesPopulator" class="org.springframework.security.ldap.authentication.UserDetailsServiceLdapAuthoritiesPopulator"> 
+		<constructor-arg ref="userDetailsService" /> </bean> -->
+
+	<bean id="authoritiesPopulator"
+		class="org.springframework.security.ldap.authentication.NullLdapAuthoritiesPopulator" />
+
+	<!--bean id="myUserContextMapper" class="org.softdays.mandy.web.security.MyUserDetailsContextMapper" 
+		/ -->
+
+	<bean id="roleVoter"
+		class="org.springframework.security.access.vote.RoleHierarchyVoter">
+		<constructor-arg ref="roleHierarchy" />
+	</bean>
+	
+	<bean id="roleHierarchy"
+		class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+		<property name="hierarchy">
+			<value>
+				ROLE_ADMIN > ROLE_MANAGER
+				ROLE_MANAGER > ROLE_USER
+			</value>
+		</property>
+	</bean>
+
+</beans>

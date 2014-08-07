@@ -13,21 +13,21 @@ public class CalendarServiceTest {
 
     @Test
     public void getFirstMondayOfTheMonthCasNominal() {
-	Date firstMonday = calendarService.getFirstMondayBeforeStartOfMonth(givenDate);
+	Date firstMonday = calendarService.getFirstMondayOfMonth(givenDate);
 	Date expected = new DateTime(2014, 7, 7, 0, 0).toDate();
 	Assert.assertEquals(expected, firstMonday);
     }
 
     @Test
     public void getFirstMondayOfTheMonthLimiteInf() {
-	Date firstMonday = calendarService.getFirstMondayBeforeStartOfMonth(givenDate);
+	Date firstMonday = calendarService.getFirstMondayOfMonth(givenDate);
 	Date expected = new DateTime(2014, 7, 7, 0, 0).toDate();
 	Assert.assertEquals(expected, firstMonday);
     }
 
     @Test
     public void getFirstMondayOfTheMonthLimiteSup() {
-	Date firstMonday = calendarService.getFirstMondayBeforeStartOfMonth(givenDate);
+	Date firstMonday = calendarService.getFirstMondayOfMonth(givenDate);
 	Date expected = new DateTime(2014, 7, 7, 0, 0).toDate();
 	Assert.assertEquals(expected, firstMonday);
     }
@@ -35,7 +35,7 @@ public class CalendarServiceTest {
     @Test
     public void getFirstMondayOfTheMonthGivenDateEqualsFirstMonday() {
 	Date givenDate = new DateTime(2014, 7, 7, 0, 0).toDate();
-	Date firstMonday = calendarService.getFirstMondayBeforeStartOfMonth(givenDate);
+	Date firstMonday = calendarService.getFirstMondayOfMonth(givenDate);
 	Assert.assertEquals(givenDate, firstMonday);
     }
 
@@ -105,6 +105,20 @@ public class CalendarServiceTest {
 	// en 2016 le 1/1 tombe un vendredi => numero de semaine : 53
 	int nb = new DateTime(2016, 1, 1, 0, 0).getWeekOfWeekyear();
 	Assert.assertEquals(53, nb);
+    }
+
+    @Test
+    public void dateWeekContainsOneDayOfPreviousMonthSouldReturnFalse() {
+	DateTime date = new DateTime(2014, 8, 4, 0, 0);
+	Assert.assertFalse(calendarService
+		.dateWeekContainsOneDayOfPreviousMonth(date));
+    }
+
+    @Test
+    public void dateWeekContainsOneDayOfPreviousMonthSouldReturnTrue() {
+	DateTime date = new DateTime(2014, 8, 1, 0, 0);
+	Assert.assertTrue(calendarService
+		.dateWeekContainsOneDayOfPreviousMonth(date));
     }
 
 }

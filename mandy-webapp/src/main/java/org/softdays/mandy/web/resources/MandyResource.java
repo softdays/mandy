@@ -25,10 +25,9 @@ import org.softdays.mandy.dto.ResourceDto;
 import org.softdays.mandy.dto.calendar.DataGridDto;
 import org.softdays.mandy.service.ActivityService;
 import org.softdays.mandy.service.CalendarService;
-import org.softdays.mandy.web.security.MyUser;
+import org.softdays.mandy.web.security.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 import com.sun.jersey.api.client.ClientResponse.Status;
@@ -49,8 +48,11 @@ public class MandyResource {
     @Autowired
     private Configuration configurationDto;
 
+    @Autowired
+    private AuthService authService;
+
     private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(
-	    "yyyy-MM-dd");
+	    "yyyyMMdd");
 
     @POST
     @Path("/login")
@@ -80,26 +82,28 @@ public class MandyResource {
     @Path("/user/session")
     @Produces(MandyConstants.JSON_UTF8)
     public ResourceDto currentUser() {
-	SecurityContext ctx = SecurityContextHolder.getContext();
-	MyUser user = (MyUser) ctx.getAuthentication().getPrincipal();
 
-	return user.getResource();
+	return authService.getCurrentToken();
     }
 
     @GET
     @Path(MandyConstants.URI_ACTIVITIES)
     @Produces(MandyConstants.JSON_UTF8)
+    @Secured("ROLE_USER")
     public List<ActivityDto> activities() {
-	return activityService.getActivities();
+	ResourceDto user = authService.getCurrentToken();
+
+	return activityService.getActivities(user.getResourceId());
     }
 
     @GET
     @Path(MandyConstants.URI_CALENDAR_DATAGRID)
     @Produces(MandyConstants.JSON_UTF8)
-    public DataGridDto calendar(@PathParam("date") String strDate) {
+    public DataGridDto datagrid(@PathParam("year") String year,
+	    @PathParam("month") String month) {
 	Date date = null;
 	try {
-	    date = DATE_FORMATTER.parse(strDate);
+	    date = DATE_FORMATTER.parse(year + month + "01");
 	} catch (ParseException e) {
 	    throw new WebApplicationException(Response
 		    .status(Status.BAD_REQUEST)

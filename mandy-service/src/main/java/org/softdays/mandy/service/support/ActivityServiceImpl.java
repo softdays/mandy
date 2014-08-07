@@ -9,8 +9,6 @@ import org.softdays.mandy.dto.ActivityDto;
 import org.softdays.mandy.service.ActivityService;
 import org.softdays.mandy.service.MapperService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 /**
@@ -26,10 +24,10 @@ public class ActivityServiceImpl implements ActivityService {
     @Autowired
     private MapperService utilService;
 
-    public List<ActivityDto> getActivities() {
+    public List<ActivityDto> getActivities(Long userId) {
 
 	return utilService.map(
-		activityDao.findAll(new Sort(Direction.ASC, "position")),
-		ActivityDto.class);
+	// activityDao.findAll(new Sort(Direction.ASC, "position")),
+		activityDao.findByResource(userId), ActivityDto.class);
     }
 }

@@ -25,14 +25,14 @@ import javax.persistence.UniqueConstraint;
 public class Imputation extends AbstractEntity {
 
     @ManyToOne
-    @JoinColumn(name = "ACTIVITY_ID", nullable = false, foreignKey = @ForeignKey(name = "FK__IMP__ACTIVITY_ID"))
-    @org.hibernate.annotations.ForeignKey(name = "FK__IMP__ACTIVITY_ID")
+    @JoinColumn(name = "ACTIVITY_ID", nullable = false, foreignKey = @ForeignKey(name = "FK__IMPUTATION__ACTIVITY"))
+    @org.hibernate.annotations.ForeignKey(name = "FK__IMPUTATION__ACTIVITY")
     // for hbm2ddl
     private Activity activity;
 
     @ManyToOne
-    @JoinColumn(name = "RESOURCE_ID", nullable = false, foreignKey = @ForeignKey(name = "FK__IMP__RESOURCE_ID"))
-    @org.hibernate.annotations.ForeignKey(name = "FK__IMP__RESOURCE_ID")
+    @JoinColumn(name = "RESOURCE_ID", nullable = false, foreignKey = @ForeignKey(name = "FK__IMPUTATION__RESOURCE"))
+    @org.hibernate.annotations.ForeignKey(name = "FK__IMPUTATION__RESOURCE")
     // for hbm2ddl
     private Resource resource;
 

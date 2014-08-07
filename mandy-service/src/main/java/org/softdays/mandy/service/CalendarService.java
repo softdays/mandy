@@ -17,10 +17,9 @@ public interface CalendarService {
     DataGridDto getDataGridOfTheMonth(Date givenDate);
 
     /**
-     * Returns the first monday before the start of the month to which belongs
-     * the given date.
+     * Returns the first monday of the month to which belongs the given date.
      */
-    Date getFirstMondayBeforeStartOfMonth(Date givenDate);
+    Date getFirstMondayOfMonth(Date givenDate);
 
     /**
      * Returns the first sunday after the end of the month to which belongs the

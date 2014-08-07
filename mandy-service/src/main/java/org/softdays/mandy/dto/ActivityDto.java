@@ -3,13 +3,15 @@ package org.softdays.mandy.dto;
 /**
  * Created by rpatriarche on 09/03/14.
  */
-public class ActivityDto implements Comparable<ActivityDto> {
+public class ActivityDto {
 
     private Long id;
 
-    private String label;
+    private String shortLabel;
 
-    private Integer position;
+    private String longLabel;
+
+    private String type;
 
     public ActivityDto() {
     }
@@ -22,26 +24,28 @@ public class ActivityDto implements Comparable<ActivityDto> {
 	this.id = id;
     }
 
-    public String getLabel() {
-	return label;
+    public String getType() {
+	return type;
     }
 
-    public void setLabel(String label) {
-	this.label = label;
+    public void setType(String type) {
+	this.type = type;
     }
 
-    public Integer getPosition() {
-	return position;
+    public String getShortLabel() {
+	return shortLabel;
     }
 
-    public void setPosition(Integer position) {
-	this.position = position;
+    public void setShortLabel(String shortLabel) {
+	this.shortLabel = shortLabel;
     }
 
-    // nécessaire si utilisation au sein d'une TreeMap
-    @Override
-    public int compareTo(ActivityDto o) {
-	return this.position.compareTo(o.position);
+    public String getLongLabel() {
+	return longLabel;
+    }
+
+    public void setLongLabel(String longLabel) {
+	this.longLabel = longLabel;
     }
 
     @Override
@@ -69,4 +73,11 @@ public class ActivityDto implements Comparable<ActivityDto> {
 	    return false;
 	return true;
     }
+
+    @Override
+    public String toString() {
+	return "ActivityDto [id=" + id + ", shortLabel=" + shortLabel
+		+ ", type=" + type + "]";
+    }
+
 }

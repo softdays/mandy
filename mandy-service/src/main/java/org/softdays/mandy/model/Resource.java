@@ -49,10 +49,10 @@ public class Resource extends AbstractEntity {
     private Set<Imputation> imputations;
 
     @ManyToMany
-    @JoinTable(name = "ACTIVITY_RESOURCE", joinColumns = { @JoinColumn(name = "RESOURCE_ID") }, inverseJoinColumns = { @JoinColumn(name = "ACTIVITY_ID") })
-    @org.hibernate.annotations.ForeignKey(name = "FK__ACTRES__RESOURCE_ID", inverseName = "FK__ACTRES__ACTIVITY_ID")
+    @JoinTable(name = "TEAM_RESOURCE", joinColumns = { @JoinColumn(name = "RESOURCE_ID") }, inverseJoinColumns = { @JoinColumn(name = "TEAM_ID") })
+    @org.hibernate.annotations.ForeignKey(name = "FK__TEAM_RESOURCE__RESOURCE", inverseName = "FK__TEAM_RESOURCE__TEAM")
     // for hbm2ddl
-    private Set<Activity> activities;
+    private Set<Team> teams;
 
     public Resource() {
 	super();
@@ -98,20 +98,20 @@ public class Resource extends AbstractEntity {
 	this.role = role;
     }
 
+    public Set<Team> getTeams() {
+	return teams;
+    }
+
+    public void setTeams(Set<Team> teams) {
+	this.teams = teams;
+    }
+
     public Set<Imputation> getImputations() {
 	return imputations;
     }
 
     public void setImputations(Set<Imputation> imputations) {
 	this.imputations = imputations;
-    }
-
-    public Set<Activity> getActivities() {
-	return activities;
-    }
-
-    public void setActivities(Set<Activity> activities) {
-	this.activities = activities;
     }
 
 }

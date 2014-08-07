@@ -10,7 +10,7 @@ public class MandyConstants {
 
     public static final String URI_ROOT = "/";
     public static final String URI_ACTIVITIES = "activities";
-    public static final String URI_CALENDAR_DATAGRID = "calendar/datagrid/{date}";
+    public static final String URI_CALENDAR_DATAGRID = "datagrid/{year}/{month}";
 
     private MandyConstants() {
 	super();

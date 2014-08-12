@@ -63,6 +63,12 @@ define(['angular',
 		            		redirectTo: '/404'
 		            	}
 		            );
+		            
+		            $routeProvider.when('/logout', 
+						{
+	            			redirectTo: '/'
+						}
+		        	);	       
 		        }
 	        ]);
 	
@@ -76,6 +82,7 @@ define(['angular',
 //	        		};
 	        		user.$promise.then(function(resolvedUser) {
 	        			$rootScope.admin = (resolvedUser.role == 'ROLE_ADMIN' || resolvedUser.role == 'ROLE_MANAGER');
+	        			$rootScope.role = resolvedUser.role.substring(5, resolvedUser.role.length);
 	        	    });
 	        		var param = utils.buildPathForCurrentMonth();
 	        		// param format =  yyyy/MM[01-12]

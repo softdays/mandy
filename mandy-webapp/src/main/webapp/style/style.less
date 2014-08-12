@@ -6,6 +6,12 @@ Default font size 14px;
 
 @import "../frameworks/bootstrap/less/bootstrap";
 
+@import url(//fonts.googleapis.com/css?family=Leckerli+One);
+
+/* RWD */
+@import "sm.less";
+@import "xxs.less";
+
 body {
 	font-size: 14px;
 }
@@ -17,23 +23,44 @@ body {
   display: none !important;
 }
 
-.title {
-	h4 {
-	   color:@gray;
+.row {
+	margin-left: 0;
+    margin-right: 0;
+}
+
+
+.header {
+	.header-title {
+	   float: left;
+	
+	    h1 {
+	       font-family: 'Leckerli One', cursive;
+	       
+	       span {
+	           color:@gray;
+	           font-style: italic;
+	           font-size: 0.4em;
+	           margin-left: 0.7142857142857143em;/* ~10px - 10:14 */
+	           font-family: @font-family-base;
+	        }
+	    }	
+	}
+	
+	.header-user  {
+	   float: right;
+    
+	    & > * {
+	       display: inline-block;
+	    }   
+	    
+	    .label {
+	        position: relative;
+	        top: -0.0714285714285714em;/* 1:14 */
+	    }
 	}
 }
 
-.user-info  {
-	
-	& > * {
-	   display: inline-block;
-	}	
-	
-	.label {
-		position: relative;
-		top: -0.0714285714285714em;/* 1:14 */
-	}
-}
+
 
 @datagrid-border: 1px solid #2E2E2E; 
 @color-current-month: #D8F6CE;
@@ -55,8 +82,11 @@ body {
 	}
 	
 	.btn-toolbar {
-      text-align: center;
-      margin-bottom: 5px;
+      margin-bottom: 0.5em;/* 7:14 */
+      
+      & > div.btn-group-justified {
+        margin-left: 0;
+      }
       
       #datagrid-current-month {  
           background-color: @color-current-month;

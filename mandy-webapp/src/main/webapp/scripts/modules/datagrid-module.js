@@ -110,11 +110,15 @@ define(['angular',
 	            function ($rootScope, $scope, $location, globals, utils, datagrid, activities) {
 	        	// global model
 	        	$rootScope.selectedTab = 1;
+	        	if (!$rootScope.contextRoot || !$rootScope.user) {
+	        		$location.path("/");
+	        	}
 	            // Definition of the model
 	        	$scope.currentDate = globals.getCurrentDate();	        	
 	            $scope.datagrid = datagrid;	     
 	            $scope.datagrid.$promise.then(function() {
 	            	$scope.formattedMonth = utils.formatMonthLabel(datagrid.month);
+	            	$scope.shortCurrentMonthIndicator = utils.formatShortMonthLabel(datagrid.month, datagrid.year);
 	            });	    
 	            $scope.activities = activities;
 	            // Actions
@@ -171,7 +175,11 @@ define(['angular',
 		                    angular.forEach(scope.activities, function(activity, index) {
 		                    	var row = angular.element('<tr class="activity"></tr>');
 		                    	row.attr("title", activity.longLabel);
-		                    	row.attr("data-placement", "left");
+		                    	if (index == scope.activities.length-1) {
+		                    		row.attr("data-placement", "top");
+		                    	} else {
+		                    		row.attr("data-placement", "bottom");
+		                    	}		                    	
 		                    	row.tooltip({container: 'body'});
 		                    	tbody.append(row);
 		                    	var firstCell = angular.element('<td></td>');

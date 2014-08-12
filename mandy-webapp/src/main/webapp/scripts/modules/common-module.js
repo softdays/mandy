@@ -41,6 +41,12 @@ define(['angular', 'moment'],
 				 return moment().month(nb).format("MMMM");
 			 };
 			 
+			 this.formatShortMonthLabel = function(month, year) {
+				 var monthNb = (+month-1);
+				 var yearNb = (+year);
+				 return moment().year(yearNb).month(monthNb).format("MM/YYYY");
+			 };
+			 
 			 this.getYear = function(strDate) {
 	             return new Date(strDate).getFullYear();
 			 };

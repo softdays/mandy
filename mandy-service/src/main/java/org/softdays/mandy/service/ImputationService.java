@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.softdays.mandy.dto.ActivityDto;
 import org.softdays.mandy.dto.ImputationDto;
 
 /**
@@ -21,15 +20,22 @@ public interface ImputationService {
      * @param date
      *            The given date corresponding to the month to consider for
      *            search.
-     * @return imputations indexed by activity
+     * @return imputations indexed by activity.id
      */
-    Map<ActivityDto, List<ImputationDto>> findImputations(Long resourceId,
-	    Date date);
+    Map<Long, List<ImputationDto>> findImputations(Long resourceId, Date date);
 
     /**
-     * Save or update the given imputation list.
-     * 
-     * @return The saved imputation list.
+     * Persists a new imputation.
      */
-    List<ImputationDto> saveImputations(List<ImputationDto> imputations);
+    ImputationDto createImputation(ImputationDto newImputation);
+
+    /**
+     * Update the existing imputation.
+     */
+    void updateImputation(ImputationDto imputation);
+
+    /**
+     * Delete imputation specified by the given id.
+     */
+    void deleteImputation(Long imputationId);
 }

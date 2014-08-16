@@ -74,6 +74,45 @@ define(['angular', 'moment'],
 				 
 				 return m.format(DATAGRID_PARAMS);
 			 };
+			 
+			 this.findImputation = function(imputations, strDate) {
+				 // je n'utilise pas un forEach angular car on ne peut pas 
+				 // utiliser break ou return à l'intérieur de la boucle
+				 // see: https://github.com/angular/angular.js/issues/263
+				 for (var i = 0; i < imputations.length; i++) {
+					 if (imputations[i].date == strDate) {
+						 return imputations[i];
+					 }
+				 }
+				 
+				 return undefined;
+			 };
+			 
+			 this.formatQuota = function(quota) {
+				 switch(quota) {				 
+				 	case 0:
+				    	return "-";
+				    case 0.25:
+				    	return "0.25";
+				    	
+				    case 0.5:
+				    	return "0.50";
+				    
+				    case 0.75:
+				    	return "0.75";
+				    	
+				    case 1:
+				    	return "1.00";
+				    	
+				    default:
+				    	return "Err";
+				} 
+			 };
+			 
+			 this.getNewQuota = function(oldQuota) {
+				 var q = oldQuota ? (+oldQuota) : 0;
+				 return q == 1 ? 0 : (q+0.25);
+			 };
 
 		};
 		

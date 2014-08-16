@@ -1,5 +1,8 @@
 package org.softdays.mandy;
 
+import java.sql.Connection;
+import java.sql.Statement;
+
 import javax.sql.DataSource;
 
 import org.dbunit.IDatabaseTester;
@@ -46,6 +49,17 @@ public abstract class AbstractDbSetupTest {
 	    Assert.fail(e.getMessage());
 	}
 	return null;
+    }
+
+    public void execute(String sql) {
+	try {
+	    Connection c = databaseTester.getConnection().getConnection();
+	    Statement s = c.createStatement();
+	    s.executeUpdate(sql);
+	    s.close();
+	} catch (Exception e) {
+	    Assert.fail(e.getMessage());
+	}
     }
 
 }

@@ -25,18 +25,18 @@ import javax.persistence.UniqueConstraint;
 public class Imputation extends AbstractEntity {
 
     @ManyToOne
-    @JoinColumn(name = "ACTIVITY_ID", nullable = false, foreignKey = @ForeignKey(name = "FK__IMPUTATION__ACTIVITY"))
+    @JoinColumn(name = "ACTIVITY_ID", updatable = false, nullable = false, foreignKey = @ForeignKey(name = "FK__IMPUTATION__ACTIVITY"))
     @org.hibernate.annotations.ForeignKey(name = "FK__IMPUTATION__ACTIVITY")
     // for hbm2ddl
     private Activity activity;
 
     @ManyToOne
-    @JoinColumn(name = "RESOURCE_ID", nullable = false, foreignKey = @ForeignKey(name = "FK__IMPUTATION__RESOURCE"))
+    @JoinColumn(name = "RESOURCE_ID", updatable = false, nullable = false, foreignKey = @ForeignKey(name = "FK__IMPUTATION__RESOURCE"))
     @org.hibernate.annotations.ForeignKey(name = "FK__IMPUTATION__RESOURCE")
     // for hbm2ddl
     private Resource resource;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.DATE)
     private Date date;
 
@@ -48,6 +48,10 @@ public class Imputation extends AbstractEntity {
 
     public Imputation() {
 	super();
+    }
+
+    public Imputation(Long imputationId) {
+	this.setId(imputationId);
     }
 
     public Activity getActivity() {
@@ -66,20 +70,20 @@ public class Imputation extends AbstractEntity {
 	this.date = date;
     }
 
-    public Quota getQuota() {
-	return Quota.valueOf(this.quota);
-    }
-
-    public void setQuota(Quota quota) {
-	this.quota = quota.floatValue();
-    }
-
     public Resource getResource() {
 	return resource;
     }
 
     public void setResource(Resource resource) {
 	this.resource = resource;
+    }
+
+    public Float getQuota() {
+	return quota;
+    }
+
+    public void setQuota(Float quota) {
+	this.quota = quota;
     }
 
     public String getComment() {
@@ -90,28 +94,4 @@ public class Imputation extends AbstractEntity {
 	this.comment = comment;
     }
 
-    public enum Quota {
-	NONE(0f), QUARTER(0.25f), HALF(0.5f), WHOLE(1f);
-
-	private float value;
-
-	private Quota(float value) {
-	    this.value = value;
-	}
-
-	public Float floatValue() {
-	    return value;
-	}
-
-	public static Quota valueOf(float value) {
-	    Quota result = null;
-	    for (Quota quota : Quota.values()) {
-		if (quota.value == value) {
-		    result = quota;
-		    break;
-		}
-	    }
-	    return result;
-	}
-    }
 }

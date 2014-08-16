@@ -1,5 +1,7 @@
 package org.softdays.mandy.service.support;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.joda.time.DateTime;
@@ -15,6 +17,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CalendarServiceImpl implements CalendarService {
+
+    private static final String FIRST_DAY_OF_THE_MONTH = "01";
+
+    private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(
+	    "yyyyMMdd");
 
     @Autowired
     private BankHolidayService bankHolidayService;
@@ -84,6 +91,13 @@ public class CalendarServiceImpl implements CalendarService {
 
     private boolean isMonday(DateTime date) {
 	return date.getDayOfWeek() == DateTimeConstants.MONDAY;
+    }
+
+    @Override
+    public Date getFirstDayOfTheMonth(String year, String month)
+	    throws ParseException {
+
+	return DATE_FORMATTER.parse(year + month + FIRST_DAY_OF_THE_MONTH);
     }
 
     @Override

@@ -4,8 +4,6 @@ import static com.ninja_squad.dbsetup.Operations.insertInto;
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -18,9 +16,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.softdays.mandy.AbstractDbSetupTest;
-import org.softdays.mandy.dto.ActivityDto;
 import org.softdays.mandy.dto.ImputationDto;
-import org.softdays.mandy.model.Imputation.Quota;
+import org.softdays.mandy.model.Quota;
 import org.softdays.mandy.service.ImputationService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -98,7 +95,7 @@ public class ImputationServiceTest extends AbstractDbSetupTest {
     public void findImputations() {
 	dbSetupTracker.skipNextLaunch();
 	Date date = new DateTime(2014, 7, 16, 0, 0).toDate();
-	Map<ActivityDto, List<ImputationDto>> results = imputationService
+	Map<Long, List<ImputationDto>> results = imputationService
 		.findImputations(CommonOperations.ID_CHO, date);
 
 	// trois activités : EM, VIESCO, LSL
@@ -107,7 +104,7 @@ public class ImputationServiceTest extends AbstractDbSetupTest {
 	// 1 est hors du mois à considérer
 	// check order
 	// viessco item should be first
-	Iterator<ActivityDto> iterator = results.keySet().iterator();
+	Iterator<Long> iterator = results.keySet().iterator();
 	// EM
 	List<ImputationDto> imputations = results.get(iterator.next());
 	Assert.assertEquals(1, imputations.size());
@@ -126,13 +123,15 @@ public class ImputationServiceTest extends AbstractDbSetupTest {
     }
 
     @Test
-    public void saveImputationsCreate() {
-	List<ImputationDto> imputations = new ArrayList<>();
-	imputations.add(new ImputationDto(CommonOperations.ACTIVITY_LSL_ID,
-		CommonOperations.ID_CHO, new DateTime(2014, 7, 15, 0, 0)
-			.toDate(), Quota.WHOLE, "un commentaire"));
+    public void createImputation() {
+	ImputationDto i = new ImputationDto(CommonOperations.ACTIVITY_LSL_ID,
+		CommonOperations.ID_CHO,
+		new DateTime(2014, 7, 15, 0, 0).toDate(),
+		Quota.WHOLE.floatValue(), "un commentaire");
 
-	imputations = imputationService.saveImputations(imputations);
+	ImputationDto created = imputationService.createImputation(i);
+
+	Assert.assertNotNull(created.getImputationId());
 
 	StringBuilder sql = new StringBuilder("select * from mandy.imputation")
 		.append(" where date='2014-07-15'").append(" and resource_id=")
@@ -140,23 +139,24 @@ public class ImputationServiceTest extends AbstractDbSetupTest {
 		.append(CommonOperations.ACTIVITY_LSL_ID)
 		.append(" and quota=1.0")
 		.append(" and comment='un commentaire'");
+
 	ITable table = query(sql.toString());
 
 	Assert.assertEquals(1, table.getRowCount());
     }
 
     @Test
-    public void saveImputationsUpdate() {
+    public void updateImputation() {
 	ImputationDto merge = new ImputationDto();
 	merge.setImputationId(IMPUT_ID_1);
 	merge.setResourceId(CommonOperations.ID_CHO);
 	Date dateImputation1 = new DateTime(2014, 7, 8, 0, 0).toDate();
 	merge.setDate(dateImputation1);
-	merge.setQuota(Quota.QUARTER);// modif here
+	merge.setQuota(Quota.QUARTER.floatValue());// modif here
 	merge.setActivityId(CommonOperations.ACTIVITY_LSL_ID);
 	merge.setComment("not null comment"); // and here
 
-	imputationService.saveImputations(Arrays.asList(merge));
+	imputationService.updateImputation(merge);
 
 	ITable table = query("select * from mandy.imputation where id="
 		+ IMPUT_ID_1);
@@ -180,6 +180,28 @@ public class ImputationServiceTest extends AbstractDbSetupTest {
 	    Assert.fail(e.getMessage());
 	    e.printStackTrace();
 	}
+    }
+
+    @Test
+    public void deleteImputation() {
+	StringBuilder sql = new StringBuilder("insert into mandy.imputation")
+		.append(" (id, activity_id, resource_id, date, quota, comment)")
+		.append(" values(").append("1111,")
+		.append(CommonOperations.ACTIVITY_LSL_ID).append(",")
+		.append(CommonOperations.ID_CHO).append(",")
+		.append("'2014-07-15',").append("1.0,").append("'foo bar')");
+
+	execute(sql.toString());
+
+	sql = new StringBuilder("select * from mandy.imputation where id=1111");
+	ITable table = query(sql.toString());
+	Assert.assertEquals(1, table.getRowCount());
+
+	imputationService.deleteImputation(1111L);
+
+	sql = new StringBuilder("select * from mandy.imputation where id=1111");
+	table = query(sql.toString());
+	Assert.assertEquals(0, table.getRowCount());
 
     }
 }

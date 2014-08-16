@@ -2,7 +2,8 @@ package org.softdays.mandy.dto;
 
 import java.util.Date;
 
-import org.softdays.mandy.model.Imputation.Quota;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.softdays.mandy.web.serializer.JsonDateSerializer;
 
 /**
  * Created by rpatriarche on 02/03/14.
@@ -15,9 +16,10 @@ public class ImputationDto {
 
     private Long resourceId;
 
+    @JsonSerialize(using = JsonDateSerializer.class)
     private Date date;
 
-    private Quota quota;
+    private Float quota;
 
     private String comment;
 
@@ -26,7 +28,7 @@ public class ImputationDto {
     }
 
     public ImputationDto(Long activityId, Long resourceId, Date date,
-	    Quota quota, String comment) {
+	    Float quota, String comment) {
 	super();
 	this.activityId = activityId;
 	this.resourceId = resourceId;
@@ -67,11 +69,11 @@ public class ImputationDto {
 	this.date = date;
     }
 
-    public Quota getQuota() {
+    public Float getQuota() {
 	return quota;
     }
 
-    public void setQuota(Quota quota) {
+    public void setQuota(Float quota) {
 	this.quota = quota;
     }
 

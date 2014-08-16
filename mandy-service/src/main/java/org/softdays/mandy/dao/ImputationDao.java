@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 /**
  * Spring Data JPA repository.
  */
-public interface ImputationDao extends JpaRepository<Imputation, Integer> {
+public interface ImputationDao extends JpaRepository<Imputation, Long> {
 
     /**
      * Retourne l'ensemble des imputations retrouvées pour l'utilisateur et pour
@@ -30,4 +30,5 @@ public interface ImputationDao extends JpaRepository<Imputation, Integer> {
     List<Imputation> findByResourceAndDateRange(
 	    @Param("resourceId") Long userId,
 	    @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
 }

@@ -1,7 +1,5 @@
 /* 
-
-Default font size 14px;
-
+   Mandy stylesheet
 */
 
 @import "../frameworks/bootstrap/less/bootstrap";
@@ -12,6 +10,7 @@ Default font size 14px;
 @import "sm.less";
 @import "xxs.less";
 
+/* Default font size fixed to 14px */
 body {
 	font-size: 14px;
 }
@@ -27,7 +26,6 @@ body {
 	margin-left: 0;
     margin-right: 0;
 }
-
 
 .header {
 	.header-title {
@@ -61,24 +59,40 @@ body {
 }
 
 
+/* 
+  Palette couleurs 
+  from http://paletton.com/#uid=73o0u0ka5X000++4u+deXRqjcIr
+  base: light-blue=A9E2F3
+*/
+@color-light-grey: #2E2E2E;
+@color-light-purple: #D8CEF6;
+@color-light-green: #D8F6CE;
+@color-light-blue: #A9E2F3;
+@color-light-orange: #FFD7AF;
+@color-orange: #FF7F00;
+@color-blue-c1: #7CCCE2;
+@color-blue-c2: #54AEC7;
+/* palette sémantique */
+@color-month-current: @color-light-blue;
+@color-month-next: @color-light-orange;
+@color-table-row-hover: @color-blue-c1;
+@datagrid-border: 1px solid @color-light-grey; 
 
-@datagrid-border: 1px solid #2E2E2E; 
-@color-current-month: #D8F6CE;
-@color-sibling-month: #F5D0A9;
 @env2px: 0.1428571428571429em; /* 2:14 */
 @env3px: 0.2142857142857143em; /* 3:14 */
 @env5px: 0.3571428571428571em; /* 5:14 */
+
 @font-size-xs: 0.8em;
 @font-size-sm: 0.9em;
 @font-size-lg: 1.0em;
-@color-light-blue:#A9E2F3;
+
 
 #datagrid {
 	margin-top: 1.428571428571429em;/* 20:14 */
 	line-height:normal;
 	
 	.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-	  background-color: @color-light-blue;
+	  background-color: @color-table-row-hover;
 	}
 	
 	.btn-toolbar {
@@ -89,7 +103,7 @@ body {
       }
       
       #datagrid-current-month {  
-          background-color: @color-current-month;
+          background-color: @color-month-current;
       }
     }
 	
@@ -142,10 +156,10 @@ body {
 	       th {
 	           &.day {
 	               text-align: center;
-	               background-color: @color-sibling-month;
+	               background-color: @color-month-next;
 	               
 	               &.current-month {
-	                    background-color: @color-current-month;
+	                    background-color:@color-month-current;
 	               }
 	           }
 	       }
@@ -156,8 +170,35 @@ body {
 	           padding: @env2px @env3px;
 	           overflow: hidden;
                text-overflow: ellipsis;
-	           white-space: nowrap;
+	           white-space: nowrap;	 
+	           text-align: center; 
+	           -webkit-touch-callout: none;
+			   -webkit-user-select: none;
+			   -khtml-user-select: none;
+			   -moz-user-select: none;
+			   -ms-user-select: none;
+			   user-select: none; 
            }   
+           
+           td[data-quota="0"] {
+               background-color: white;
+           } 
+           
+           td[data-quota="0.25"] {
+               background-color: white;
+           } 
+           
+           td[data-quota="0.5"] {
+               background-color: white;
+           } 
+           
+           td[data-quota="0.75"] {
+               background-color: white;
+           } 
+           
+           td[data-quota="1"] {
+               background-color: white;
+           } 
 	   }
 	   
 	   tfoot {

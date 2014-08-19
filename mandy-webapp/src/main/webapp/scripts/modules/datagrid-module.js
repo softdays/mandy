@@ -11,13 +11,14 @@
 define(['angular', 
         'angular-route',
         'angular-resource',
+        'angular-cookies',
         'mandy-common',
         'mandy-user'], 
         function (angular) 
         {
     		'use strict';
 
-    		var module = angular.module('DatagridModule', ['ngRoute', 'ngResource', 'CommonModule', 'UserModule']);
+    		var module = angular.module('DatagridModule', ['ngRoute', 'ngResource', 'ngCookies', 'CommonModule', 'UserModule']);
     		
     		module.service('CalendarService', ["$resource", "CONTEXT_ROOT", "Utils", function ($resource, CONTEXT_ROOT, utils) {
             	
@@ -36,10 +37,10 @@ define(['angular',
                     	
                         return Calendar.get({year:year, month:month}, 
 	                        		angular.noop,
-		                			function (err) 
+		                			function (httpResponse) 
 		                			{ 
                         				// cas d'erreur
-			                			var message = "Erreur technique récupération grille de données : "+err;
+			                			var message = "Erreur technique récupération grille de données : "+httpResponse;
 			                        	console.log(message);
 			                        	alert(message);
 		                			}
@@ -63,10 +64,10 @@ define(['angular',
                     	
                         return Activities.query({}, 
 	                        		angular.noop,
-		                			function (err) 
+		                			function (httpResponse) 
 		                			{ 
                         				// cas d'erreur
-			                			var message = "Erreur technique récupération activités : "+err;
+			                			var message = "Erreur technique récupération activités : "+httpResponse;
 			                        	console.log(message);
 			                        	alert(message);
 		                			}
@@ -75,7 +76,7 @@ define(['angular',
                 };
             }]);
     		
-    		module.service('ImputationService', ["$resource", "CONTEXT_ROOT", function ($resource, CONTEXT_ROOT) {
+    		module.service('ImputationService', ["$resource", "CONTEXT_ROOT", "ErrorService", function ($resource, CONTEXT_ROOT, errorService) {
             	
             	var Imputations = $resource(CONTEXT_ROOT+"/api/imputations/:id",
 					{ id: '@id' },
@@ -109,12 +110,11 @@ define(['angular',
                     		function(data){
                         		console.log(data);
                         	},
-                			function (err) 
+                        	
+                			function (httpResponse) 
                 			{ 
-                				// cas d'erreur
-	                			var message = "Erreur technique récupération imputations : "+err;
-	                        	console.log(message);
-	                        	alert(message);
+                        		errorService.errorHandler(httpResponse, 
+                        				"Erreur technique récupération imputations");
                 			}
             		   );
                     },
@@ -125,13 +125,15 @@ define(['angular',
                     	imputations.activityId = activityId;
                     	imputations.date = date;
                     	imputations.quota = quota;
+                    	// attention les méthodes d'instances Angular#Resource 
+                    	// retournent directement la promise
                     	return imputations.$save(
                     		imputations,
                 			angular.noop,
-                			function (err) 
+                			function (httpResponse) 
                 			{ 
                 				// cas d'erreur
-	                			var message = "Erreur technique creation imputation : "+err;
+	                			var message = "Erreur technique creation imputation : "+httpResponse;
 	                        	console.log(message);
 	                        	alert(message);
                 			}
@@ -147,10 +149,10 @@ define(['angular',
 //	                				quota: quota
 //                    			}, 
 //                    			angular.noop,
-//	                			function (err) 
+//	                			function (httpResponse) 
 //	                			{ 
 //                    				// cas d'erreur
-//		                			var message = "Erreur technique reation imputation : "+err;
+//		                			var message = "Erreur technique reation imputation : "+httpResponse;
 //		                        	console.log(message);
 //		                        	alert(message);
 //	                			}
@@ -161,9 +163,9 @@ define(['angular',
                     	Imputations.update( { id:imputation.imputationId }, 
                     			imputation, 
                     			angular.noop, 
-                    			function (err) { 
+                    			function (httpResponse) { 
 	                				// cas d'erreur
-		                			var message = "Erreur technique update imputation : "+err;
+		                			var message = "Erreur technique update imputation : "+httpResponse;
 		                        	console.log(message);
 		                        	alert(message);
 	                			}
@@ -171,12 +173,17 @@ define(['angular',
                     },
                     
                     deleteImputation: function(imputationId) {
+                    	// attention les méthodes de classe retournent une 
+                    	// référence vide sur l'objet résultat qui sera peuplé
+                    	// au retour de la requête 
+                    	// cet objet possède également une propriété '$promise'
+                    	// depuis angular 1.2
                     	return Imputations.remove({ id:imputationId }, 
                     			{},
                     			angular.noop, 
-                    			function (err) { 
+                    			function (httpResponse) { 
 	                				// cas d'erreur
-		                			var message = "Erreur technique delete imputation : "+err;
+		                			var message = "Erreur technique delete imputation : "+httpResponse;
 		                        	console.log(message);
 		                        	alert(message);
 	                			}
@@ -195,6 +202,16 @@ define(['angular',
 		                 templateUrl: "partials/datagrid.html",
 		                 controller: 'CalendarController',
 		                 resolve: {
+		                	 // hack pour rediriger si accès direct
+		                	 // en cas de refresh de la page par exemple
+		                	 /*
+		                	 preventDirectAccess: ['$rootScope', '$location',
+		                	   function ($rootScope, $location) {
+		                		 if ($rootScope.user == undefined) {
+		                			 $location.path('/');
+		                		 }
+		                	 }],
+		                	 */
 		                	 datagrid: ['$route', 'CalendarService', function ($route, calendarService) {
 		                		 var year = $route.current.params.year;
 		                		 var month = $route.current.params.month;
@@ -204,8 +221,9 @@ define(['angular',
 		                	 activities: ['ActivityService', function (activityService) {
 		                         return activityService.getUserActivities();
 		                	 }],
-		                	 imputations: ['$rootScope', '$route', 'ImputationService', function ($rootScope, $route, imputationService) {
-		                		 var userId = $rootScope.user.id;
+		                	 imputations: ['$rootScope', '$route', '$cookieStore', 'ImputationService',
+		                	   function ($rootScope, $route, $cookieStore, imputationService) {
+		                		 var userId = $cookieStore.get('user').resourceId;
 		                		 var year = $route.current.params.year;
 		                		 var month = $route.current.params.month;
 		                         return imputationService.findImputations(userId, year, month);
@@ -213,17 +231,20 @@ define(['angular',
 		                 }
 		             }
 	        	 );	            
-	        }]);
+	        }]); 
 
 	        // Configuration of the controller
-	        module.controller('CalendarController', ['$rootScope', '$scope', '$location', 'Globals', 'Utils', 'ImputationService', 'datagrid', 'activities', 'imputations',
-	            function ($rootScope, $scope, $location, globals, utils, imputationService, datagrid, activities, imputations)  {
-	        	// global model
+	        module.controller('CalendarController', ['$rootScope', '$scope', 
+	            	'$location', 'Globals', 'Utils', 'ImputationService', 
+	            	'datagrid', 'activities', 'imputations',
+	            function ($rootScope, $scope, $location, globals, utils, 
+	            		imputationService, datagrid, activities, imputations)  {
+	        	// Definition of the model
 	        	$rootScope.selectedTab = 1;
-	        	if (!$rootScope.contextRoot || !$rootScope.user) {
-	        		$location.path("/");
-	        	}
-	            // Definition of the model
+	        	//$scope.controlsDisabled=false;
+	        	$scope.$on('$routeChangeSuccess', function(next, current) { 
+	        		//$scope.controlsDisabled=false;
+	            });
 	        	$scope.currentDate = globals.getCurrentDate();	        	
 	            $scope.datagrid = datagrid;	     
 	            $scope.datagrid.$promise.then(function() {
@@ -233,15 +254,18 @@ define(['angular',
 	            $scope.activities = activities;
 	            $scope.imputationsMap = imputations;
 	            // Actions
-	            $scope.displayNextMonth = function(year, month){
+	            $scope.displayNextMonth = function(year, month) {
+	            	$scope.controlsDisabled = true;
 	            	$location.path("/datagrid/"+utils.buildPathForNextMonth(year, month));
 	            };
 	            
-	            $scope.displayPreviousMonth = function(year, month){
+	            $scope.displayPreviousMonth = function(year, month) {
+	            	$scope.controlsDisabled = true;
 	            	$location.path("/datagrid/"+utils.buildPathForPreviousMonth(year, month));
 	            };
 	            
-	            $scope.displayCurrentMonth = function(){
+	            $scope.displayCurrentMonth = function() {
+	            	$scope.controlsDisabled = true;
 	            	$location.path("/datagrid/"+utils.buildPathForCurrentMonth());
 	            };
 	            
@@ -272,7 +296,8 @@ define(['angular',
             			if (newQuota == 0) {
             				var delRes = imputationService.deleteImputation(+imputationId);
             				delRes.$promise.then(function(data){
-            					ngCell.removeAttr('data-imputation-id');
+            					ngCell.removeAttr ('data-imputation-id');
+            					ngCell.removeAttr ('data-quota');
             				});
             			} else {
             				var imputation = {};
@@ -312,9 +337,17 @@ define(['angular',
 	                    	elemDays.append(activities);	
 		                    angular.forEach(weeks, function(week, index) {
 		                        angular.forEach(week.days, function(day, dIndex) {
-		                        	var elemDay = angular.element('<th class="day"></th>');		                        	
-		                        	elemDay.text(utils.getDay(day.date));
-		                        	elemDay.attr("data-date", day.date);
+		                        	var elemDay = angular.element('<th class="day"></th>');	
+		                        	var elemDayContentWrapper = angular.element('<div></div>');	
+		                        	//var spanCompleteness = angular.element('<span class="completeness glyphicon"></span>');	
+		                        	//var completeness = utils.getCompleteness(); 
+		                        	//spanCompleteness.addClass();
+		                        	var spanDayValue = angular.element('<span class="day-value"></span>');	
+		                        	spanDayValue.text(utils.getDay(day.date));
+		                        	elemDay.attr("data-date", day.date);		                        	
+		                        	//elemDayContentWrapper.append(spanCompleteness);
+		                        	elemDayContentWrapper.append(spanDayValue);		                        	
+		                        	elemDay.append(elemDayContentWrapper);
 		                        	if (utils.areMonthsEqual(resolvedDatagrid.month, day.date)) {
 		                        		elemDay.addClass("current-month");
 		                        	}
@@ -335,7 +368,10 @@ define(['angular',
 	                replace: false,
 	                transclude:false,
 	                link: function (scope, element) {	
-	                	$q.all([scope.datagrid.$promise, scope.activities.$promise, scope.imputationsMap.$promise]).then(function() {
+	                	$q.all([scope.datagrid.$promise, 
+	                	        scope.activities.$promise, 
+	                	        scope.imputationsMap.$promise])
+	                	.then(function() {
 	                		var tbody = angular.element('<tbody></tbody>');
 		                    angular.forEach(scope.activities, function(activity, index) {
 		                    	var row = angular.element('<tr></tr>');

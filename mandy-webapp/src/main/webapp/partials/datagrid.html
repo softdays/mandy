@@ -4,14 +4,18 @@
 		    <div class="btn-group">		
 				<button type="button" class="btn btn-default"
 					title="Affiche le mois précédent"
-					ng-click="displayPreviousMonth(datagrid.year, datagrid.month)">
+					ng-click="displayPreviousMonth(datagrid.year, datagrid.month)"
+					ng-disabled="controlsDisabled">
 					<span class=" glyphicon glyphicon-chevron-left"></span>
 					<span class="hidden-xs">Précédent</span>
 				</button>
 			</div>
 			<div class="btn-group">
-				<button type="button" class="btn btn-default"
-					title="Affiche le mois courant" ng-click="displayCurrentMonth()">
+				<button type="button" 
+				    class="btn btn-default"
+					title="Affiche le mois courant" 
+					ng-click="displayCurrentMonth()"
+					ng-disabled="controlsDisabled">
 					<span class=" glyphicon glyphicon-chevron-down"></span>
 					<strong class="hidden-xs">Aujourd'hui</strong>
 				</button>
@@ -19,7 +23,8 @@
 			<div class="btn-group">
 				<button type="button" class="btn btn-default"
 					title="Affiche le mois suivant"
-					ng-click="displayNextMonth(datagrid.year, datagrid.month)">
+					ng-click="displayNextMonth(datagrid.year, datagrid.month)"
+					ng-disabled="controlsDisabled">
 					<span class="hidden-xs">Suivant</span>
 					<span class=" glyphicon glyphicon-chevron-right"></span>
 				</button>

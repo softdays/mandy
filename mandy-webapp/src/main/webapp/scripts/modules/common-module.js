@@ -134,6 +134,24 @@ define(['angular', 'moment'],
 		};
 		
 		module.service('Globals', GlobalsService);
+		
+		var ErrorService = ['$rootScope', '$location', function($rootScope, $location) {
+        	
+			this.errorHandler = function(httpResponse, context)  
+			{
+            	var status = httpResponse.status ? httpResponse.status : "";
+            	var details = httpResponse.statusText ? httpResponse.statusText : "aucune information récupérable";
+            	var title = "Erreur " + status;
+            	var details = "Détails : " + details;
+            	console.log(title + ", "+ context, +", "+details);
+            	$rootScope.alert = { title:title, context:context, details:details };            	
+            	$rootScope.selectedTab = 0;
+            	$location.path("/error");
+   		 	};
+                
+		}];
+		
+		module.service('ErrorService', ErrorService);
 
         return module;
     }

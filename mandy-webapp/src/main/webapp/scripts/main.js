@@ -30,6 +30,7 @@ window.require && (function (requirejs) {
             'angular': '../frameworks/angular/angular',
             'angular-resource': '../frameworks/angular/angular-resource',
             'angular-route': '../frameworks/angular/angular-route',
+            'angular-cookies': '../frameworks/angular/angular-cookies',
             'moment': '../frameworks/moment/moment-with-locales.min'
             
         },
@@ -53,6 +54,9 @@ window.require && (function (requirejs) {
                 'deps': ['angular']
             },
 	        'angular-route': {
+	            'deps': ['angular']
+	        },
+	        'angular-cookies': {
 	            'deps': ['angular']
 	        }
         }

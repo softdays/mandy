@@ -12,7 +12,8 @@
 		<s:intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
 		<s:intercept-url pattern="/**" access="IS_AUTHENTICATED_REMEMBERED" />
 		<s:form-login />
-		<s:logout delete-cookies="JSESSIONID" logout-success-url="/logout"/>
+		<s:logout delete-cookies="JSESSIONID" logout-success-url="/" />
+		<s:headers />
 	</s:http>
 
 

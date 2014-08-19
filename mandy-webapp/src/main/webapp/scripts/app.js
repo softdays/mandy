@@ -52,7 +52,7 @@ define(['angular',
 						}
 			        );	
 	        	 	
-	        	 	$routeProvider.when('/404', 
+	        	 	$routeProvider.when('/error', 
 						{
 							templateUrl: "partials/error.html"
 						}
@@ -60,7 +60,7 @@ define(['angular',
 		            
 		            $routeProvider.otherwise(
 		            	{
-		            		redirectTo: '/404'
+		            		redirectTo: '/error'
 		            	}
 		            );
 		            
@@ -83,11 +83,10 @@ define(['angular',
 	        		user.$promise.then(function(resolvedUser) {
 	        			$rootScope.admin = (resolvedUser.role == 'ROLE_ADMIN' || resolvedUser.role == 'ROLE_MANAGER');
 	        			$rootScope.role = resolvedUser.role.substring(5, resolvedUser.role.length);
+	        			var param = utils.buildPathForCurrentMonth();
+		        		// param format =  yyyy/MM[01-12]
+		        		$location.path("/datagrid/"+param);
 	        	    });
-	        		var param = utils.buildPathForCurrentMonth();
-	        		// param format =  yyyy/MM[01-12]
-	        		$location.path("/datagrid/"+param);
-	        		
 	        }]);
 	        
 	        var contextRootValue = window.location.pathname;

@@ -16,6 +16,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.Logger;
 import org.softdays.mandy.config.Configuration;
 import org.softdays.mandy.dto.ActivityDto;
 import org.softdays.mandy.dto.ImputationDto;
@@ -35,6 +36,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Path(MandyConstants.URI_ROOT)
 public class MandyResource {
+
+    private static final Logger LOGGER = Logger.getLogger(MandyResource.class);
 
     @Autowired
     private ActivityService activityService;
@@ -121,6 +124,11 @@ public class MandyResource {
     public Map<Long, List<ImputationDto>> getImputations(
 	    @PathParam("year") String year, @PathParam("month") String month) {
 	Long resourceId = authService.getCurrentToken().getResourceId();
+	if (LOGGER.isDebugEnabled()) {
+	    LOGGER.debug("resourceId: " + resourceId);
+	    LOGGER.debug("year: " + year);
+	    LOGGER.debug("month: " + month);
+	}
 	Date date;
 	try {
 	    date = calendarService.getFirstDayOfTheMonth(year, month);

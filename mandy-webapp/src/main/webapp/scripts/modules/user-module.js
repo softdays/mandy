@@ -20,7 +20,8 @@ define(['angular',
     		var module = angular.module('UserModule', ['ngRoute', 'ngResource', 'ngCookies', 'CommonModule']);
     		
    		
-    		module.service('UserService', ['$resource', '$cookieStore', 'CONTEXT_ROOT', function ($resource, $cookieStore, CONTEXT_ROOT) {
+    		module.service('UserService', ['$resource', '$cookieStore', '$log', 'CONTEXT_ROOT', 'ErrorService', 
+    		    function ($resource, $cookieStore, $log, CONTEXT_ROOT, errorService) {
             	
             	var UserResource = $resource(CONTEXT_ROOT+"/api/user/session");
             	
@@ -35,14 +36,12 @@ define(['angular',
                         return UserResource.get({}, 
 	                        		function(data){
 			                        	$cookieStore.put('user', data);
-			                        	console.log("user resource id from cookie: "+$cookieStore.get('user').resourceId);
+			                        	$log.debug("user id retrieved from cookie: "+$cookieStore.get('user').resourceId);
 			                        },
-		                			function (err) 
+		                			function (httpResponse) 
 		                			{ 
-                        				// cas d'erreur
-			                			var message = "Technical error on get user info : "+err;
-			                        	console.log(message);
-			                        	alert(message);
+			                			errorService.errorHandler(httpResponse, 
+        									"Erreur technique récupération infos utilisateur");
 		                			}
 	                		   );
                     }

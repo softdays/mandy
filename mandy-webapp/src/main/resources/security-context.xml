@@ -12,7 +12,12 @@
 		<s:intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
 		<s:intercept-url pattern="/**" access="IS_AUTHENTICATED_REMEMBERED" />
 		<s:form-login />
+		
+		<!-- Retour sur la page de login après déconnexion -->
 		<s:logout delete-cookies="JSESSIONID" logout-success-url="/" />
+		
+		<!-- Permet de fixer le problème de mise en cache de la page de logout si celle-ci avait déjà été chargé par le browser -->
+		<!-- See: http://spring.io/blog/2013/08/23/spring-security-3-2-0-rc1-highlights-security-headers/#cache-control -->
 		<s:headers />
 	</s:http>
 

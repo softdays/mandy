@@ -10,6 +10,40 @@
 @import "sm.less";
 @import "xxs.less";
 
+/* 
+  Palette couleurs 
+  from http://paletton.com/#uid=73o0u0ka5X000++4u+deXRqjcIr
+  base: light-blue=A9E2F3
+*/
+@color-light-grey: #2E2E2E;
+@color-light-purple: #D8CEF6;
+@color-light-green: #D8F6CE;
+@color-light-blue: #A9E2F3;
+@color-light-orange: #FFD7AF;
+@color-orange: #FF7F00;
+@color-blue-c1: #7CCCE2;
+@color-blue-c2: #54AEC7;
+/* palette sémantique */
+@color-month-current: @color-light-blue;
+@color-month-next: @color-light-orange;
+@color-table-row-hover: @color-blue-c1;
+@color-table-cell-hover: @color-blue-c2;
+@datagrid-border: 1px solid @color-light-grey; 
+
+@env2px: 0.1428571428571429em; /* 2:14 */
+@env3px: 0.2142857142857143em; /* 3:14 */
+@env5px: 0.3571428571428571em; /* 5:14 */
+
+@font-size-xs: 0.8em;
+@font-size-sm: 0.9em;
+@font-size-lg: 1.0em;
+
+@height-fixed-header: 111px;
+@height-fixed-datagrid-navbar: 54px;
+@height-fixed-datagrid-header: 118px;
+@width-column-activities: 100px;
+
+
 /* Default font size fixed to 14px */
 body {
 	font-size: 14px;
@@ -25,6 +59,22 @@ body {
 .row {
 	margin-left: 0;
     margin-right: 0;
+}
+
+.container-fluid > .row:first-child {
+	position: fixed !important;
+    height: @height-fixed-header;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    padding: 0 15px;
+    background-color: white;
+}
+
+.container-fluid > .row:last-child {
+    margin-top: @height-fixed-header;
+    z-index: 1;
 }
 
 .header {
@@ -59,35 +109,6 @@ body {
 }
 
 
-/* 
-  Palette couleurs 
-  from http://paletton.com/#uid=73o0u0ka5X000++4u+deXRqjcIr
-  base: light-blue=A9E2F3
-*/
-@color-light-grey: #2E2E2E;
-@color-light-purple: #D8CEF6;
-@color-light-green: #D8F6CE;
-@color-light-blue: #A9E2F3;
-@color-light-orange: #FFD7AF;
-@color-orange: #FF7F00;
-@color-blue-c1: #7CCCE2;
-@color-blue-c2: #54AEC7;
-/* palette sémantique */
-@color-month-current: @color-light-blue;
-@color-month-next: @color-light-orange;
-@color-table-row-hover: @color-blue-c1;
-@color-table-cell-hover: @color-blue-c2;
-@datagrid-border: 1px solid @color-light-grey; 
-
-@env2px: 0.1428571428571429em; /* 2:14 */
-@env3px: 0.2142857142857143em; /* 3:14 */
-@env5px: 0.3571428571428571em; /* 5:14 */
-
-@font-size-xs: 0.8em;
-@font-size-sm: 0.9em;
-@font-size-lg: 1.0em;
-
-
 #datagrid {
 	margin-top: 1.428571428571429em;/* 20:14 */
 	line-height:normal;
@@ -97,7 +118,14 @@ body {
 	}
 	
 	.btn-toolbar {
-      margin-bottom: 0.5em;/* 7:14 */
+	  position: fixed !important;
+      height: @height-fixed-datagrid-navbar;
+      width: 100%;
+      top: @height-fixed-header;
+      left: 0;
+      z-index: 2;
+      padding: 10px 30px;
+      background-color: white;	  
       
       & > div.btn-group-justified {
         margin-left: 0;
@@ -107,142 +135,173 @@ body {
           background-color: @color-month-current;
       }
     }
-	
-	table {
-	   table-layout: fixed;
-	   
-	   thead {
-	       	    
-	       th.month, th.header-activities {
-	           border-top: 1px solid white;
-			   border-left: 1px solid white;			   
-			   border-collapse: collapse;
-	       }
+    
+    .table-responsive {
+        margin-top: @height-fixed-datagrid-navbar;
+        z-index: 1;
+        
+        .datagrid-header {
+            position: fixed !important;
+		    top: @height-fixed-header + @height-fixed-datagrid-navbar;
+		    left: 0;
+		    z-index: 2;
+		    background-color: white;  
+            padding: 0 30px;
+            
+            table {
+                margin-bottom: 0;
+            }
+        }
+        
+        .datagrid-body {
+            margin-top: @height-fixed-datagrid-header;
+            z-index: 1;
+        }
+        
+        table {
+	       table-layout: fixed;
 	       
-	       th.month {
-	           width: 100px;
-	           min-width: 100px;
-	           font-size: @font-size-lg;
-               border-bottom: 1px solid white;
-               vertical-align: middle;
-               padding: 0 0;
-               
-               * {
-                vertical-align: middle;
-               }
-               
-               & > span {
-                   display: inline-block;
-                   font-family:monospace;
-                   margin: 0;
-                   padding: 0;
-                   
+	       thead {
+	           th.month, th.header-activities {
+	               border-top: 1px solid white;
+	               border-left: 1px solid white;               
+	               border-collapse: collapse;
+	           }
+	           
+	           th.month {
+	               width: @width-column-activities;
+	               font-size: @font-size-lg;
+	               border-bottom: 1px solid white;
+	               vertical-align: middle;
+	               padding: 0 0;
+	               
+	               * {
+	                vertical-align: middle;
+	               }
+	               
 	               & > span {
-	                    display: block;
-	                    font-size: @font-size-xs;
-	                    position: relative;
-	                    padding: 0 2px;
-	                    
+	                   display: inline-block;
+	                   font-family:monospace;
+	                   margin: 0;
+	                   padding: 0;
+	                   
+	                   & > span {
+	                        display: block;
+	                        font-size: @font-size-xs;
+	                        position: relative;
+	                        padding: 0 2px;
+	                        
+	                   }
+	                   span:first-child {
+	                       bottom: -2px;
+	                   }                   
+	                   span:last-child {
+	                       top: -2px;
+	                       font-weight: normal;
+	                   }
 	               }
-	               span:first-child {
-                       bottom: -2px;
-                   }	               
-	               span:last-child {
-	                   top: -2px;
-	                   font-weight: normal;
-	               }
-               }
-	       }
-	       
-	       th {
-	           &.day {
-	               text-align: center;
-	               background-color: @color-month-next;
-	               padding: 0;
-	               
-	               &.current-month {
-	                    background-color:@color-month-current;
-	               }
-	               
-	               & > div {
-	                   width: 100%;
-	                   height: 100%;
-	               
-		               .day-value {
-	                       position: relative;
-	                       display: inline-block;
-	                       top: -5px;
-	                       /*
-                           left: -20px;
-                           */
-                           
+	           }
+	           
+	           th {
+	               &.day {
+	                   text-align: center;
+	                   background-color: @color-month-next;
+	                   padding: 0;
+	                   
+	                   &.current-month {
+	                        background-color:@color-month-current;
 	                   }
 	                   
-	                   .completeness {
-	                       position: relative;
-	                       display: inline-block;
-	                       top: -8px;
-                           right: -24px;
+	                   & > div {
+	                       width: 100%;
+	                       height: 100%;
+	                   
+	                       .day-value {
+	                           position: relative;
+	                           display: inline-block;
+	                           top: -5px;
+	                           /*
+	                           left: -20px;
+	                           */
+	                           
+	                       }
+	                       
+	                       .completeness {
+	                           position: relative;
+	                           display: inline-block;
+	                           top: -8px;
+	                           right: -24px;
+	                       }
 	                   }
 	               }
 	           }
 	       }
-	   }
-	   
-	   tbody {
-	       td {
-	           padding: @env2px @env3px;
-	           overflow: hidden;
-               text-overflow: ellipsis;
-	           white-space: nowrap;	 
-	           text-align: center; 
-	           -webkit-touch-callout: none;
-			   -webkit-user-select: none;
-			   -khtml-user-select: none;
-			   -moz-user-select: none;
-			   -ms-user-select: none;
-			   user-select: none; 
-           } 
-           
-           td.imputation:hover {
-                background-color: @color-table-cell-hover;
-           }
-           
-           /* 
-           td[data-quota="0"] {
-               background-color: inherit;
-           } 
-           
-           td[data-quota="0.25"] {
-               background-color: inherit;
-           } 
-           
-           td[data-quota="0.5"] {
-               background-color: inherit;
-           } 
-           
-           td[data-quota="0.75"] {
-               background-color: inherit;
-           } 
-           
-           td[data-quota="1"] {
-               background-color: inherit;
-           } 
-           */
-	   }
-	   
-	   tfoot {
-	       tr {
-	           td {
-	               font-style: italic;
-	               padding-right: @env2px;
-	               font-size: @font-size-xs;
-	               text-align: right;
-	               padding-right: @env5px;
-	            }
+	       
+	       tbody {
+	       
+	           tr:first-child > td:first-child {
+	               width: @width-column-activities;
+	           }
+	           
+	            td {
+	                padding: @env2px @env3px;
+	                overflow: hidden;
+	                text-overflow: ellipsis;
+	                white-space: nowrap;  
+	                text-align: center; 
+	                -webkit-touch-callout: none;
+	                -webkit-user-select: none;
+	                -khtml-user-select: none;
+	                -moz-user-select: none;
+	                -ms-user-select: none;
+	                user-select: none; 
+	                
+	                &.activity {
+	                   text-align:left;
+	                }
+	                
+	                &.imputation:hover {
+	                 background-color: @color-table-cell-hover;
+	                }
+	            } 
+	            
+	            
+	            /* 
+	            td[data-quota="0"] {
+	                background-color: inherit;
+	            } 
+	            
+	            td[data-quota="0.25"] {
+	                background-color: inherit;
+	            } 
+	            
+	            td[data-quota="0.5"] {
+	                background-color: inherit;
+	            } 
+	            
+	            td[data-quota="0.75"] {
+	                background-color: inherit;
+	            } 
+	            
+	            td[data-quota="1"] {
+	                background-color: inherit;
+	            } 
+	            */
 	       }
-        }	       
-	}
+	       
+	       tfoot {
+	           tr {
+	               td {
+	                   font-style: italic;
+	                   padding-right: @env2px;
+	                   font-size: @font-size-xs;
+	                   text-align: right;
+	                   padding-right: @env5px;
+	                }
+	           }
+	        }          
+	    }
+    }
 }
 
 #view-error {

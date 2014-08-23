@@ -24,27 +24,30 @@
 </head>
 <body ng-cloak class="ng-cloak">
 	<div class="container-fluid">
-		<div class="row header">
-		    <div class="header-user">
-                <h6><span class="glyphicon glyphicon-user"></span>&nbsp;{{user.firstName}}&nbsp;{{user.lastName}}&nbsp;<span class="label label-default">{{role}}</span>&nbsp;</h6>
-                <a ng-href="{{contextRoot}}/j_spring_security_logout">
-                  <button type="button" class="btn btn-default btn-xs glyphicon glyphicon-log-out" title="Se déconnecter"></button>
-                </a>
-            </div>
-			<div class="header-title">
-				<h1>Mandy<span class="hidden-xs">A simple app to track man-day consumption on activities</span></h1>
+	   <div class="row">
+			<div class="row header">
+			    <div class="header-user">
+	                <h6><span class="glyphicon glyphicon-user"></span>&nbsp;{{user.firstName}}&nbsp;{{user.lastName}}&nbsp;<span class="label label-default">{{role}}</span>&nbsp;</h6>
+	                <a ng-href="{{contextRoot}}/j_spring_security_logout">
+	                  <button type="button" class="btn btn-default btn-xs glyphicon glyphicon-log-out" title="Se déconnecter"></button>
+	                </a>
+	            </div>
+				<div class="header-title">
+					<h1>Mandy<span class="hidden-xs">A simple app to track man-day consumption on activities</span></h1>
+				</div>
 			</div>
-		</div>
-		<div class="row">
-			<ul class="nav nav-tabs" role="tablist">
-			  <li ng-class="{active: 1==selectedTab}"><a ng-href="#/datagrid"><span class="hidden-xxs">Grille de saisie</span><span class="visible-xxs-inline">Saisie</span></a></li>			  
-			  <li ng-class="{active: 2==selectedTab}" ng-show="admin"><a ng-href="#/admin"><span class="hidden-xxs">Administration</span><span class="visible-xxs-inline">Admin.</span></a></li>
-			  <li ng-class="{active: 3==selectedTab}"><a ng-href="#/settings"><span class="hidden-xxs">Préférences</span><span class="visible-xxs-inline">Préf.</span></a></li>
-			</ul>
-			<div class="col-md-12" ng-view></div>
-		</div>
+			<div class="row">
+				<ul class="nav nav-tabs" role="tablist">
+				  <li ng-class="{active: 1==selectedTab}"><a ng-href="#/datagrid"><span class="hidden-xxs">Grille de saisie</span><span class="visible-xxs-inline">Saisie</span></a></li>			  
+				  <li ng-class="{active: 2==selectedTab}" ng-show="admin"><a ng-href="#/admin"><span class="hidden-xxs">Administration</span><span class="visible-xxs-inline">Admin.</span></a></li>
+				  <li ng-class="{active: 3==selectedTab}"><a ng-href="#/settings"><span class="hidden-xxs">Préférences</span><span class="visible-xxs-inline">Préf.</span></a></li>
+				</ul>
+			</div>
+	   </div>
+	   <div class="row">
+		  <div class="col-md-12" ng-view></div>
+	   </div>
 	</div>
-
 	<!-- RequireJS setup -->
 	<!-- defer attribute: when present, it specifies that the script is executed when the page has finished parsing. -->
 	<script type="text/javascript" charset="UTF-8" defer="defer"

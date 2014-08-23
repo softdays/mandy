@@ -77,15 +77,21 @@ define(['angular',
 	            function ($rootScope, $scope, $location, CONTEXT_ROOT, user, utils) {
 	        		$rootScope.contextRoot = CONTEXT_ROOT;
 	        		$rootScope.user = user;
-//	        		$rootScope.isAdmin = function() { 
-//	        			return user.role == 'ROLE_ADMIN' || user.role == 'ROLE_MANAGER'; 
-//	        		};
 	        		user.$promise.then(function(resolvedUser) {
 	        			$rootScope.admin = (resolvedUser.role == 'ROLE_ADMIN' || resolvedUser.role == 'ROLE_MANAGER');
 	        			$rootScope.role = resolvedUser.role.substring(5, resolvedUser.role.length);
-	        			var param = utils.buildPathForCurrentMonth();
-		        		// param format =  yyyy/MM[01-12]
-		        		$location.path("/datagrid/"+param);
+		        		
+	        			if ($location.search().redirect) {
+	        				// pour supprimer la query string devenue inutile
+	        				// il faut ultiliser la méthode $location.url()
+	        				// see: http://stackoverflow.com/questions/17376416/angularjs-how-to-clear-query-parameters-in-the-url
+	        				$location.url($location.search().redirect);
+	        			} else {
+	        				// param format =  yyyy/MM[01-12]
+	        				var param = utils.buildPathForCurrentMonth();
+	        				$location.path("/datagrid/"+param);
+	        			}
+		        		
 	        	    });
 	        }]);
 	        

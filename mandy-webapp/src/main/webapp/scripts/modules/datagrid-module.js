@@ -217,6 +217,13 @@ define(['angular',
 	            	'datagrid', 'activities', 'imputations', '$timeout', 
 	            function ($rootScope, $scope, $location, $log, globals, utils, 
 	            		imputationService, datagrid, activities, imputations, $timeout) {
+	        	// détection du wild wild refresh
+	        	if ($rootScope.user == undefined) {
+	        		var currentPath = $location.path();
+        			//$location.path('/').search('redirect', currentPath); 
+        			$location.url('/?redirect='+currentPath);
+	        	}
+	        	
 	        	// Definition of the model
 	        	$rootScope.selectedTab = 1;
 	        	
@@ -352,7 +359,6 @@ define(['angular',
 	                		var tbody = angular.element('<tbody></tbody>');
 		                    angular.forEach(scope.activities, function(activity, index) {
 		                    	var row = angular.element('<tr></tr>');
-		                    	row.addClass('activity');
 		                    	row.attr("title", activity.longLabel);
 		                    	row.attr('data-activity-id', activity.id);
 		                    	if (index == scope.activities.length-1) {
@@ -363,6 +369,7 @@ define(['angular',
 		                    	row.tooltip({container: 'body'});
 		                    	tbody.append(row);
 		                    	var firstCell = angular.element('<td></td>');
+		                    	firstCell.addClass('activity');
 		                    	firstCell.text(activity.shortLabel);
 		                    	row.append(firstCell);
 			                    angular.forEach(scope.datagrid.weeks, function(week, index) {

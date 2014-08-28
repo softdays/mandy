@@ -20,9 +20,9 @@ define(['angular', 'moment'],
 		
 		var UtilsService = function()
 		{
-			var DATAGRID_PARAMS = "[year]/YYYY/[month]/MM";
+			 var DATAGRID_PARAMS = "[year]/YYYY/[month]/MM";
 			
-			this.formatDate = function(date) {
+			 this.formatDate = function(date) {
 				 var fDate = date.toJSON();
              	 return fDate.substring(0, fDate.indexOf('T'));
 			 };
@@ -91,7 +91,7 @@ define(['angular', 'moment'],
 			 this.formatQuota = function(quota) {
 				 switch(quota) {				 
 				 	case 0:
-				    	return "-";
+				    	return "0.00";
 				    case 0.25:
 				    	return "0.25";
 				    	
@@ -109,9 +109,14 @@ define(['angular', 'moment'],
 				} 
 			 };
 			 
-			 this.getNewQuota = function(oldQuota) {
-				 var q = oldQuota ? (+oldQuota) : 0;
-				 return q == 1 ? 0 : (q+0.25);
+			 this.getNewQuota = function(oldQuota, minus) {
+				 var q = (oldQuota && oldQuota != '-') ? (+oldQuota) : 0;
+				 if (minus) {
+					 return q == 0 ? 1 : (q-0.25);
+				 } else {
+					 return q == 1 ? 0 : (q+0.25);
+				 }
+				 
 			 };
 
 		};

@@ -253,14 +253,63 @@ define(['angular',
 	            	$location.path("/datagrid/"+utils.buildPathForCurrentMonth());
 	            };
 	            
+	            $scope.currentCellSelected = undefined;
+	            
 	            $scope.tableClickHandler = function(event) {
-	            	var ngCell = angular.element(event.target);
+	            	var ngCell = findTdCell(angular.element(event.target));
 	            	if (ngCell.hasClass("imputation")) {
-	            		processClickEventOnImputationCell(ngCell);
- 	            	}
+	            		//processClickEventOnImputationCell(ngCell);
+	            		//angular.element('#myModal').modal();
+	            		if ($scope.currentCellSelected) {
+	            			$scope.currentCellSelected.toggleClass("selected");
+		            		//$scope.currentCellSelected.find('.marker').toggleClass('invisible');
+	            		}
+	            		ngCell.toggleClass('selected');
+	            		//ngCell.find('.marker').toggleClass('invisible');
+	            		$scope.currentCellSelected = ngCell;
+ 	            	} 
+	            };
+	            
+	            $scope.tableDoubleClickHandler = function(event) {
+	            	var ngCell = findTdCell(angular.element(event.target));
+	            	$scope.detailsDialogImputationActivity = findLabel(ngCell.attr('data-activity-id'));
+            		$scope.detailsDialogImputationDate = ngCell.attr('data-date');
+            		var value = ngCell.find(".value").text();
+            		value = (value == "-") ? "0.00" : value;
+            		$scope.detailsDialogImputationValue = value;
+	            	angular.element("#imputation-details").modal();
+	            };
+	            
+	            $scope.updateCurrentValue = function(minus) {
+	            	var value = utils.getNewQuota(+$scope.detailsDialogImputationValue, minus);
+	            	$scope.detailsDialogImputationValue = utils.formatQuota(value);
 	            };
 	            
 	            // private methods
+	            
+	            var findTdCell = function(ngElem) {
+	            	if (ngElem == undefined) return undefined;
+	            	if (ngElem.prop("tagName") == 'TD') {
+	            		return ngElem;
+	            	} else {
+	            		return findTdCell(ngElem.parent());
+	            	}
+	            };
+	            
+	            
+	            var findLabel = function(activityId) {
+	            	 // je n'utilise pas un forEach angular car on ne peut pas 
+					 // utiliser break ou return à l'intérieur de la boucle
+					 // see: https://github.com/angular/angular.js/issues/263
+					 for (var i = 0; i < $scope.activities.length; i++) {
+						 if ($scope.activities[i].id == activityId) {
+		            			return $scope.activities[i].longLabel;
+		            	 }
+					 }
+	            	
+	            	return "Activité non retrouvée";
+	            };
+	            
 	            
 	            /** Process an imputation cell */
 	            var processClickEventOnImputationCell = function(ngCell) {
@@ -374,17 +423,23 @@ define(['angular',
 		                    	row.append(firstCell);
 			                    angular.forEach(scope.datagrid.weeks, function(week, index) {
 			                        angular.forEach(week.days, function(day, dIndex) {
-			                        	var elemDay = angular.element('<td class="imputation"></td>');	
-			                        	elemDay.attr('data-activity-id', activity.id);
-			                        	elemDay.attr('data-date', day.date);
-			                        	row.append(elemDay);
+			                        	var cellDay = angular.element('<td class="imputation"></td>');	
+			                        	//var marker = angular.element('<span class="marker invisible" />');
+			                        	var value = angular.element('<span class="value">-</span>');
+			                        	var elemDay = angular.element('<div></div>');
+			                        	//elemDay.append(marker);
+			                        	elemDay.append(value);
+			                        	cellDay.append(elemDay);
+			                        	cellDay.attr('data-activity-id', activity.id);
+			                        	cellDay.attr('data-date', day.date);
+			                        	row.append(cellDay);
 			                        	var activityImputations = scope.imputationsMap[activity.id];
 			                        	if (activityImputations) {
 			                        		var imputation = utils.findImputation(activityImputations, day.date);
 				                        	if (imputation) {
-				                        		elemDay.attr('data-imputation-id', imputation.imputationId);
-					                        	elemDay.attr('data-quota', imputation.quota);
-					                        	elemDay.text(utils.formatQuota(imputation.quota));
+				                        		cellDay.attr('data-imputation-id', imputation.imputationId);
+					                        	cellDay.attr('data-quota', imputation.quota);
+					                        	value.text(utils.formatQuota(imputation.quota));
 				                        	};
 			                        	};
 			                        });

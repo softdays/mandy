@@ -68,7 +68,8 @@ define(['angular',
 						{
 	            			redirectTo: '/'
 						}
-		        	);	       
+		        	);	
+		            
 		        }
 	        ]);
 	

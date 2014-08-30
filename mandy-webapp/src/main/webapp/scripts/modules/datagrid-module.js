@@ -115,12 +115,13 @@ define(['angular',
             		   );
                     },
                     
-                    createImputation: function(userId, activityId, date, quota, callback) {
+                    createImputation: function(userId, activityId, date, quota, comment) {
                     	var imputations = new Imputations();
                     	imputations.resourceId = userId;
                     	imputations.activityId = activityId;
                     	imputations.date = date;
                     	imputations.quota = quota;
+                    	imputations.comment = comment;
                     	// attention les méthodes d'instances Angular#Resource 
                     	// retournent directement la promise
                     	return imputations.$save(
@@ -151,7 +152,7 @@ define(['angular',
                     },
                     
                     updateImputation: function(imputation) {
-                    	Imputations.update( { id:imputation.imputationId }, 
+                    	return Imputations.update( { id:imputation.imputationId }, 
                     			imputation, 
                     			angular.noop, 
                     			function (httpResponse) { 
@@ -182,7 +183,19 @@ define(['angular',
     		// Configuration of the router
     		// You need to add the "Provider" suffix to our custom provider, if not Angular doesn't recognize it
     		module.config(['$routeProvider', function ($routeProvider) {
-	            // Declare module routes
+    			
+    			 /**
+    			  * Accès au menu
+    			  */ 
+    			 $routeProvider.when('/datagrid', 
+					{
+            			redirectTo: '/'
+					}
+	        	 );
+    			
+    			 /**
+    			  * Navigation
+    			  */
 	        	 $routeProvider.when(
         			 '/datagrid/year/:year/month/:month', 
         			 {
@@ -258,28 +271,40 @@ define(['angular',
 	            $scope.tableClickHandler = function(event) {
 	            	var ngCell = findTdCell(angular.element(event.target));
 	            	if (ngCell.hasClass("imputation")) {
-	            		//processClickEventOnImputationCell(ngCell);
-	            		//angular.element('#myModal').modal();
 	            		if ($scope.currentCellSelected) {
 	            			$scope.currentCellSelected.toggleClass("selected");
-		            		//$scope.currentCellSelected.find('.marker').toggleClass('invisible');
 	            		}
 	            		ngCell.toggleClass('selected');
-	            		//ngCell.find('.marker').toggleClass('invisible');
 	            		$scope.currentCellSelected = ngCell;
  	            	} 
 	            };
 	            
+	            /**
+	             * Table double-click handler
+	             */
 	            $scope.tableDoubleClickHandler = function(event) {
-	            	var ngCell = findTdCell(angular.element(event.target));
-	            	$scope.detailsDialogImputationActivity = findLabel(ngCell.attr('data-activity-id'));
+	            	//var ngCell = findTdCell(angular.element(event.target));
+	            	if (!$scope.currentCellSelected) return;
+	            	
+	            	var ngCell = $scope.currentCellSelected;
+	            	var activityId = ngCell.attr('data-activity-id');
+	            	$scope.detailsDialogImputationActivity = findLabel(activityId);
+	            	var imputationId = ngCell.attr('data-imputation-id');
+	            	if (imputationId) {
+	            		$scope.detailsDialogImputationComment = findComment(activityId, imputationId);
+	            	} else {
+	            		$scope.detailsDialogImputationComment = "";
+	            	}          		
             		$scope.detailsDialogImputationDate = ngCell.attr('data-date');
             		var value = ngCell.find(".value").text();
-            		value = (value == "-") ? "0.00" : value;
+            		value = utils.formatQuota(value);
             		$scope.detailsDialogImputationValue = value;
 	            	angular.element("#imputation-details").modal();
 	            };
 	            
+	            /**
+	             * Allows to update quota of the imputation 'copy' displayed in modal.
+	             */
 	            $scope.updateCurrentValue = function(minus) {
 	            	var value = utils.getNewQuota(+$scope.detailsDialogImputationValue, minus);
 	            	$scope.detailsDialogImputationValue = utils.formatQuota(value);
@@ -310,48 +335,147 @@ define(['angular',
 	            	return "Activité non retrouvée";
 	            };
 	            
+	            var findComment = function(activityId, imputationId) {	            	
+	            	var comment = "";
+                	var imputation = findImputation(activityId, imputationId);
+					if (imputation) {
+						comment = imputation.comment;
+					} 
+	            	
+	            	return comment;
+	            };
 	            
-	            /** Process an imputation cell */
-	            var processClickEventOnImputationCell = function(ngCell) {
+	            var findImputation = function(activityId, imputationId) {	
+	            	// je n'utilise pas un forEach angular car on ne peut pas 
+					// utiliser break ou return à l'intérieur de la boucle
+					// see: https://github.com/angular/angular.js/issues/263
+	            	var imputations = $scope.imputationsMap[activityId] || [];
+	            	for (var i = 0; i < imputations.length; i++) {
+						 if (imputations[i].imputationId == imputationId) {
+		            			return imputations[i];
+		            	 }
+					 }
+	            	
+	            	return undefined;
+	            };
+	            
+	            var findImputationIndex = function(activityId, imputationId) {	
+	            	// je n'utilise pas un forEach angular car on ne peut pas 
+					// utiliser break ou return à l'intérieur de la boucle
+					// see: https://github.com/angular/angular.js/issues/263
+	            	var imputations = $scope.imputationsMap[activityId] || [];
+	            	for (var i = 0; i < imputations.length; i++) {
+						 if (imputations[i].imputationId == imputationId) {
+		            			return i;
+		            	 }
+					 }
+	            	
+	            	return -1;
+	            };
+	            
+	            /**
+	             * Save from modal data.
+	             */
+	            $scope.saveImputationFromDetails = function() {	            	
+	            	processClickEventOnImputationCell(
+	            			$scope.currentCellSelected, 
+	            			+$scope.detailsDialogImputationValue, 
+	            			$scope.detailsDialogImputationComment);
+	            	
+	            	angular.element('#imputation-details').modal('hide');
+	            };
+	            
+	            
+	            /** 
+	             * Process an imputation cell 
+	             */
+	            var processClickEventOnImputationCell = function(ngCell, newQuota, newComment) {
             		var activityId = ngCell.attr('data-activity-id');
             		$log.debug("activity id="+activityId);
             		var date = ngCell.attr('data-date');
             		$log.debug("date="+date);
             		var imputationId = ngCell.attr('data-imputation-id');
-            		// mettre à jour le modèle
-            		var quota = ngCell.attr('data-quota');
-            		var newQuota = utils.getNewQuota(quota);
-            		ngCell.attr('data-quota', newQuota); 
-            		// mettre à jour la vue
-            		ngCell.text(utils.formatQuota(newQuota));
-            		// synchroniser le backend
-            		if (imputationId) {
-            			if (newQuota == 0) {
-            				var delRes = imputationService.deleteImputation(+imputationId);
-            				delRes.$promise.then(function(data){
-            					ngCell.removeAttr ('data-imputation-id');
-            					ngCell.removeAttr ('data-quota');
-            				});
-            			} else {
-            				var imputation = {};
-            				imputation.imputationId= (+imputationId);
-	            			imputation.activityId= (+activityId);
-	            			imputation.resourceId= $rootScope.user.id;
-	            			imputation.date = date;
-	            			imputation.quota = newQuota;
-	            			imputationService.updateImputation(imputation);
-            			}
-            		} else {
-            			var res = imputationService.createImputation(
-        					+$rootScope.user.resourceId, 
-        					+activityId, 
-        					date, 
-        					newQuota
-            		    );
-            			res.then(function(createdImputation){
-            				ngCell.attr('data-imputation-id', createdImputation.imputationId);
-            			});
+            		// synchroniser le modèle client
+            		var syncBackendRequired = isSyncRequired(activityId, imputationId, newQuota, newComment);
+            		if (syncBackendRequired) {
+                		//var quota = ngCell.attr('data-quota');
+                		//var newQuota = utils.getNewQuota(quota);
+                		
+                		// synchroniser le backend
+                		if (imputationId) {
+                			if (newQuota == 0) {
+                				var delRes = imputationService.deleteImputation(+imputationId);
+                				delRes.$promise.then(function(data){
+                					ngCell.removeAttr('data-imputation-id');
+                					ngCell.removeAttr('data-quota');
+                					// synchroniser le modèle client
+                					var index = findImputationIndex(activityId, imputationId);
+                					$scope.imputationsMap[activityId].splice(index, 1);
+                					// synchroniser les données de la cellule
+    	            				synchronizeCellData(ngCell, newQuota);
+                				});
+                			} else {
+                				var imputation = {};
+                				imputation.imputationId= (+imputationId);
+    	            			imputation.activityId= (+activityId);
+    	            			imputation.resourceId= $rootScope.user.id;
+    	            			imputation.date = date;
+    	            			imputation.quota = newQuota;
+    	            			imputation.comment = newComment;
+    	            			var updateRes = imputationService.updateImputation(imputation);
+    	            			updateRes.$promise.then(function(){
+    	            				// synchroniser le modèle client
+    	            				var i = findImputation(activityId, imputationId);
+    	            				i.quota = newQuota;
+    	            				i.comment = newComment;
+    	            				// synchroniser les données de la cellule
+    	            				synchronizeCellData(ngCell, newQuota);
+    	            			});
+                			}
+                		} else {
+                			var createRes = imputationService.createImputation(
+            					+$rootScope.user.resourceId, 
+            					+activityId, 
+            					date, 
+            					newQuota,
+            					newComment
+                		    );
+                			createRes.then(function(createdImputation){
+                				// synchroniser le modèle client
+                				$scope.imputationsMap[activityId].push(createdImputation);
+                				// synchroniser les données de la cellule
+                				synchronizeCellData(ngCell, newQuota, createdImputation.imputationId);
+                			});
+                		}
             		}
+	            };
+	            
+	            /**
+	             * Synchronize les éléments de vue stockant les informations de quota.
+	             */
+	            var synchronizeCellData = function(ngCell, newQuota, createdId) {
+	            	ngCell.attr('data-quota', newQuota); 
+            		ngCell.find(".value").text(utils.formatQuotaForGrid(newQuota));
+            		if (createdId) {
+            			ngCell.attr('data-imputation-id', createdId);
+            		}
+	            }
+	            
+	            /**
+	             * Retourne vrai si au moins une des nouvelles données diffère de son ancienne valeur, faux sinon.
+	             */
+	            var isSyncRequired = function(activityId, imputationId, newQuota, newComment) {
+	            	var syncRequired = true;
+	            	var imputation = findImputation(activityId, imputationId);
+	            	if (imputation) {
+	            		syncRequired = imputation.comment != newComment || imputation.quota != newQuota;
+//	            		if (synRequired) {
+//	            			imputation.quota = +newQuota;
+//		            		imputation.comment = newComment;
+//	            		}
+	            	} 
+	            	// sinon il s'agit d'une création et le modèle sera mis à jour au retour de la requête
+	            	return syncRequired;
 	            };
             
 	        }]);

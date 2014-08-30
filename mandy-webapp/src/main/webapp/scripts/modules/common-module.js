@@ -89,7 +89,9 @@ define(['angular', 'moment'],
 			 };
 			 
 			 this.formatQuota = function(quota) {
-				 switch(quota) {				 
+				 quota = quota || 0;
+				 quota = quota == "-" ? 0 : quota;
+				 switch(+quota) {				 
 				 	case 0:
 				    	return "0.00";
 				    case 0.25:
@@ -107,6 +109,11 @@ define(['angular', 'moment'],
 				    default:
 				    	return "Err";
 				} 
+			 };
+			 
+			 this.formatQuotaForGrid = function(quota) {
+				 var q = this.formatQuota(quota);
+				 return q == "0.00" ? "-" : q;
 			 };
 			 
 			 this.getNewQuota = function(oldQuota, minus) {
@@ -140,7 +147,7 @@ define(['angular', 'moment'],
 		
 		module.service('Globals', GlobalsService);
 		
-		var ErrorService = ['$rootScope', '$location', '$log', function($rootScope, $location, $log) {
+		var ErrorService = ['$rootScope', '$location', '$log', '$timeout', function($rootScope, $location, $log, $timeout) {
         	
 			this.errorHandler = function(httpResponse, context)  
 			{
@@ -151,7 +158,10 @@ define(['angular', 'moment'],
             	$log.debug(title + ", "+ context, +", "+details);
             	$rootScope.alert = { title:title, context:context, details:details };            	
             	$rootScope.selectedTab = 0;
-            	$location.path("/error");
+            	// delay to be sure the modal (if opened) is closed before redirection
+            	$timeout(function(){
+            		$location.path("/error");
+            	}, 200);
    		 	};
                 
 		}];

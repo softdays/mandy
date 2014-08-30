@@ -29,6 +29,7 @@ import org.softdays.mandy.web.security.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 /**
  * Created by rpatriarche on 09/03/14.
@@ -157,6 +158,12 @@ public class MandyResource {
     @Consumes(MandyConstants.JSON_UTF8)
     @Secured("ROLE_USER")
     public void updateImputation(ImputationDto imputationDto) {
+	String comment = imputationDto.getComment();
+	if (StringUtils.hasText(comment)) {
+	    if (comment.equals("booom")) {
+		throw new RuntimeException("Booom");
+	    }
+	}
 	imputationService.updateImputation(imputationDto);
     }
 

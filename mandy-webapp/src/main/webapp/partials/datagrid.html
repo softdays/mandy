@@ -26,12 +26,12 @@
                         </button>
                     </div>
                     <div class="row">
-	                   <textarea class="form-control" rows="3">{{detailsDialogImputationComment}}</textarea>
+	                   <textarea class="form-control" rows="3" ng-model="detailsDialogImputationComment">{{detailsDialogImputationComment}}</textarea>
                     </div>
 				</div>
 				<div class="modal-footer">
 				    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-					<button type="button" class="btn btn-primary btn-sm">Sauvegarder</button>
+					<button type="button" class="btn btn-primary btn-sm" ng-click="saveImputationFromDetails()">Sauvegarder</button>
 				</div>
 			</div>
 			<!-- /.modal-content -->

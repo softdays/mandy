@@ -280,7 +280,7 @@ define(['angular',
 	            };
 	            
 	            /**
-	             * Table double-click handler
+	             * Table double-click handler.
 	             */
 	            $scope.tableDoubleClickHandler = function(event) {
 	            	//var ngCell = findTdCell(angular.element(event.target));
@@ -297,8 +297,7 @@ define(['angular',
 	            	}          		
             		$scope.detailsDialogImputationDate = ngCell.attr('data-date');
             		var value = ngCell.find(".value").text();
-            		value = utils.formatQuota(value);
-            		$scope.detailsDialogImputationValue = value;
+            		updateDetailsDialogImputationValue(value);
 	            	angular.element("#imputation-details").modal();
 	            };
 	            
@@ -307,10 +306,17 @@ define(['angular',
 	             */
 	            $scope.updateCurrentValue = function(minus) {
 	            	var value = utils.getNewQuota(+$scope.detailsDialogImputationValue, minus);
-	            	$scope.detailsDialogImputationValue = utils.formatQuota(value);
+	            	updateDetailsDialogImputationValue(value);
 	            };
 	            
 	            // private methods
+	            
+	            var updateDetailsDialogImputationValue = function(newValue) {
+	            	var value = utils.formatQuota(newValue);
+	            	$scope.progressValue = value*100;
+	            	$scope.progressValueStyle = {width:($scope.progressValue+'%')};
+	            	$scope.detailsDialogImputationValue = value;
+	            };
 	            
 	            var findTdCell = function(ngElem) {
 	            	if (ngElem == undefined) return undefined;

@@ -17,7 +17,11 @@
 		                    ng-disabled="detailsDialogImputationValue == '0.00'">
 		                    <span class="glyphicon glyphicon-minus"></span>
 		                </button>
-		                <span class="current-value">{{detailsDialogImputationValue}}</span>
+		                <div class="progress">
+						  <div class="progress-bar" role="progressbar" aria-valuenow="{{progressValue}}" aria-valuemin="0" aria-valuemax="100" ng-style="progressValueStyle">
+						    {{detailsDialogImputationValue}}
+						  </div>
+						</div>
 		                <button type="button" class="btn btn-default"
                             title="Plus"
                             ng-click="updateCurrentValue()"

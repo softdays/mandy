@@ -33,6 +33,9 @@
 @env2px: 0.1428571428571429em; /* 2:14 */
 @env3px: 0.2142857142857143em; /* 3:14 */
 @env5px: 0.3571428571428571em; /* 5:14 */
+@env20px: 1.428571428571429em; /* 20:14 */
+@env27px: 1.928571428571429em; /* 27:14 */
+
 
 @font-size-xs: 0.8em;
 @font-size-sm: 0.9em;
@@ -342,15 +345,19 @@ body {
 
 #imputation-details {
 	
-	.current-value {
-	   font-weight: bold;
-	   padding: 3px 5px;
+	.progress {
+	   width: 478px;
 	   display: inline-block;
-	   width: 80px;
-	   text-align: center;
-	   font-size: 2.0em;
-	   position: relative;
-	   top: -2px;
+	   vertical-align:middle;
+	   margin-bottom: 0;
+	   height: 25px;
+	   
+	   .progress-bar {
+	       line-height: 27px;
+	       font-size: @env20px; /* 20:14 */
+	       font-weight: bold;
+	       padding-left: @env5px;
+	   }
 	}
 	
 	.modal-body {
@@ -364,7 +371,7 @@ body {
 	   }
 	   
 	   .btn {
-	       vertical-align: top;
+	       vertical-align:middle;
 	   }
 	}
 

@@ -125,6 +125,28 @@ define(['angular', 'moment'],
 				 }
 				 
 			 };
+			 
+			 this.getCompletenessGlyphiconClass = function(imputationsMap, strDate) {
+				// on additionne l'ensemble des quotas à la date indiquée
+				 var allQuotasAtDate = 0;
+				angular.forEach(imputationsMap, function(imputations, activityId) {
+					for (var i = 0; i < imputations.length; i++) {
+						 if (imputations[i].date == strDate) {
+							 allQuotasAtDate+= imputations[i].quota;
+							 break;
+						 }
+					 }
+				});
+				// On détermine l'icône à utiliser
+				var glyphicon = 'glyphicon-ok';
+				if (allQuotasAtDate < 1) {
+				    glyphicon = 'glyphicon-arrow-down';
+				} else if (allQuotasAtDate > 1) {
+					glyphicon = 'glyphicon-arrow-up';
+				} 
+				
+				return glyphicon;
+			 };
 
 		};
 		

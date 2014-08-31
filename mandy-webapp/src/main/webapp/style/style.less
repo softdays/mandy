@@ -210,7 +210,6 @@ body {
 	               &.day {
 	                   text-align: center;
 	                   background-color: @color-month-next;
-	                   padding: 0;
 	                   
 	                   &.current-month {
 	                        background-color:@color-month-current;
@@ -221,20 +220,12 @@ body {
 	                       height: 100%;
 	                   
 	                       .day-value {
-	                           position: relative;
-	                           display: inline-block;
-	                           top: -5px;
-	                           /*
-	                           left: -20px;
-	                           */
+	                           margin-right:2px;
 	                           
 	                       }
 	                       
 	                       .completeness {
-	                           position: relative;
-	                           display: inline-block;
-	                           top: -8px;
-	                           right: -24px;
+	                           margin-left:2px;
 	                       }
 	                   }
 	               }

@@ -279,6 +279,7 @@ define(['angular',
  	            	} 
 	            };
 	            
+	            
 	            /**
 	             * Table double-click handler.
 	             */
@@ -401,14 +402,12 @@ define(['angular',
             		var date = ngCell.attr('data-date');
             		$log.debug("date="+date);
             		var imputationId = ngCell.attr('data-imputation-id');
-            		// synchroniser le modèle client
+            		// est-ce qu'une modification doit être synchronisée ?
             		var syncBackendRequired = isSyncRequired(activityId, imputationId, newQuota, newComment);
             		if (syncBackendRequired) {
-                		//var quota = ngCell.attr('data-quota');
-                		//var newQuota = utils.getNewQuota(quota);
-                		
                 		// synchroniser le backend
                 		if (imputationId) {
+                			// DELETE CASE
                 			if (newQuota == 0) {
                 				var delRes = imputationService.deleteImputation(+imputationId);
                 				delRes.$promise.then(function(data){
@@ -419,8 +418,11 @@ define(['angular',
                 					$scope.imputationsMap[activityId].splice(index, 1);
                 					// synchroniser les données de la cellule
     	            				synchronizeCellData(ngCell, newQuota);
+    	            				// mettre à jour l'indicateur de complètude
+    	            				updateCompletenessMarker(date);
                 				});
                 			} else {
+                				// UPDATE CASE
                 				var imputation = {};
                 				imputation.imputationId= (+imputationId);
     	            			imputation.activityId= (+activityId);
@@ -436,9 +438,12 @@ define(['angular',
     	            				i.comment = newComment;
     	            				// synchroniser les données de la cellule
     	            				synchronizeCellData(ngCell, newQuota);
+    	            				// mettre à jour l'indicateur de complètude
+    	            				updateCompletenessMarker(date);
     	            			});
                 			}
                 		} else {
+                			// CREATE CASE
                 			var createRes = imputationService.createImputation(
             					+$rootScope.user.resourceId, 
             					+activityId, 
@@ -451,6 +456,8 @@ define(['angular',
                 				$scope.imputationsMap[activityId].push(createdImputation);
                 				// synchroniser les données de la cellule
                 				synchronizeCellData(ngCell, newQuota, createdImputation.imputationId);
+                				// mettre à jour l'indicateur de complètude
+	            				updateCompletenessMarker(date);
                 			});
                 		}
             		}
@@ -465,7 +472,26 @@ define(['angular',
             		if (createdId) {
             			ngCell.attr('data-imputation-id', createdId);
             		}
-	            }
+	            };
+	            
+	            /**
+	             * Mets à jour l'indicateur de complètude de la colonne correspondant à la date donnée.
+	             */
+	            var updateCompletenessMarker = function(strDate){
+	            	// retrieve element to update
+	            	var elem = angular.element("th.day[data-date='"+strDate+"'] .completeness");
+	            	if (elem) {
+	            		// remove previous glyphicon class name
+	            		//var regex = /(\s)*(glyphicon-.*?)(?=\s)/g; 
+	            		//elem.className =  elem.className.replace(regex, '');
+	            		elem.removeClass('glyphicon-ok glyphicon-arrow-up glyphicon-arrow-down');
+	            		// add new glyphicon class name
+	            		var glyphiconClass = utils.getCompletenessGlyphiconClass($scope.imputationsMap, strDate);
+	            		elem.addClass(glyphiconClass);
+	            	} else {
+	            		$log.error("Completeness cell not found");
+	            	}
+	            };
 	            
 	            /**
 	             * Retourne vrai si au moins une des nouvelles données diffère de son ancienne valeur, faux sinon.
@@ -486,15 +512,18 @@ define(['angular',
             
 	        }]);
 	        
-	        module.directive('mandyDatagridHeader', ["Utils", function(utils) {
+	        module.directive('mandyDatagridHeader', ["$q", "Utils", function($q, utils) {
 	            return {
 	                restrict: 'A',
 	                scope:false,
 	                replace: false,
 	                transclude:false,
-	                link: function (scope, element) {	                   
-	                    scope.datagrid.$promise.then(function(resolvedDatagrid){
-	                    	var weeks = resolvedDatagrid.weeks;
+	                link: function (scope, element) {
+	                	// on doit disposer de la datagrid et des imputations
+	                	// pour pouvoir réaliser le traitement
+	                	$q.all([scope.datagrid.$promise, 
+	                	        scope.imputationsMap.$promise]).then(function(){
+	                    	var weeks = scope.datagrid.weeks;
 	                    	var elemDays = angular.element('<tr class="days"></tr>');
 	                    	var activities = angular.element('<th class="header-activities">Activités</th>');
 	                    	elemDays.append(activities);	
@@ -502,16 +531,16 @@ define(['angular',
 		                        angular.forEach(week.days, function(day, dIndex) {
 		                        	var elemDay = angular.element('<th class="day"></th>');	
 		                        	var elemDayContentWrapper = angular.element('<div></div>');	
-		                        	//var spanCompleteness = angular.element('<span class="completeness glyphicon"></span>');	
-		                        	//var completeness = utils.getCompleteness(); 
-		                        	//spanCompleteness.addClass();
+		                        	var spanCompleteness = angular.element('<span class="completeness glyphicon"></span>');	
+		                        	var completenessGlyphiconIcon = utils.getCompletenessGlyphiconClass(scope.imputationsMap, day.date); 
+		                        	spanCompleteness.addClass(completenessGlyphiconIcon);
 		                        	var spanDayValue = angular.element('<span class="day-value"></span>');	
 		                        	spanDayValue.text(utils.getDay(day.date));
 		                        	elemDay.attr("data-date", day.date);		                        	
-		                        	//elemDayContentWrapper.append(spanCompleteness);
-		                        	elemDayContentWrapper.append(spanDayValue);		                        	
+		                        	elemDayContentWrapper.append(spanDayValue);	
+		                        	elemDayContentWrapper.append(spanCompleteness);
 		                        	elemDay.append(elemDayContentWrapper);
-		                        	if (utils.areMonthsEqual(resolvedDatagrid.month, day.date)) {
+		                        	if (utils.areMonthsEqual(scope.datagrid.month, day.date)) {
 		                        		elemDay.addClass("current-month");
 		                        	}
 		                        	elemDays.append(elemDay);
@@ -580,6 +609,7 @@ define(['angular',
 	                }
 	            }
 	        }]);
+	        
 	        
 	        return module;
         }

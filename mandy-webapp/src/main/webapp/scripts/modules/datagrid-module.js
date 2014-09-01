@@ -279,6 +279,17 @@ define(['angular',
  	            	} 
 	            };
 	            
+	            /**
+	             * Table right-click handler;
+	             */
+	            $scope.tableRightClickHandler = function(event) {
+	            	var ngCell = findTdCell(angular.element(event.target));
+	            	if (ngCell.hasClass("selected")) {
+	            		var oldQuota = ngCell.attr("data-quota");
+	            		var newQuota = utils.getNewQuota(oldQuota);
+	            		updateImputation(ngCell, newQuota, -1);
+	            	}
+	            };
 	            
 	            /**
 	             * Table double-click handler.
@@ -384,8 +395,7 @@ define(['angular',
 	             * Save from modal data.
 	             */
 	            $scope.saveImputationFromDetails = function() {	            	
-	            	processClickEventOnImputationCell(
-	            			$scope.currentCellSelected, 
+	            	updateImputation($scope.currentCellSelected, 
 	            			+$scope.detailsDialogImputationValue, 
 	            			$scope.detailsDialogImputationComment);
 	            	
@@ -394,9 +404,9 @@ define(['angular',
 	            
 	            
 	            /** 
-	             * Process an imputation cell 
+	             * Process new data entries on imputation cell.
 	             */
-	            var processClickEventOnImputationCell = function(ngCell, newQuota, newComment) {
+	            var updateImputation = function(ngCell, newQuota, newComment) {
             		var activityId = ngCell.attr('data-activity-id');
             		$log.debug("activity id="+activityId);
             		var date = ngCell.attr('data-date');
@@ -423,19 +433,24 @@ define(['angular',
                 				});
                 			} else {
                 				// UPDATE CASE
+                				var oldImputation = findImputation(activityId, imputationId);
                 				var imputation = {};
                 				imputation.imputationId= (+imputationId);
     	            			imputation.activityId= (+activityId);
     	            			imputation.resourceId= $rootScope.user.id;
     	            			imputation.date = date;
     	            			imputation.quota = newQuota;
-    	            			imputation.comment = newComment;
+    	            			if (typeof newComment === 'number' && newComment==-1) {
+    	            				imputation.comment = oldImputation.comment;
+    	            			} else {
+    	            				imputation.comment = newComment;
+    	            			}
     	            			var updateRes = imputationService.updateImputation(imputation);
     	            			updateRes.$promise.then(function(){
     	            				// synchroniser le modèle client
     	            				var i = findImputation(activityId, imputationId);
-    	            				i.quota = newQuota;
-    	            				i.comment = newComment;
+    	            				i.quota = imputation.quota;
+    	            				i.comment = imputation.comment;
     	            				// synchroniser les données de la cellule
     	            				synchronizeCellData(ngCell, newQuota);
     	            				// mettre à jour l'indicateur de complètude
@@ -500,11 +515,13 @@ define(['angular',
 	            	var syncRequired = true;
 	            	var imputation = findImputation(activityId, imputationId);
 	            	if (imputation) {
-	            		syncRequired = imputation.comment != newComment || imputation.quota != newQuota;
-//	            		if (synRequired) {
-//	            			imputation.quota = +newQuota;
-//		            		imputation.comment = newComment;
-//	            		}
+	            		if (typeof newComment === 'number' && newComment==-1) {
+	            			// on ne doit pas prendre en compte le commentaire
+	            			syncRequired = imputation.quota != newQuota;
+	            		} else {
+	            			syncRequired = imputation.comment != newComment || imputation.quota != newQuota;
+	            		}
+	            		
 	            	} 
 	            	// sinon il s'agit d'une création et le modèle sera mis à jour au retour de la requête
 	            	return syncRequired;
@@ -610,6 +627,17 @@ define(['angular',
 	            }
 	        }]);
 	        
+	        module.directive('ngRightClick', function($parse) {
+	            return function(scope, element, attrs) {
+	                var fn = $parse(attrs.ngRightClick);
+	                element.bind('contextmenu', function(event) {
+	                    scope.$apply(function() {
+	                        event.preventDefault();
+	                        fn(scope, {$event:event});
+	                    });
+	                });
+	            };
+	        });
 	        
 	        return module;
         }

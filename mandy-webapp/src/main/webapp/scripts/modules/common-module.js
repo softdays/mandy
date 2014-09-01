@@ -123,7 +123,6 @@ define(['angular', 'moment'],
 				 } else {
 					 return q == 1 ? 0 : (q+0.25);
 				 }
-				 
 			 };
 			 
 			 this.getCompletenessGlyphiconClass = function(imputationsMap, strDate) {

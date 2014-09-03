@@ -20,7 +20,11 @@ window.require && (function (requirejs) {
             // 'Package' based for our application
             'mandy': '.',
             'mandy-common': './modules/common-module',
-            'mandy-datagrid': './modules/datagrid-module',
+            'mandy-datagrid': './modules/datagrid/datagrid-module',
+            'mandy-datagrid-controller': './modules/datagrid/datagrid-controller',
+            'mandy-datagrid-service': './modules/datagrid/datagrid-services',
+            'mandy-datagrid-directive': './modules/datagrid/datagrid-directives',
+            'mandy-datagrid-route': './modules/datagrid/datagrid-routes',
             'mandy-user': './modules/user-module',
             // Templates path
             'partials': '../partials/',
@@ -32,7 +36,6 @@ window.require && (function (requirejs) {
             'angular-route': '../frameworks/angular/angular-route',
             'angular-cookies': '../frameworks/angular/angular-cookies',
             'moment': '../frameworks/moment/moment-with-locales.min'
-            
         },
 
         //urlArgs: 'timestamp=' + Date.now(), // To prevent caching

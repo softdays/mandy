@@ -16,7 +16,7 @@ define(['angular', 'moment'],
 		// configuration de la librairie Moment.js
 		moment.locale('fr');
 
-		var module = angular.module('CommonModule', []);
+		var module = angular.module('mdCommon', []);
 		
 		var UtilsService = function()
 		{

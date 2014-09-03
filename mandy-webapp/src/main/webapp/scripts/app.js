@@ -17,7 +17,7 @@ define(['angular',
         {
     		'use strict';
 
-    		var app = angular.module('mandyApp', ['ngRoute', 'CommonModule', 'UserModule', 'DatagridModule']);
+    		var app = angular.module('mandyApp', ['ngRoute', 'mdCommon', 'mdUser', 'mdDatagrid']);
     		
     		app.run(["$rootScope", function ($rootScope) {
 					// définition des variables globales
@@ -101,15 +101,15 @@ define(['angular',
 			
 			app.constant('CONTEXT_ROOT', contextRootValue);
 			
-			app.provider("ContextRoot", function() {
-				this.$get = function() {
-				    return {
-				      getValue: function() {
-				        return "/mandy";
-				      }
-				    };
-				 };
-			});
+//			app.provider("ContextRoot", function() {
+//				this.$get = function() {
+//				    return {
+//				      getValue: function() {
+//				        return "/mandy";
+//				      }
+//				    };
+//				 };
+//			});
 	        
 	        return app;
 });

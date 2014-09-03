@@ -17,7 +17,7 @@ define(['angular',
         {
     		'use strict';
 
-    		var module = angular.module('UserModule', ['ngRoute', 'ngResource', 'ngCookies', 'CommonModule']);
+    		var module = angular.module('mdUser', ['ngRoute', 'ngResource', 'ngCookies', 'mdCommon']);
     		
    		
     		module.service('UserService', ['$resource', '$cookieStore', '$log', 'CONTEXT_ROOT', 'ErrorService', 

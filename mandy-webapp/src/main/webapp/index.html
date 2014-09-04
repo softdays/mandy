@@ -39,9 +39,9 @@
 			<div class="row">
 				<ul class="nav nav-tabs" role="tablist">
 				  <li ng-class="{active: 1==selectedTab}"><a ng-href="#/datagrid"><span class="hidden-xxs">Grille de saisie</span><span class="visible-xxs-inline">Saisie</span></a></li>	
-				  <li ng-class="{active: 4==selectedTab}"><a ng-href="#/reporting"><span class="hidden-xxs">Récapitulatifs</span><span class="visible-xxs-inline">Récap.</span></a></li>		  
-				  <li ng-class="{active: 2==selectedTab}" ng-show="admin"><a ng-href="#/admin"><span class="hidden-xxs">Administration</span><span class="visible-xxs-inline">Admin.</span></a></li>
-				  <li ng-class="{active: 3==selectedTab}"><a ng-href="#/settings"><span class="hidden-xxs">Préférences</span><span class="visible-xxs-inline">Préf.</span></a></li>
+				  <li ng-class="{active: 4==selectedTab, disabled:true}"><a ng-href="#/reporting" ng-disabled="true"><span class="hidden-xxs">Récapitulatifs</span><span class="visible-xxs-inline">Récap.</span></a></li>		  
+				  <li ng-class="{active: 2==selectedTab, disabled:true}" ng-show="admin"><a ng-href="#/admin" ng-disabled="true"><span class="hidden-xxs">Administration</span><span class="visible-xxs-inline">Admin.</span></a></li>
+				  <li ng-class="{active: 3==selectedTab, disabled:true}"><a ng-href="#/settings" ng-disabled="true"><span class="hidden-xxs">Préférences</span><span class="visible-xxs-inline">Préf.</span></a></li>
 				</ul>
 			</div>
 	   </div>

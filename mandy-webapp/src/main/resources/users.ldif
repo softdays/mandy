@@ -3,7 +3,7 @@ objectclass: top
 objectclass: organizationalUnit
 ou: people
 
-dn: uid=rod,ou=people,dc=springframework,dc=org
+dn: uid=repatriarche,ou=people,dc=springframework,dc=org
 objectclass: top
 objectclass: person
 objectclass: organizationalPerson
@@ -14,25 +14,36 @@ givenName: Rémi
 uid: repatriarche
 userPassword: repatriarche
 
-dn: uid=dianne,ou=people,dc=springframework,dc=org
+dn: uid=fcharbonnier1,ou=people,dc=springframework,dc=org
 objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
-cn: Dianne Emu
-sn: Emu
-givenName: Dianne
-uid: dianne
-userPassword: emu
+cn: François Charbonnier
+sn: Charbonnier
+givenName: François
+uid: fcharbonnier1
+userPassword: fcharbonnier1
 
-dn: uid=scott,ou=people,dc=springframework,dc=org
+dn: uid=chonillo,ou=people,dc=springframework,dc=org
 objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
-cn: Scott
-sn: Wombat
-givenName: Scott
-uid: scott
-userPassword: wombat
+cn: Christophe Onillon
+sn: Onillon
+givenName: Christophe
+uid: chonillo
+userPassword: chonillo
+
+dn: uid=epelaic,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Eddy Pelaic
+sn: Pelaic
+givenName: Eddy
+uid: epelaic
+userPassword: epelaic
 

@@ -15,6 +15,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
 import org.softdays.mandy.config.Configuration;
@@ -108,11 +109,10 @@ public class MandyResource {
 	try {
 	    date = calendarService.getFirstDayOfTheMonth(year, month);
 	} catch (ParseException e) {
-	    throw new WebApplicationException(
-		    Response.status(
-			    com.sun.jersey.api.client.ClientResponse.Status.BAD_REQUEST)
-			    .entity("Couldn't parse date string: "
-				    + e.getMessage()).build());
+	    throw new WebApplicationException(Response
+		    .status(Status.BAD_REQUEST)
+		    .entity("Couldn't parse date string: " + e.getMessage())
+		    .build());
 	}
 
 	return calendarService.getDataGridOfTheMonth(date);
@@ -134,11 +134,10 @@ public class MandyResource {
 	try {
 	    date = calendarService.getFirstDayOfTheMonth(year, month);
 	} catch (ParseException e) {
-	    throw new WebApplicationException(
-		    Response.status(
-			    com.sun.jersey.api.client.ClientResponse.Status.BAD_REQUEST)
-			    .entity("Couldn't parse date string: "
-				    + e.getMessage()).build());
+	    throw new WebApplicationException(Response
+		    .status(Status.BAD_REQUEST)
+		    .entity("Couldn't parse date string: " + e.getMessage())
+		    .build());
 	}
 
 	return imputationService.findImputations(resourceId, date);

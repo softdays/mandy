@@ -9,21 +9,40 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:*-context.xml</param-value>
 	</context-param>
+
+	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>ldap.root</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>spring.profiles.active</param-name>
+		<param-value>${mandy.environment}</param-value>
+	</context-param>
 	
-	 <context-param>
-        <param-name>webAppRootKey</param-name>
-        <param-value>ldap.root</param-value>
+	<context-param>
+        <param-name>spring.profiles.default</param-name>
+        <param-value>prod</param-value>
     </context-param>
 
-    <filter>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-    </filter>
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>file:${mandy.config.home}/log4j.properties</param-value>
+	</context-param>
 
-    <filter-mapping>
-        <filter-name>springSecurityFilterChain</filter-name>
-      <url-pattern>/*</url-pattern>
-    </filter-mapping>
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
 
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -36,11 +55,8 @@
 			the XML configuration or by auto-wiring) will be automatically registered. 
 			It is possible to intermix Spring and non-Spring registration of classes 
 			by additionally using the normal Jersey-based registration mechanisms using 
-			the com.sun.jersey.config.property.packages property : 
-			<init-param>
-			<param-name>com.sun.jersey.config.property.packages</param-name> 
-			<param-value>org.softdays.mandy.web.resources</param-value>
-			</init-param> -->
+			the com.sun.jersey.config.property.packages property : <init-param> <param-name>com.sun.jersey.config.property.packages</param-name> 
+			<param-value>org.softdays.mandy.web.resources</param-value> </init-param> -->
 		<init-param>
 			<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
 			<param-value>true</param-value>

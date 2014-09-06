@@ -1,7 +1,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:s="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:s="http://www.springframework.org/schema/security"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
         http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
         http://www.springframework.org/schema/security 
         http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
@@ -12,35 +15,19 @@
 		<s:intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
 		<s:intercept-url pattern="/**" access="IS_AUTHENTICATED_REMEMBERED" />
 		<s:form-login />
-		
+
 		<!-- Retour sur la page de login après déconnexion -->
 		<s:logout delete-cookies="JSESSIONID" logout-success-url="/" />
-		
-		<!-- Permet de fixer le problème de mise en cache de la page de logout si celle-ci avait déjà été chargé par le browser -->
+
+		<!-- Permet de fixer le problème de mise en cache de la page de logout 
+			si celle-ci avait déjà été chargé par le browser -->
 		<!-- See: http://spring.io/blog/2013/08/23/spring-security-3-2-0-rc1-highlights-security-headers/#cache-control -->
 		<s:headers />
 	</s:http>
 
-
-	<!-- Simple namespace-based configuration -->
-
-	<s:ldap-server ldif="classpath:users.ldif" port="33389"
-		root="dc=springframework,dc=org" />
-
-	<!-- <s:authentication-manager> <s:ldap-authentication-provider user-search-base="ou=people" 
-		user-search-filter="uid={0}" /> </s:authentication-manager> -->
-
 	<s:authentication-manager>
 		<s:authentication-provider ref="ldapAuthProvider" />
 	</s:authentication-manager>
-
-
-	<!-- This bean points at the embedded directory server created by the ldap-server 
-		element above -->
-	<bean id="contextSource"
-		class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
-		<constructor-arg value="ldap://localhost:33389/dc=springframework,dc=org" />
-	</bean>
 
 	<bean id="ldapAuthProvider"
 		class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider">
@@ -62,20 +49,21 @@
 		<property name="userDetailsContextMapper" ref="myUserDetailsContextMapper" />
 	</bean>
 
-	<!-- <bean id="authoritiesPopulator" class="org.springframework.security.ldap.authentication.UserDetailsServiceLdapAuthoritiesPopulator"> 
-		<constructor-arg ref="userDetailsService" /> </bean> -->
+	<!-- This bean points at the embedded directory server created by the ldap-server 
+		element above -->
+	<bean id="contextSource"
+		class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+		<constructor-arg value="ldap://localhost:33389/dc=springframework,dc=org" />
+	</bean>
 
 	<bean id="authoritiesPopulator"
 		class="org.springframework.security.ldap.authentication.NullLdapAuthoritiesPopulator" />
-
-	<!--bean id="myUserContextMapper" class="org.softdays.mandy.web.security.MyUserDetailsContextMapper" 
-		/ -->
 
 	<bean id="roleVoter"
 		class="org.springframework.security.access.vote.RoleHierarchyVoter">
 		<constructor-arg ref="roleHierarchy" />
 	</bean>
-	
+
 	<bean id="roleHierarchy"
 		class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
 		<property name="hierarchy">
@@ -85,5 +73,16 @@
 			</value>
 		</property>
 	</bean>
+
+	<!-- LDAP server configuration -->
+	<beans profile="dev">
+		<s:ldap-server ldif="classpath:users.ldif" port="33389"
+			root="dc=springframework,dc=org" />
+	</beans>
+
+	<beans profile="prod">
+		<s:ldap-server url="${ldap.server.url}" />
+	</beans>
+
 
 </beans>

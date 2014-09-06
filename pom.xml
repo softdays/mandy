@@ -257,15 +257,9 @@
 			</properties>
 		</profile>
 		<profile>
-			<id>ci</id>
+			<id>prod</id>
 			<properties>
-				<environment>ci</environment>
-			</properties>
-		</profile>
-		<profile>
-			<id>deploy</id>
-			<properties>
-				<environment>deploy</environment>
+				<environment>prod</environment>
 			</properties>
 		</profile>
 	</profiles>
@@ -273,6 +267,7 @@
 	<properties>
 		<!-- build properties -->
 		<context.root>mandy</context.root>
+		<log.output.file>./logs/mandy.log</log.output.file>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- frameworks versions -->
 		<servlet.version>3.0.1</servlet.version>

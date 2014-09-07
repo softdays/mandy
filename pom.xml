@@ -1,5 +1,9 @@
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                              http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0  
+         http://maven.apache.org/maven-v4_0_0.xsd">
+	     
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.softdays.mandy</groupId>
@@ -7,7 +11,32 @@
 	<packaging>pom</packaging>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>Mandy</name>
-	<description>A simple collaborative projects imputation tool</description>
+	<description>A simple webapp to track man-day consumption on activities</description>
+	<url>http://www.softdays.org</url>
+	<inceptionYear>2014</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>GNU Affero General Public License, Version 3</name>
+			<url>https://www.gnu.org/licenses/agpl-3.0.txt</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>rpatriarche</id>
+			<name>Rémi</name>
+			<email>rpatriarche@gmail.com</email>
+			<url>https://www.linkedin.com/in/rpatriarche</url>
+			<organization>softdays.org</organization>
+			<organizationUrl>http://www.softdays.org</organizationUrl>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
 
 	<modules>
 		<module>mandy-scripts</module>
@@ -19,8 +48,8 @@
 		<connection>https://github.com/softdays/mandy.git</connection>
 		<url>https://github.com/softdays/mandy</url>
 		<developerConnection>scm:git:ssh://git@github.com/softdays/mandy.git</developerConnection>
-	    <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 	<build>
 		<pluginManagement>
@@ -42,13 +71,13 @@
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.5</version>
 				<configuration>
-                    <tagNameFormat>@{project.version}</tagNameFormat>
-                    <username>softdays</username>
-                    <!--password>xxxxxxxx</password-->
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <!--preparationGoals>clean verify</preparationGoals-->
-                    <!--arguments>-Dmaven.test.skip=true</arguments-->
-                </configuration>
+					<tagNameFormat>@{project.version}</tagNameFormat>
+					<username>softdays</username>
+					<!--password>xxxxxxxx</password -->
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<!--preparationGoals>clean verify</preparationGoals -->
+					<!--arguments>-Dmaven.test.skip=true</arguments -->
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

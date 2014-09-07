@@ -1,6 +1,6 @@
-==============================================================
- Mandy, a simple app to track man-day consumption on projects
-==============================================================
+===============================================================================
+ Mandy, a simple webapp to track man-day consumption on activities
+===============================================================================
 
 ```
 Mandy is an HTML5 webapp using a REST backend.
@@ -11,19 +11,16 @@ Mandy is an HTML5 webapp using a REST backend.
 UI is powered by  AngularJS+Bootstrap frameworks.
 REST API uses a Java stack (Jersey+Spring+Hibernate) connected to a MySql database.
 
-## Licenses
+## Licensing
 
-Mandy GUI is licensed under the [GNU General Public License][5].  
-Mandy API is licensed under the [GNU Lesser General Public License][6].
+Mandy is licensed under the [GNU Affero General Public License][3].  
+![alt AGPL](http://www.gnu.org/graphics/agplv3-155x51.png)
 
 ## Contact
 
-Contact: [dev@softdays.org][4]  
-Web site: [http://softdays.org/mandy][2]
+Contact: [rpatriarche][2]  
+Web site: [softdays.org][1]
 
-[1]: http://softdays.org
-[2]: http://softdays.org/mandy
-[3]: http://mandy.softdays.org
-[4]: mailto:dev@softdays.org
-[5]: http://www.gnu.org/licenses/gpl.txt
-[6]: http://www.gnu.org/licenses/lgpl.txt
+[1]: http://www.softdays.org
+[2]: mailto:rpatriarche@gmail.com
+[3]: http://www.gnu.org/licenses/agpl-3.0.html

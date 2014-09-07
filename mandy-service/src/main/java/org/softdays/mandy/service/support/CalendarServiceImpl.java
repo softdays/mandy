@@ -1,3 +1,23 @@
+/**
+ * MANDY is a simple webapp to track man-day consumption on activities.
+ * 
+ * Copyright 2014, rpatriarche
+ *
+ * This file is part of MANDY software.
+ *
+ * MANDY is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * MANDY is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.softdays.mandy.service.support;
 
 import java.text.ParseException;
@@ -15,6 +35,12 @@ import org.softdays.mandy.service.SchoolHolidayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * The Class CalendarServiceImpl.
+ * 
+ * @author rpatriarche
+ * @since 1.0.0
+ */
 @Service
 public class CalendarServiceImpl implements CalendarService {
 
@@ -29,6 +55,9 @@ public class CalendarServiceImpl implements CalendarService {
     @Autowired
     private SchoolHolidayService schoolHolidaysService;
 
+    /* (non-Javadoc)
+     * @see org.softdays.mandy.service.CalendarService#getDataGridOfTheMonth(java.util.Date)
+     */
     @Override
     public DataGridDto getDataGridOfTheMonth(Date base) {
 	// Date base = this.determineBaseDate(givenDate);
@@ -52,14 +81,11 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     /**
-     * Ici le coeur de l'algo de construction dela grille. Il s'agit de
-     * retourner le premier jour du mois correspondant à la grille à laquelle
-     * appartient la date donnée. Attention, la date donnée peut être une date
-     * du mois calendaire postérieur à celui de la grille de saisie à laquelle
-     * elle appartient. Le fait de proposer une saisie débutant systématiquement
-     * sur le premier lundi du mois courant fait qu'en début de mois, on peut
-     * être amené à présenter la grille correspondant au mois calendaire
-     * précédent.
+     * Determine base date.
+     * 
+     * @param givenDate
+     *            the given date
+     * @return the date
      */
     protected Date determineBaseDate(Date givenDate) {
 	DateTime base = new DateTime(givenDate);
@@ -71,11 +97,11 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     /**
-     * Est-ce que la semaine du jour donné contient un jour du mois précédent le
-     * mois de la date donnée ?
+     * Date week contains one day of previous month.
      * 
-     * Does the week to which belongs the given date contain one day of the the
-     * month which precedes the month of the given date?
+     * @param date
+     *            the date
+     * @return true, if successful
      */
     protected boolean dateWeekContainsOneDayOfPreviousMonth(DateTime date) {
 	int week = date.getWeekOfWeekyear();
@@ -93,6 +119,9 @@ public class CalendarServiceImpl implements CalendarService {
 	return date.getDayOfWeek() == DateTimeConstants.MONDAY;
     }
 
+    /* (non-Javadoc)
+     * @see org.softdays.mandy.service.CalendarService#getFirstDayOfTheMonth(java.lang.String, java.lang.String)
+     */
     @Override
     public Date getFirstDayOfTheMonth(String year, String month)
 	    throws ParseException {
@@ -100,6 +129,9 @@ public class CalendarServiceImpl implements CalendarService {
 	return DATE_FORMATTER.parse(year + month + FIRST_DAY_OF_THE_MONTH);
     }
 
+    /* (non-Javadoc)
+     * @see org.softdays.mandy.service.CalendarService#getFirstMondayOfMonth(java.util.Date)
+     */
     @Override
     public Date getFirstMondayOfMonth(final Date givenDate) {
 	DateTime date = new DateTime(givenDate);
@@ -111,6 +143,9 @@ public class CalendarServiceImpl implements CalendarService {
 	return date.toDate();
     }
 
+    /* (non-Javadoc)
+     * @see org.softdays.mandy.service.CalendarService#getFirstSundayAfterEndOfMonth(java.util.Date)
+     */
     @Override
     public Date getFirstSundayAfterEndOfMonth(final Date givenDate) {
 	DateTime date = new DateTime(givenDate);
@@ -122,10 +157,24 @@ public class CalendarServiceImpl implements CalendarService {
 	return date.toDate();
     }
 
+    /**
+     * Next.
+     * 
+     * @param date
+     *            the date
+     * @return the date
+     */
     protected Date next(Date date) {
 	return new DateTime(date).plusDays(1).toDate();
     }
 
+    /**
+     * Gets the date status.
+     * 
+     * @param givenDate
+     *            the given date
+     * @return the date status
+     */
     protected Status getDateStatus(Date givenDate) {
 	Status status = Status.WD;
 	if (isBankHoliday(givenDate)) {
@@ -139,10 +188,24 @@ public class CalendarServiceImpl implements CalendarService {
 	return status;
     }
 
+    /**
+     * Checks if is school holiday.
+     * 
+     * @param givenDate
+     *            the given date
+     * @return true, if is school holiday
+     */
     protected boolean isSchoolHoliday(Date givenDate) {
 	return schoolHolidaysService.isSchoolHoliday(givenDate);
     }
 
+    /**
+     * Checks if is end of week.
+     * 
+     * @param givenDate
+     *            the given date
+     * @return true, if is end of week
+     */
     protected boolean isEndOfWeek(Date givenDate) {
 	DateTime date = new DateTime(givenDate);
 	int dayOfWeek = date.getDayOfWeek();
@@ -150,6 +213,13 @@ public class CalendarServiceImpl implements CalendarService {
 		|| dayOfWeek == DateTimeConstants.SATURDAY;
     }
 
+    /**
+     * Checks if is bank holiday.
+     * 
+     * @param givenDate
+     *            the given date
+     * @return true, if is bank holiday
+     */
     protected boolean isBankHoliday(Date givenDate) {
 	String bankHolidaySummary = bankHolidayService
 		.getBankHolidaySummary(givenDate);

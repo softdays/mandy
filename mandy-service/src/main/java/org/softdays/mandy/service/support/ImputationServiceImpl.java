@@ -1,3 +1,23 @@
+/**
+ * MANDY is a simple webapp to track man-day consumption on activities.
+ * 
+ * Copyright 2014, rpatriarche
+ *
+ * This file is part of MANDY software.
+ *
+ * MANDY is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * MANDY is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.softdays.mandy.service.support;
 
 import java.util.ArrayList;
@@ -19,7 +39,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by rpatriarche on 02/03/14.
+ * The Class ImputationServiceImpl.
+ * 
+ * @author rpatriarche
+ * @since 1.0.0
  */
 @Service
 @Transactional
@@ -37,6 +60,14 @@ public class ImputationServiceImpl implements ImputationService {
     @Autowired
     private Mapper mapper;
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.softdays.mandy.service.ImputationService#findImputations(java.lang
+     * .Long, java.util.Date)
+     */
+    @Override
     public Map<Long, List<ImputationDto>> findImputations(Long resourceId,
 	    Date date) {
 
@@ -66,6 +97,13 @@ public class ImputationServiceImpl implements ImputationService {
 	return results;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.softdays.mandy.service.ImputationService#createImputation(org.softdays
+     * .mandy.dto.ImputationDto)
+     */
     @Override
     public ImputationDto createImputation(ImputationDto newImputation) {
 	Imputation entity = mapper.map(newImputation, Imputation.class);
@@ -73,6 +111,13 @@ public class ImputationServiceImpl implements ImputationService {
 	return mapper.map(imputation, ImputationDto.class);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.softdays.mandy.service.ImputationService#updateImputation(org.softdays
+     * .mandy.dto.ImputationDto)
+     */
     @Override
     public void updateImputation(ImputationDto imputationDto) {
 	Long imputationId = imputationDto.getImputationId();
@@ -87,6 +132,13 @@ public class ImputationServiceImpl implements ImputationService {
 	// dirty checking will do the trick
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.softdays.mandy.service.ImputationService#deleteImputation(java.lang
+     * .Long)
+     */
     @Override
     public void deleteImputation(Long imputationId) {
 	imputationDao.delete(imputationId);

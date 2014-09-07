@@ -70,7 +70,8 @@
     
     <!-- External configuration -->
     <bean id="configuration" class="org.softdays.mandy.config.Configuration">
-       <property name="contextRoot" value="${context.root}" />       
+       <property name="contextRoot" value="${context.root}" /> 
+       <property name="version" value="${project.version}" />       
     </bean>
 
 </beans>

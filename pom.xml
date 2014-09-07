@@ -16,9 +16,9 @@
 	</modules>
 
 	<scm>
-		<connection>scm:git:git@github.com:softdays/mandy.git</connection>
-		<url>scm:git:git@github.com:softdays/mandy.git</url>
-		<developerConnection>scm:git:git@github.com:softdays/mandy.git</developerConnection>
+		<connection>https://github.com/softdays/mandy.git</connection>
+		<url>https://github.com/softdays/mandy</url>
+		<developerConnection>scm:git:ssh://git@github.com/softdays/mandy.git</developerConnection>
 	    <tag>HEAD</tag>
   </scm>
 

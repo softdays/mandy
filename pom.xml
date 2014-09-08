@@ -77,10 +77,13 @@
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 					<!--preparationGoals>clean verify</preparationGoals -->
 					<!--arguments>-Dmaven.test.skip=true</arguments -->
+					<!--
 					<providerImplementations>
 					  <git>jgit</git>
-				  </providerImplementations>
+				    </providerImplementations>
+				    -->
 				</configuration>
+				<!--
 				<dependencies>
 				  <dependency>
 					  <groupId>org.apache.maven.scm</groupId>
@@ -88,6 +91,7 @@
 							<version>1.9.1</version>
 				  </dependency>
 				 </dependencies>
+				 -->
 			</plugin>
 		</plugins>
 	</build>

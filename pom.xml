@@ -8,7 +8,7 @@
 	<groupId>org.softdays.mandy</groupId>
 	<artifactId>mandy-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<name>Mandy</name>
 	<description>A simple webapp to track man-day consumption on activities</description>
 	<url>http://www.softdays.org</url>

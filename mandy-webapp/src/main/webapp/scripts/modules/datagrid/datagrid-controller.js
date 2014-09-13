@@ -26,6 +26,8 @@ define(['angular', 'mandy-common', 'mandy-datagrid-service'],
     			$location.url('/?redirect='+currentPath);
         	}
         	
+        	var IGNORE_COMMENT = "$_IGNORE_COMMENT_$";
+        	
         	// Definition of the model
         	$rootScope.selectedTab = 1;
         	
@@ -76,7 +78,7 @@ define(['angular', 'mandy-common', 'mandy-datagrid-service'],
             	if (ngCell.hasClass("selected")) {
             		var oldQuota = ngCell.attr("data-quota");
             		var newQuota = utils.getNewQuota(oldQuota);
-            		updateImputation(ngCell, newQuota, -1);
+            		updateImputation(ngCell, newQuota, IGNORE_COMMENT);
             	}
             };
             
@@ -91,6 +93,7 @@ define(['angular', 'mandy-common', 'mandy-datagrid-service'],
             	var activityId = ngCell.attr('data-activity-id');
             	$scope.detailsDialogImputationActivity = findLabel(activityId);
             	var imputationId = ngCell.attr('data-imputation-id');
+            	$scope.detailsDialogImputationId = imputationId;
             	if (imputationId) {
             		$scope.detailsDialogImputationComment = findComment(activityId, imputationId);
             	} else {
@@ -229,7 +232,7 @@ define(['angular', 'mandy-common', 'mandy-datagrid-service'],
 	            			imputation.resourceId= $rootScope.user.id;
 	            			imputation.date = date;
 	            			imputation.quota = newQuota;
-	            			if (typeof newComment === 'number' && newComment==-1) {
+	            			if (newComment === IGNORE_COMMENT) {
 	            				imputation.comment = oldImputation.comment;
 	            			} else {
 	            				imputation.comment = newComment;
@@ -248,6 +251,9 @@ define(['angular', 'mandy-common', 'mandy-datagrid-service'],
             			}
             		} else {
             			// CREATE CASE
+            			if (newComment === IGNORE_COMMENT) {
+            				newComment = null;
+            			} 
             			var createRes = imputationService.createImputation(
         					+$rootScope.user.resourceId, 
         					+activityId, 
@@ -304,14 +310,15 @@ define(['angular', 'mandy-common', 'mandy-datagrid-service'],
             	var syncRequired = true;
             	var imputation = findImputation(activityId, imputationId);
             	if (imputation) {
-            		if (typeof newComment === 'number' && newComment==-1) {
+            		if (newComment === IGNORE_COMMENT) {
             			// on ne doit pas prendre en compte le commentaire
             			syncRequired = imputation.quota != newQuota;
             		} else {
             			syncRequired = imputation.comment != newComment || imputation.quota != newQuota;
-            		}
-            		
-            	} 
+            		}            		
+            	} else if (newQuota==0) {
+            		syncRequired = false;
+            	}
             	// sinon il s'agit d'une création et le modèle sera mis à jour au retour de la requête
             	return syncRequired;
             };

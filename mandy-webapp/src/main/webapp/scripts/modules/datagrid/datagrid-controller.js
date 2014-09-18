@@ -263,7 +263,12 @@ define(['angular', 'mandy-common', 'mandy-datagrid-service'],
             		    );
             			createRes.then(function(createdImputation){
             				// synchroniser le modèle client
-            				$scope.imputationsMap[activityId].push(createdImputation);
+            				var imputations = $scope.imputationsMap[activityId];
+            				if (!imputations) {
+            					imputations = $scope.imputationsMap[activityId] = [];
+            				}
+            				imputations.push(createdImputation);
+            				
             				// synchroniser les données de la cellule
             				synchronizeCellData(ngCell, newQuota, createdImputation.imputationId);
             				// mettre à jour l'indicateur de complètude
@@ -274,7 +279,7 @@ define(['angular', 'mandy-common', 'mandy-datagrid-service'],
             };
             
             /**
-             * Synchronize les éléments de vue stockant les informations de quota.
+             * Synchronise les éléments de vue stockant les informations de quota.
              */
             var synchronizeCellData = function(ngCell, newQuota, createdId) {
             	ngCell.attr('data-quota', newQuota); 

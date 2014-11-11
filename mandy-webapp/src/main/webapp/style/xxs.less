@@ -2,7 +2,8 @@
 
 .visible-xxs-block,
 .visible-xxs-inline,
-.visible-xxs-inline-block {
+.visible-xxs-inline-block,
+.visible-xxs-table {
   display: none !important;
 }
 
@@ -15,6 +16,31 @@
 	    display: inline !important;
 	}
 	
+	.visible-xxs-block {
+        display: block !important;
+    }
+    
+    .visible-xxs-inline-block {
+        display: inline-block !important;
+    }
+    
+    .visible-xxs-table {
+        display: table !important;
+    }
+    
+    #imputation-details {    
+        .progress {
+           width: 65%;
+        }
+    }
+	
+}
+
+@media only screen and (max-width: 510px) {
+    #datagrid .datagrid-table-view-day table.datagrid-body-view-day tbody .imputation-toolbar .btn-radio-quota-group > span .btn-radio-quota {
+        padding-left: 17px;
+        background-size: 15px;
+    }
 }
 
 @media only screen and (max-width: 340px) {
@@ -22,3 +48,7 @@
         margin-top: 0;
     }
 }
+
+
+
+

@@ -20,7 +20,6 @@
  */
 package org.softdays.mandy.service;
 
-import java.text.ParseException;
 import java.util.Date;
 
 import org.softdays.mandy.dto.calendar.DataGridDto;
@@ -69,11 +68,7 @@ public interface CalendarService {
      * @param month
      *            A string denoting a month (format = MM)
      * @return A Date.
-     * 
-     * @throws ParseException
-     *             Lève une exception si les formats ne correspondent pas à une
-     *             date.
      */
-    Date getFirstDayOfTheMonth(String year, String month) throws ParseException;
+    Date getFirstDayOfTheMonth(String year, String month);
 
 }

@@ -30,39 +30,53 @@ define(['angular',
         			redirectTo: '/'
 				}
         	 );
+			 
+			 // create single route config
+			 var route = {
+                 templateUrl: "partials/datagrid.html",
+                 
+                 controller: 'DatagridController',
+                 
+                 resolve: {
+                	 year: ['$route', function ($route) {
+                		 return $route.current.params.year;
+                	 }],
+                	 
+                	 month: ['$route', function ($route) {
+                		 return $route.current.params.month;
+                	 }],
+                	 
+                	 day: ['$route', function ($route) {
+                		 return $route.current.params.day;
+                	 }],
+                	 
+                	 datagrid: ['$route', 'CalendarService', function ($route, calendarService) {
+                		 var year = $route.current.params.year;
+                		 var month = $route.current.params.month;
+                		 
+                		 return calendarService.loadDataGrid(year, month);
+                	 }],
+                	 
+                	 activities: ['ActivityService', function (activityService) {
+                         return activityService.getUserActivities();
+                	 }],
+                	 
+                	 imputations: ['$rootScope', '$route', '$cookieStore', 'ImputationService',
+                	   function ($rootScope, $route, $cookieStore, imputationService) {
+                		 // $cookieStore permet de gérer le refresh sauvage
+                		 var userId = $cookieStore.get('user').resourceId;
+                		 var year = $route.current.params.year;
+                		 var month = $route.current.params.month;
+                         return imputationService.findImputations(userId, year, month);
+                	 }]
+                 }
+	         };
 			
 			 /**
 			  * Navigation
 			  */
-        	 $routeProvider.when(
-    			 '/datagrid/year/:year/month/:month', 
-    			 {
-	                 templateUrl: "partials/datagrid.html",
-	                 
-	                 controller: 'DatagridController',
-	                 
-	                 resolve: {
-	                	 datagrid: ['$route', 'CalendarService', function ($route, calendarService) {
-	                		 var year = $route.current.params.year;
-	                		 var month = $route.current.params.month;
-	                		 
-	                		 return calendarService.loadDataGrid(year, month);
-	                	 }],
-	                	 
-	                	 activities: ['ActivityService', function (activityService) {
-	                         return activityService.getUserActivities();
-	                	 }],
-	                	 
-	                	 imputations: ['$rootScope', '$route', '$cookieStore', 'ImputationService',
-	                	   function ($rootScope, $route, $cookieStore, imputationService) {
-	                		 // $cookieStore permet de gérer le refresh sauvage
-	                		 var userId = $cookieStore.get('user').resourceId;
-	                		 var year = $route.current.params.year;
-	                		 var month = $route.current.params.month;
-	                         return imputationService.findImputations(userId, year, month);
-	                	 }]
-	                 }
-	             }
-        	 );	            
+        	 $routeProvider.when('/datagrid/year/:year/month/:month', route);        	 
+        	 $routeProvider.when('/datagrid/year/:year/month/:month/day/:day', route);
+        	 
         }]); 
 });

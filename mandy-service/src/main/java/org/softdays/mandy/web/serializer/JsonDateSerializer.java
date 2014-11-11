@@ -21,13 +21,15 @@
 package org.softdays.mandy.web.serializer;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Component;
 
 /**
@@ -39,8 +41,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class JsonDateSerializer extends JsonSerializer<Date> {
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
-	    "yyyy-MM-dd");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormat
+	    .forPattern("yyyy-MM-dd");
 
     /*
      * (non-Javadoc)
@@ -54,9 +56,7 @@ public class JsonDateSerializer extends JsonSerializer<Date> {
 	    SerializerProvider provider) throws IOException,
 	    JsonProcessingException {
 
-	String formattedDate = DATE_FORMAT.format(date);
-
-	gen.writeString(formattedDate);
+	gen.writeString(FORMATTER.print(new DateTime(date)));
     }
 
 }

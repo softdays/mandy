@@ -112,6 +112,107 @@ define(['angular', 'mandy-common'],
             }
         }]);
         
+        
+        module.directive('mandyDatagridBodyViewDay', ["$q", "Utils", function($q, utils) {
+        	
+            return {
+                restrict: 'A',
+                scope:false,
+                replace: false,
+                transclude:false,
+                link: function (scope, element) {	
+                	$q.all([scope.datagrid.$promise, 
+                	        scope.activities.$promise, 
+                	        scope.imputationsMap.$promise])
+                	.then(function() {
+                		var tbody = angular.element('<tbody></tbody>');
+	                    angular.forEach(scope.activities, function(activity, index) {
+	                    	var row = angular.element('<tr></tr>');
+	                    	row.attr("title", activity.longLabel);
+	                    	row.attr('data-activity-id', activity.id);
+	                    	tbody.append(row);
+	                    	var cellActivity = angular.element('<td></td>');
+	                    	cellActivity.addClass('activity');
+	                    	cellActivity.text(activity.shortLabel)
+	                    	row.append(cellActivity);
+	                    	
+	                    	
+	                    	/*
+							<div class="btn-group">
+							  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+							    Action
+							    <span class="caret"></span>
+							  </button>
+							  <ul class="dropdown-menu" role="menu">
+							    <li><a href="#">Action</a></li>
+							    <li><a href="#">Another action</a></li>
+							    <li><a href="#">Something else here</a></li>
+							    <li class="divider"></li>
+							    <li><a href="#">Separated link</a></li>
+							  </ul>
+							</div>
+                        	*/	
+	                    	
+	                    	// imputation value	                    	
+	                    	var imputationValue = '0.00';
+	                    	var dropdownCaret = angular.element('<span class="caret"></span>');                        	
+                        	var dropdownBtnValue = angular.element('<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" />');
+                        	dropdownBtnValue.append(imputationValue);
+                        	dropdownBtnValue.append('&nbsp;');
+                        	dropdownBtnValue.append(dropdownCaret);                       	
+                        	// dropdown sub items
+                        	var dropdownUlLiNone = angular.element('<li role="presentation"><a role="menuitem" tabindex="-1" ng-click="">0.00</a></li>');
+                        	var dropdownUlLiQuarter = angular.element('<li role="presentation"><a role="menuitem" tabindex="-1" ng-click="">0.25</a></li>');
+                        	var dropdownUlLiHalf = angular.element('<li role="presentation"><a role="menuitem" tabindex="-1" ng-click="">0.50</a></li>');
+                        	var dropdownUlLiThreeQuarters = angular.element('<li role="presentation"><a role="menuitem" tabindex="-1" ng-click="">0.75</a></li>');
+                        	var dropdownUlLiWhole = angular.element('<li role="presentation"><a role="menuitem" tabindex="-1" ng-click="">1.00</a></li>');
+                        	// dropdown element
+                        	var dropdownUl = angular.element('<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuImputation" />');
+                        	dropdownUl.append(dropdownUlLiNone);
+                        	dropdownUl.append(dropdownUlLiQuarter);
+                        	dropdownUl.append(dropdownUlLiHalf);
+                        	dropdownUl.append(dropdownUlLiThreeQuarters);
+                        	dropdownUl.append(dropdownUlLiWhole);
+                        	// imputation value button group
+                         	var btnGrImputationValue = angular.element('<div class="btn-group"></div>');
+                        	btnGrImputationValue.append(dropdownBtnValue);
+                        	btnGrImputationValue.append(dropdownUl);
+                        	// comment element
+                        	var btnComment = angular.element('<button type="button" class="btn btn-default btn-comment"><span class="glyphicon glyphicon-comment"></span></button>');
+                        	var btnGrpComment = angular.element('<div class="btn-group" />');
+                        	btnGrpComment.append(btnComment); 
+                        	
+                        	// imputation btn group
+                        	var btnGrpImputationXxs = angular.element('<div class="btn-group btn-group-justified visible-xxs-table" />');
+                        	btnGrpImputationXxs.append(btnGrImputationValue);
+                        	btnGrpImputationXxs.append(btnGrpComment);
+                        	
+                        	
+                        	// imputation table cell
+                        	var cellImputation = angular.element('<td class="imputation"></td>');	
+	                    	cellImputation.attr('data-activity-id', activity.id);
+	                    	cellImputation.attr('data-date', scope.shortCurrentDayIndicator);
+                        	cellImputation.append(btnGrpImputationXxs);
+                        	
+                        	
+                        	row.append(cellImputation);
+                        	
+//                        	var activityImputations = scope.imputationsMap[activity.id];
+//                        	if (activityImputations) {
+//                        		var imputation = utils.findImputation(activityImputations, day.date);
+//	                        	if (imputation) {
+//	                        		cellDay.attr('data-imputation-id', imputation.imputationId);
+//		                        	cellDay.attr('data-quota', imputation.quota);
+//		                        	value.text(utils.formatQuota(imputation.quota));
+//	                        	};
+//                        	};
+	                    });
+	                    element.replaceWith(tbody);
+                	});
+                }
+            }
+        }]);
+        
         module.directive('ngRightClick', function($parse) {
             return function(scope, element, attrs) {
                 var fn = $parse(attrs.ngRightClick);
@@ -123,6 +224,7 @@ define(['angular', 'mandy-common'],
                 });
             };
         });
+        
         
         return module;
     }

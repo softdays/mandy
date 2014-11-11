@@ -6,26 +6,24 @@
 
 @import url(//fonts.googleapis.com/css?family=Leckerli+One);
 
-/* RWD */
-@import "sm.less";
-@import "xxs.less";
-
 /* 
   Palette couleurs 
   from http://paletton.com/#uid=73o0u0ka5X000++4u+deXRqjcIr
   base: light-blue=A9E2F3
 */
+@sides-padding: @grid-gutter-width / 2;
 @color-light-grey: #2E2E2E;
 @color-light-purple: #D8CEF6;
 @color-light-green: #D8F6CE;
 @color-light-blue: #A9E2F3;
 @color-light-orange: #FFD7AF;
+@color-grey: #ccc;
 @color-orange: #FF7F00;
 @color-blue-c1: #7CCCE2;
 @color-blue-c2: #54AEC7;
 /* palette sémantique */
 @color-month-current: @color-light-blue;
-@color-month-next: @color-light-orange;
+@color-month-next: @color-grey;
 @color-table-row-hover: @color-blue-c1;
 @color-table-cell-hover: @color-blue-c2;
 @datagrid-border: 1px solid @color-light-grey; 
@@ -36,24 +34,41 @@
 @env20px: 1.428571428571429em; /* 20:14 */
 @env27px: 1.928571428571429em; /* 27:14 */
 
+@btn-radio-quota-width: 100% / 6;
 
 @font-size-xs: 0.8em;
 @font-size-sm: 0.9em;
 @font-size-lg: 1.0em;
 
 @height-fixed-header: 111px;
-@height-fixed-datagrid-navbar: 54px;
-@height-fixed-datagrid-header: 118px;
-@width-column-activities: 100px;
+@height-fixed-datagrid-header: 146px;
+@height-fixed-datagrid-header-view-day: 82px;
 
+@width-column-activities: 100px;
+@header-cell-day-content-width: 2.357142857142857em; /* 33:14 */
 
 /* Default font size fixed to 14px */
 body {
 	font-size: 14px;
 }
 
+/* Gérer l'attribut pour les liens */
+a[disabled] {
+   pointer-events: none;
+   cursor: default;
+}
+
 /* Bootstrap overrides */
 @icon-font-path: "../frameworks/bootstrap/fonts/";
+
+.noSelect() {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
@@ -64,14 +79,16 @@ body {
     margin-right: 0;
 }
 
+/* header global application (titre + user + menu) */
 .container-fluid > .row:first-child {
 	position: fixed !important;
+	position: static;
     height: @height-fixed-header;
     width: 100%;
     top: 0;
     left: 0;
     z-index: 2;
-    padding: 0 15px;
+    padding: 0 @sides-padding;
     background-color: white;
 }
 
@@ -125,44 +142,112 @@ body {
 
 
 #datagrid {
-	margin-top: 1.428571428571429em;/* 20:14 */
 	line-height:normal;
 	
 	.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
 	  background-color: @color-table-row-hover;
 	}
-	
-	.btn-toolbar {
-	  position: fixed !important;
-      height: @height-fixed-datagrid-navbar;
-      width: 100%;
-      top: @height-fixed-header;
-      left: 0;
-      z-index: 2;
-      padding: 10px 30px;
-      background-color: white;	  
-      
-      & > div.btn-group-justified {
-        margin-left: 0;
-      }
-      
-      #datagrid-current-month {  
-          background-color: @color-month-current;
-          text-transform: uppercase;
-      }
-    }
-    
-    .table-responsive {
-        margin-top: @height-fixed-datagrid-navbar;
-        z-index: 1;
-        
-        .datagrid-header {
+
+
+    .datagrid-table {
+	        
+        .datagrid-table-header {
             position: fixed !important;
-		    top: @height-fixed-header + @height-fixed-datagrid-navbar;
+		    top: @height-fixed-header;
+		    height: @height-fixed-datagrid-header;
 		    left: 0;
 		    z-index: 2;
 		    background-color: white;  
-            padding: 0 30px;
+            padding: 20px @sides-padding 0;
+            
+            thead {
+               th:first-child {
+                   border: 1px solid white;
+                   border-right: 1px solid @table-border-color;
+               }
+               
+               /* Rétablir la bordure bas de la cellule d'entête des activités */
+               tr:last-child {
+	               th:first-child {
+	                   border-bottom: 1px solid @table-border-color;           
+	               }
+               }
+               
+               /* Gestion de la première cellule vide en haut à gauche du tableau de données */
+               tr:first-child {
+                   > th:first-child {
+                       width: @width-column-activities;
+                       border-right: 1px solid white;
+                   }
+                   
+                   > th:last-child {
+                        padding: 0 0 7px 0;
+                        border : 1px solid white;
+                        border-bottom: 1px solid @table-border-color;
+                   }
+               }
+               
+               .datagrid-toolbar {
+			        width:100%; 
+			        /*    
+			        position: fixed !important;
+			        height: @height-fixed-datagrid-navbar;
+			        top: @height-fixed-header;
+			        left: 0;
+			        z-index: 2;
+			        padding: 10px 30px;
+			        background-color: white;
+			        */
+			                
+			        .btn-toolbar {          
+			          /*max-width: 728px;*/  
+			          margin: 0;
+			
+			          
+			          > div.btn-group-justified {
+			            margin: 0;
+			          }
+			          
+			          #datagrid-current-month {  
+			              background-color: @color-month-current;
+			              text-transform: uppercase;
+			          }
+			        }
+			    }
+               
+               tr.weeks {
+                   /* Toutes les cellules correspondants aux semaines, il faut 
+                      donc exclure la première colonne des activités */
+                   > th:nth-child(n+2) {
+                      background-color: @table-bg-accent;
+                   }
+               }
+               
+               th.day {
+                   text-align: center;
+                   background-color: @color-month-next;
+                   
+                   &.current-month {
+                        background-color:@color-month-current;
+                   }
+                   
+                   > div {
+                       margin: auto auto;
+                       width: 34px; /* pour éviter les différences de largeur entre cellule en fonction de l'empattement des caractères de la police */
+                       height: 100%;
+                   
+                       > .day-value {
+                           display: inline-block;
+                           width: 17px;
+                           margin-right:2px;
+                       }
+                       
+                       > .completeness {
+                           margin-left:2px;
+                       }
+                   }
+               }/* \th.day */
+            }/* \thead */
             
             table {
                 margin-bottom: 0;
@@ -176,74 +261,7 @@ body {
         
         table {
 	       table-layout: fixed;
-	       
-	       thead {
-	           th.month, th.header-activities {
-	               border-top: 1px solid white;
-	               border-left: 1px solid white;               
-	               border-collapse: collapse;
-	           }
-	           
-	           th.month {
-	               width: @width-column-activities;
-	               font-size: @font-size-lg;
-	               border-bottom: 1px solid white;
-	               vertical-align: middle;
-	               padding: 0 0;
-	               
-	               * {
-	                vertical-align: middle;
-	               }
-	               
-	               & > span {
-	                   display: inline-block;
-	                   font-family:monospace;
-	                   margin: 0;
-	                   padding: 0;
-	                   
-	                   & > span {
-	                        display: block;
-	                        font-size: @font-size-xs;
-	                        position: relative;
-	                        padding: 0 2px;
-	                        
-	                   }
-	                   span:first-child {
-	                       bottom: -2px;
-	                   }                   
-	                   span:last-child {
-	                       top: -2px;
-	                       font-weight: normal;
-	                   }
-	               }
-	           }
-	           
-	           th {
-	               &.day {
-	                   text-align: center;
-	                   background-color: @color-month-next;
-	                   
-	                   &.current-month {
-	                        background-color:@color-month-current;
-	                   }
-	                   
-	                   & > div {
-	                       width: 100%;
-	                       height: 100%;
-	                   
-	                       .day-value {
-	                           margin-right:2px;
-	                           
-	                       }
-	                       
-	                       .completeness {
-	                           margin-left:2px;
-	                       }
-	                   }
-	               }
-	           }
-	       }
-	       
+
 	       tbody {
 	       
 	           tr:first-child > td:first-child {
@@ -259,15 +277,10 @@ body {
 	                overflow: hidden;
 	                text-overflow: ellipsis;
 	                white-space: nowrap;  
-	                text-align: center; 
-	                -webkit-touch-callout: none;
-	                -webkit-user-select: none;
-	                -khtml-user-select: none;
-	                -moz-user-select: none;
-	                -ms-user-select: none;
-	                user-select: none; 
+	                text-align: center; 	                
 	                padding: 0;
 	                height: 100%;
+	                .noSelect(); 
 	                
 	                &.activity {
 	                   padding-left: 3px;
@@ -320,7 +333,7 @@ body {
 	                background-color: inherit;
 	            } 
 	            */
-	       }
+	       }/*close tbody*/
 	       
 	       tfoot {
 	           tr {
@@ -332,10 +345,140 @@ body {
 	                   padding-right: @env5px;
 	                }
 	           }
-	        }          
-	    }
-    }
-}
+	        }/*close tfoot*/          
+	    }/*close table*/
+    }/*close .datagrid-table*/
+    
+
+    .datagrid-table-view-day {
+        .datagrid-table-header-view-day {
+            position: fixed !important;
+            top: @height-fixed-header;
+            height: @height-fixed-datagrid-header-view-day;
+            width: 100%;
+            left: 0;
+            z-index: 2;
+            background-color: white; 
+            padding: 5px @sides-padding 0; 
+        
+            thead {
+            
+                tr:first-child > th {              
+                    border: 1px solid white;
+                    border-bottom: 1px solid @table-border-color;
+                    
+                    .btn-toolbar {                        
+                        margin-left:-10px;
+                    }
+                }
+                
+                tr:last-child > th {
+                    font-weight: bold;
+                    background-color: @color-month-current;
+                    text-align: center;
+                }
+            }
+        }
+        
+        table.datagrid-body-view-day {
+           table-layout: fixed;
+           margin-top: @height-fixed-datagrid-header-view-day;
+
+           tbody {
+           
+               tr:first-child > td:first-child {
+                   width: @width-column-activities;
+               }
+               
+               td:first-child {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    padding: 0 3px;
+                    height: 50px;
+               }
+               
+               td {
+                    height: 100%;
+                    padding: 0 8px;
+                    vertical-align: middle;
+                     
+                    > div.btn-group {
+                        margin-left: auto;
+                        margin-right: auto;
+                        max-width: 250px;
+                    }
+               }
+               
+               .imputation-toolbar {               
+                    width: 100%;
+                    padding: 0 @env5px;
+                    
+                    .btn-radio-quota-group {                    
+                        padding-top: 7px; /*centrage vertical par/ au bouton flottant de droite */
+                        
+                        > span {
+                            display: inline-block;
+                            width: @btn-radio-quota-width;
+                            height: 100%;
+                            
+                           .btn-radio-quota {   
+                                display: inline-block;     
+                                height: 100%;       
+	                            color: black;
+	                            padding-left: 24px;
+	                            background-size: 20px;
+	                            background-position: left center;
+	                            background-image: url('../images/radio-button-off.svg');
+                                background-repeat: no-repeat;
+                                .noSelect();
+	                            
+	                            &.checked {
+	                                 background-image: url('../images/radio-button-on.svg');
+	                            }
+	                            
+	                            &:hover {
+	                                text-decoration: none;
+	                                cursor: pointer;
+	                            }
+	                            
+	                            &[disabled] {
+                                    opacity: 0.5;
+                                }
+	                        }
+	                        
+	                        
+                        }
+                    }
+                    
+                    .btn-group {
+                        float: right;
+                    }
+               }
+            }
+        }
+        
+        /* le bloc permettant de désactiver la saisie */
+        .blockUI.blockMsg {
+        
+            h1 {
+                font-size: 1.3em;
+                font-weight: bold;
+            }
+            
+            span.glyphicon {
+                font-size: 24px;
+            }
+            
+            h2 {
+                font-size: 0.9em;
+                font-style: italic;
+            }
+        }
+    
+    }/* close .datagrid-table-view-day */
+    
+}/*close #datagrid*/
 
 #view-error {
 	margin-top: 25px;
@@ -349,7 +492,7 @@ body {
 #imputation-details {
 	
 	.progress {
-	   width: 478px;
+	   width: 80%;
 	   display: inline-block;
 	   vertical-align:middle;
 	   margin-bottom: 0;
@@ -377,7 +520,12 @@ body {
 	       vertical-align:middle;
 	   }
 	}
-
 }
+
+/* RWD */
+@import "xxs.less";
+@import "xs.less";
+@import "md.less";
+@import "xl.less";
 
 

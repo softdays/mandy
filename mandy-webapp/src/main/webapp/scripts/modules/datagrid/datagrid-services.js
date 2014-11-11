@@ -25,7 +25,7 @@ define(['angular',
              */
             return {
                 /**
-                 * Retourne la datagrid pour l'année et le mois indiqué
+                 * Retourne la datagrid pour l'année et le mois indiqué.
                  */
                 loadDataGrid: function (year, month) {
                 	
@@ -92,6 +92,8 @@ define(['angular',
             /**
              * @alias mandy/imputation/service
              */
+        	//TODO: tous les services devraient systématiquement retourner directement la promise de la resource
+        	// de manière à ce que les routes synchronise les données avant d'invoquer leur contrôleur
             return {
                 /**
                  * Retourne les imputations pour l'utilisateur et le mois donnés.

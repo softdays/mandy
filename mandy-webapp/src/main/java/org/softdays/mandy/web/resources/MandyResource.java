@@ -20,7 +20,6 @@
  */
 package org.softdays.mandy.web.resources;
 
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -128,7 +127,7 @@ public class MandyResource {
 	Date date;
 	try {
 	    date = calendarService.getFirstDayOfTheMonth(year, month);
-	} catch (ParseException e) {
+	} catch (Exception e) {
 	    throw new WebApplicationException(Response
 		    .status(Status.BAD_REQUEST)
 		    .entity("Couldn't parse date string: " + e.getMessage())
@@ -153,7 +152,7 @@ public class MandyResource {
 	Date date;
 	try {
 	    date = calendarService.getFirstDayOfTheMonth(year, month);
-	} catch (ParseException e) {
+	} catch (Exception e) {
 	    throw new WebApplicationException(Response
 		    .status(Status.BAD_REQUEST)
 		    .entity("Couldn't parse date string: " + e.getMessage())
@@ -176,14 +175,16 @@ public class MandyResource {
     @Path(MandyConstants.URI_IMPUTATIONS_IID)
     @Consumes(MandyConstants.JSON_UTF8)
     @Secured("ROLE_USER")
-    public void updateImputation(ImputationDto imputationDto) {
+    public ImputationDto updateImputation(ImputationDto imputationDto) {
 	String comment = imputationDto.getComment();
+	// TODO: remove this trap
 	if (StringUtils.hasText(comment)) {
 	    if (comment.equals("booom")) {
 		throw new RuntimeException("Booom");
 	    }
 	}
-	imputationService.updateImputation(imputationDto);
+
+	return imputationService.updateImputation(imputationDto);
     }
 
     @DELETE

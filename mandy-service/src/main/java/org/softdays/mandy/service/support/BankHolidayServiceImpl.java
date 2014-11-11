@@ -69,14 +69,16 @@ public class BankHolidayServiceImpl implements BankHolidayService {
 
     private void init() {
 	long start = System.currentTimeMillis();
-	InputStream ics = this.getClass().getClassLoader()
-		.getResourceAsStream("holidays/basic.ics");
+	ClassLoader classLoader = Thread.currentThread()
+		.getContextClassLoader();
+	InputStream ics = classLoader.getResourceAsStream("holidays/basic.ics");
 	CalendarBuilder builder = new CalendarBuilder();
 	Calendar calendar = null;
 	try {
 	    calendar = builder.build(ics);
 	} catch (IOException | ParserException e) {
 	    e.printStackTrace();
+	    LOGGER.error(e.getMessage());
 	    throw new RuntimeException(e);
 	}
 

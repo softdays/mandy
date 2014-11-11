@@ -119,7 +119,7 @@ public class ImputationServiceImpl implements ImputationService {
      * .mandy.dto.ImputationDto)
      */
     @Override
-    public void updateImputation(ImputationDto imputationDto) {
+    public ImputationDto updateImputation(ImputationDto imputationDto) {
 	Long imputationId = imputationDto.getImputationId();
 	Imputation imputation = imputationDao.findOne(imputationId);
 	if (imputation == null) {
@@ -130,6 +130,7 @@ public class ImputationServiceImpl implements ImputationService {
 	imputation.setQuota(imputationDto.getQuota());
 	imputation.setComment(imputationDto.getComment());
 	// dirty checking will do the trick
+	return mapper.map(imputation, ImputationDto.class);
     }
 
     /*

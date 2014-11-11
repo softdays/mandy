@@ -61,8 +61,10 @@ public interface ImputationService {
      * 
      * @param imputation
      *            the imputation
+     * 
+     * @return The updated imputation dto.
      */
-    void updateImputation(ImputationDto imputation);
+    ImputationDto updateImputation(ImputationDto imputation);
 
     /**
      * Delete imputation specified by the given id.

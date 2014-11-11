@@ -83,8 +83,9 @@ public class SchoolHolidayServiceImpl implements SchoolHolidayService {
      */
     public void init() throws Exception {
 	schoolHolidays = new HashSet<Date>();
-	InputStream input = this.getClass().getClassLoader()
-		.getResourceAsStream(XML_DATASOURCE);
+	ClassLoader classLoader = Thread.currentThread()
+		.getContextClassLoader();
+	InputStream input = classLoader.getResourceAsStream(XML_DATASOURCE);
 	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 	Document doc = dBuilder.parse(input);

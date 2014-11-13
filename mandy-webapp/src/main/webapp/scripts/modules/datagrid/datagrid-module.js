@@ -8,15 +8,15 @@
  * @since 1.0
  * @author rpatriarche
  */
-define([ 'angular', 'mandy-datagrid-directive', 'mandy-datagrid-controller',
+define(['angular', 'mandy-datagrid-directive', 'mandy-datagrid-controller',
     'mandy-datagrid-controller-view-month',
     'mandy-datagrid-controller-view-day', 'mandy-datagrid-controller-modal',
-    'mandy-datagrid-route' ], function(angular) {
-  'use strict';
+    'mandy-datagrid-route'], function(angular){
+    'use strict';
 
-  return angular.module('mdDatagrid', [ 'mdDatagridDirective',
-      'mdDatagridController', 'mdDatagridControllerViewMonth',
-      'mdDatagridControllerViewDay', 'mdDatagridControllerModal',
-      'mdDatagridRoute' ]);
+    return angular.module('mdDatagrid', ['mdDatagridDirective',
+        'mdDatagridController', 'mdDatagridControllerViewMonth',
+        'mdDatagridControllerViewDay', 'mdDatagridControllerModal',
+        'mdDatagridRoute']);
 
 });

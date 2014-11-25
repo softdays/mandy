@@ -38,7 +38,7 @@ define(['angular', 'moment'], function(angular, moment){
 
         this.areMonthsEqual = function(currentFormattedMonth, date){
             var dateMonth = moment(date).format("MM");
-            return currentFormattedMonth == dateMonth;
+            return currentFormattedMonth === dateMonth;
         };
 
         this.formatMonthLabel = function(month){
@@ -67,13 +67,11 @@ define(['angular', 'moment'], function(angular, moment){
         };
 
         this.buildPathForNextDay = function(strDate){
-            return moment(strDate).add(1, 'days')
-                .format(DATAGRID_PARAMS_FOR_VIEW_DAY);
+            return moment(strDate).add(1, 'days').format(DATAGRID_PARAMS_FOR_VIEW_DAY);
         };
 
         this.buildPathForPreviousDay = function(strDate){
-            return moment(strDate).subtract(1, 'days').format(
-                DATAGRID_PARAMS_FOR_VIEW_DAY);
+            return moment(strDate).subtract(1, 'days').format(DATAGRID_PARAMS_FOR_VIEW_DAY);
         };
 
         /**
@@ -84,10 +82,10 @@ define(['angular', 'moment'], function(angular, moment){
             // je n'utilise pas un forEach angular car on ne peut pas
             // utiliser break ou return à l'intérieur de la boucle
             // see: https://github.com/angular/angular.js/issues/263
-            for (var w = 0; w < datagrid.weeks.length; w++) {
+            for (var w = 0; w<datagrid.weeks.length; w++) {
                 var days = datagrid.weeks[w].days;
-                for (var d = 0; d < days.length; d++) {
-                    if (days[d].date == strDate) {
+                for (var d = 0; d<days.length; d++) {
+                    if (days[d].date === strDate) {
                         return true;
                     }
                 }
@@ -101,20 +99,20 @@ define(['angular', 'moment'], function(angular, moment){
             var m = moment(strDate);
             if (previous) {
                 m.subtract(1, 'M');
-            } else {
+            }
+            else {
                 m.add(1, 'M');
             }
 
             return m.format(DATAGRID_PARAMS);
-        }
-        ;
+        };
 
         this.findImputation = function(imputations, strDate){
             // je n'utilise pas un forEach angular car on ne peut pas
             // utiliser break ou return à l'intérieur de la boucle
             // see: https://github.com/angular/angular.js/issues/263
-            for (var i = 0; i < imputations.length; i++) {
-                if (imputations[i].date == strDate) {
+            for (var i = 0; i<imputations.length; i++) {
+                if (imputations[i].date === strDate) {
                     return imputations[i];
                 }
             }
@@ -123,48 +121,58 @@ define(['angular', 'moment'], function(angular, moment){
         };
 
         this.formatQuota = function(quota){
+            var formatted = "Err";
             quota = quota || 0;
-            quota = quota == "-" ? 0 : quota;
+            quota = quota === "-" ? 0 : quota;
             switch (+quota) {
                 case 0:
-                    return "0.00";
+                    formatted =  "0.00";
+                    break;
+
                 case 0.25:
-                    return "0.25";
+                    formatted =  "0.25";
+                    break;
 
                 case 0.5:
-                    return "0.50";
+                    formatted =  "0.50";
+                    break;
 
                 case 0.75:
-                    return "0.75";
+                    formatted =  "0.75";
+                    break;
 
                 case 1:
-                    return "1.00";
+                    formatted =  "1.00";
+                    break;
 
-                default:
-                    return "Err";
+                default: break;
             }
+
+            return formatted;
         };
 
         this.formatQuotaForGrid = function(quota){
             var q = this.formatQuota(quota);
-            return q == "0.00" ? "-" : q;
+            return q === "0.00" ? "-" : q;
         };
 
         this.getNewQuota = function(oldQuota, minus){
-            var q = (oldQuota && oldQuota != '-') ? (+oldQuota) : 0;
+            var q = (oldQuota && oldQuota !== '-') ? (+oldQuota) : 0;
             if (minus) {
-                return q == 0 ? 1 : (q - 0.25);
-            } else {
-                return q == 1 ? 0 : (q + 0.25);
+                return q === 0 ? 1 : (q - 0.25);
+            }
+            else {
+                return q === 1 ? 0 : (q + 0.25);
             }
         };
 
         this.getCompletenessGlyphiconClass = function(imputationsMap, strDate){
             // on additionne l'ensemble des quotas à la date indiquée
             var allQuotasAtDate = 0;
-            angular.forEach(imputationsMap, function(imputations, activityId){
-                for (var i = 0; i < imputations.length; i++) {
-                    if (imputations[i].date == strDate) {
+            angular.forEach(imputationsMap, function(imputations){
+                // don't use angular.forEach if you want to break
+                for (var i = 0; i<imputations.length; i++) {
+                    if (imputations[i].date === strDate) {
                         allQuotasAtDate += imputations[i].quota;
                         break;
                     }
@@ -172,9 +180,10 @@ define(['angular', 'moment'], function(angular, moment){
             });
             // On détermine l'icône à utiliser
             var glyphicon = 'glyphicon-ok';
-            if (allQuotasAtDate < 1) {
+            if (allQuotasAtDate<1) {
                 glyphicon = 'glyphicon-arrow-down';
-            } else if (allQuotasAtDate > 1) {
+            }
+            else if (allQuotasAtDate>1) {
                 glyphicon = 'glyphicon-arrow-up';
             }
 
@@ -200,23 +209,16 @@ define(['angular', 'moment'], function(angular, moment){
     module.service('Globals', GlobalsService);
 
     var ErrorService = [
-        '$rootScope',
-        '$location',
-        '$log',
-        '$timeout',
-        function($rootScope, $location, $log, $timeout){
+        '$rootScope', '$location', '$log', '$timeout', function($rootScope, $location, $log, $timeout){
 
             this.errorHandler = function(httpResponse, context){
                 var status = httpResponse.status ? httpResponse.status : "???";
-                var details = httpResponse.statusText ? httpResponse.statusText
-                    : "aucune information récupérable";
+                var details = httpResponse.statusText ? httpResponse.statusText : "aucune information récupérable";
                 var title = "Code HTTP " + status;
-                var details = "Détails : " + details;
+                details = "Détails : " + details;
                 $log.debug("[" + title + "] " + context + ", " + details);
                 $rootScope.alert = {
-                    title: title,
-                    context: context,
-                    details: details
+                    title: title, context: context, details: details
                 };
                 $rootScope.selectedTab = 0;
                 // delay to be sure the modal (if opened) is closed before redirection
@@ -225,7 +227,8 @@ define(['angular', 'moment'], function(angular, moment){
                 }, 200);
             };
 
-        }];
+        }
+    ];
 
     module.service('ErrorService', ErrorService);
 

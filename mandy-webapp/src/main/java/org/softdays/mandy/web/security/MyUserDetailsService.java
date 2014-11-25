@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -22,7 +22,6 @@ package org.softdays.mandy.web.security;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
  * Responsabilité : récupérer le rôle utilisateur en base.
@@ -32,6 +31,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  */
 public class MyUserDetailsService implements UserDetailsService {
 
+    /**
+     * Instantiates a new user details service.
+     */
+    public MyUserDetailsService() {
+        super();
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -39,9 +45,8 @@ public class MyUserDetailsService implements UserDetailsService {
      * loadUserByUsername(java.lang.String)
      */
     @Override
-    public UserDetails loadUserByUsername(String username)
-	    throws UsernameNotFoundException {
-	return null;
+    public UserDetails loadUserByUsername(final String username) {
+        return null;
     }
 
 }

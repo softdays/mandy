@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -50,7 +50,7 @@ public class ImputationDto {
      * Instantiates a new imputation dto.
      */
     public ImputationDto() {
-	super();
+        super();
     }
 
     /**
@@ -67,14 +67,14 @@ public class ImputationDto {
      * @param comment
      *            the comment
      */
-    public ImputationDto(Long activityId, Long resourceId, Date date,
-	    Float quota, String comment) {
-	super();
-	this.activityId = activityId;
-	this.resourceId = resourceId;
-	this.date = date;
-	this.quota = quota;
-	this.comment = comment;
+    public ImputationDto(final Long activityId, final Long resourceId,
+            final Date date, final Float quota, final String comment) {
+        super();
+        this.activityId = activityId;
+        this.resourceId = resourceId;
+        this.date = (Date) date.clone();
+        this.quota = quota;
+        this.comment = comment;
     }
 
     /**
@@ -83,7 +83,7 @@ public class ImputationDto {
      * @return the imputation id
      */
     public Long getImputationId() {
-	return imputationId;
+        return this.imputationId;
     }
 
     /**
@@ -92,8 +92,8 @@ public class ImputationDto {
      * @param imputationId
      *            the new imputation id
      */
-    public void setImputationId(Long imputationId) {
-	this.imputationId = imputationId;
+    public void setImputationId(final Long imputationId) {
+        this.imputationId = imputationId;
     }
 
     /**
@@ -102,7 +102,7 @@ public class ImputationDto {
      * @return the activity id
      */
     public Long getActivityId() {
-	return activityId;
+        return this.activityId;
     }
 
     /**
@@ -111,8 +111,8 @@ public class ImputationDto {
      * @param activityId
      *            the new activity id
      */
-    public void setActivityId(Long activityId) {
-	this.activityId = activityId;
+    public void setActivityId(final Long activityId) {
+        this.activityId = activityId;
     }
 
     /**
@@ -121,7 +121,7 @@ public class ImputationDto {
      * @return the resource id
      */
     public Long getResourceId() {
-	return resourceId;
+        return this.resourceId;
     }
 
     /**
@@ -130,8 +130,8 @@ public class ImputationDto {
      * @param resourceId
      *            the new resource id
      */
-    public void setResourceId(Long resourceId) {
-	this.resourceId = resourceId;
+    public void setResourceId(final Long resourceId) {
+        this.resourceId = resourceId;
     }
 
     /**
@@ -140,7 +140,7 @@ public class ImputationDto {
      * @return the date
      */
     public Date getDate() {
-	return date;
+        return (Date) this.date.clone();
     }
 
     /**
@@ -149,8 +149,8 @@ public class ImputationDto {
      * @param date
      *            the new date
      */
-    public void setDate(Date date) {
-	this.date = date;
+    public void setDate(final Date date) {
+        this.date = (Date) date.clone();
     }
 
     /**
@@ -159,7 +159,7 @@ public class ImputationDto {
      * @return the quota
      */
     public Float getQuota() {
-	return quota;
+        return this.quota;
     }
 
     /**
@@ -168,8 +168,8 @@ public class ImputationDto {
      * @param quota
      *            the new quota
      */
-    public void setQuota(Float quota) {
-	this.quota = quota;
+    public void setQuota(final Float quota) {
+        this.quota = quota;
     }
 
     /**
@@ -178,7 +178,7 @@ public class ImputationDto {
      * @return the comment
      */
     public String getComment() {
-	return comment;
+        return this.comment;
     }
 
     /**
@@ -187,7 +187,7 @@ public class ImputationDto {
      * @param comment
      *            the new comment
      */
-    public void setComment(String comment) {
-	this.comment = comment;
+    public void setComment(final String comment) {
+        this.comment = comment;
     }
 }

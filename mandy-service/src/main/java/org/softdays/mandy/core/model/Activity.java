@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.softdays.mandy.model;
+package org.softdays.mandy.core.model;
 
 import java.util.Set;
 
@@ -30,7 +30,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.NaturalId;
+import org.softdays.mandy.core.BaseEntity;
+import org.softdays.mandy.core.CoreConstants;
 
 /**
  * Une activité est l'objet de l'imputation d'une charge.
@@ -40,18 +44,21 @@ import org.hibernate.annotations.NaturalId;
  */
 @Entity
 @Table(name = "ACTIVITY")
-public class Activity extends AbstractEntity {
+public class Activity extends BaseEntity {
 
     @NaturalId(mutable = true)
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = CoreConstants.DB_SHORT_LABEL_LENGTH)
     private String shortLabel;
 
     @NaturalId(mutable = true)
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = CoreConstants.DB_LONG_LABEL_LENGTH)
     private String longLabel;
 
     @Column(columnDefinition = "char(1) not null default 'P'")
     @Enumerated(EnumType.STRING)
+    /**
+     * @see org.softdays.mandy.model.ActivityType
+     */
     private ActivityType type;
 
     @NaturalId(mutable = true)
@@ -68,7 +75,7 @@ public class Activity extends AbstractEntity {
      * Instantiates a new activity.
      */
     public Activity() {
-	super();
+        super();
     }
 
     /**
@@ -77,7 +84,7 @@ public class Activity extends AbstractEntity {
      * @return the type
      */
     public ActivityType getType() {
-	return type;
+        return this.type;
     }
 
     /**
@@ -86,8 +93,8 @@ public class Activity extends AbstractEntity {
      * @param type
      *            the new type
      */
-    public void setType(ActivityType type) {
-	this.type = type;
+    public void setType(final ActivityType type) {
+        this.type = type;
     }
 
     /**
@@ -96,7 +103,7 @@ public class Activity extends AbstractEntity {
      * @return the short label
      */
     public String getShortLabel() {
-	return shortLabel;
+        return this.shortLabel;
     }
 
     /**
@@ -105,8 +112,8 @@ public class Activity extends AbstractEntity {
      * @param shortLabel
      *            the new short label
      */
-    public void setShortLabel(String shortLabel) {
-	this.shortLabel = shortLabel;
+    public void setShortLabel(final String shortLabel) {
+        this.shortLabel = shortLabel;
     }
 
     /**
@@ -115,7 +122,7 @@ public class Activity extends AbstractEntity {
      * @return the long label
      */
     public String getLongLabel() {
-	return longLabel;
+        return this.longLabel;
     }
 
     /**
@@ -124,8 +131,8 @@ public class Activity extends AbstractEntity {
      * @param longLabel
      *            the new long label
      */
-    public void setLongLabel(String longLabel) {
-	this.longLabel = longLabel;
+    public void setLongLabel(final String longLabel) {
+        this.longLabel = longLabel;
     }
 
     /**
@@ -134,7 +141,7 @@ public class Activity extends AbstractEntity {
      * @return the position
      */
     public Integer getPosition() {
-	return position;
+        return this.position;
     }
 
     /**
@@ -143,27 +150,8 @@ public class Activity extends AbstractEntity {
      * @param position
      *            the new position
      */
-    public void setPosition(Integer position) {
-	this.position = position;
-    }
-
-    /**
-     * Gets the teams.
-     * 
-     * @return the teams
-     */
-    public Set<Team> getTeams() {
-	return teams;
-    }
-
-    /**
-     * Sets the teams.
-     * 
-     * @param teams
-     *            the new teams
-     */
-    public void setTeams(Set<Team> teams) {
-	this.teams = teams;
+    public void setPosition(final Integer position) {
+        this.position = position;
     }
 
     /**
@@ -172,7 +160,7 @@ public class Activity extends AbstractEntity {
      * @return the imputations
      */
     public Set<Imputation> getImputations() {
-	return imputations;
+        return this.imputations;
     }
 
     /**
@@ -181,8 +169,47 @@ public class Activity extends AbstractEntity {
      * @param imputations
      *            the new imputations
      */
-    public void setImputations(Set<Imputation> imputations) {
-	this.imputations = imputations;
+    public void setImputations(final Set<Imputation> imputations) {
+        this.imputations = imputations;
     }
 
+    /**
+     * Gets the teams.
+     * 
+     * @return the teams
+     */
+    public Set<Team> getTeams() {
+        return this.teams;
+    }
+
+    /**
+     * Sets the teams.
+     * 
+     * @param teams
+     *            the new teams
+     */
+    public void setTeams(final Set<Team> teams) {
+        this.teams = teams;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().appendSuper(super.hashCode())
+                .append(this.getLongLabel()).append(this.getShortLabel())
+                .append(this.getPosition()).append(this.getType()).toHashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        Boolean status = this.equalsConsideringTechnicalLogic(obj);
+        if (status == null) {
+            final Activity rhs = (Activity) obj;
+            status = new EqualsBuilder().appendSuper(this.equals(obj))
+                    .append(this.getShortLabel(), rhs.getShortLabel())
+                    .append(this.getLongLabel(), rhs.getLongLabel())
+                    .append(this.getPosition(), rhs.getPosition())
+                    .append(this.getType(), rhs.getType()).isEquals();
+        }
+        return status;
+    }
 }

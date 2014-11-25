@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -21,9 +21,9 @@
 package org.softdays.mandy.service.support;
 
 import org.dozer.Mapper;
+import org.softdays.mandy.core.model.Resource;
 import org.softdays.mandy.dao.ResourceDao;
 import org.softdays.mandy.dto.ResourceDto;
-import org.softdays.mandy.model.Resource;
 import org.softdays.mandy.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,22 +45,37 @@ public class ResourceServiceImpl implements ResourceService {
     @Autowired
     private Mapper mapper;
 
-    /* (non-Javadoc)
-     * @see org.softdays.mandy.service.ResourceService#findByUid(java.lang.String)
+    /**
+     * Instantiates a new resource service impl.
      */
-    @Override
-    public ResourceDto findByUid(String uid) {
-	Resource res = resourceDao.findOneByUid(uid);
-	return res == null ? null : mapper.map(res, ResourceDto.class);
+    public ResourceServiceImpl() {
+        super();
     }
 
-    /* (non-Javadoc)
-     * @see org.softdays.mandy.service.ResourceService#create(java.lang.String, java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.softdays.mandy.service.ResourceService#findByUid(java.lang.String)
      */
     @Override
-    public ResourceDto create(String uid, String lastname, String firstname) {
-	Resource res = resourceDao.save(new Resource(uid, lastname, firstname));
-	return mapper.map(res, ResourceDto.class);
+    public ResourceDto findByUid(final String uid) {
+        final Resource res = this.resourceDao.findOneByUid(uid);
+        return res == null ? null : this.mapper.map(res, ResourceDto.class);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.softdays.mandy.service.ResourceService#create(java.lang.String,
+     * java.lang.String, java.lang.String)
+     */
+    @Override
+    public ResourceDto create(final String uid, final String lastname,
+            final String firstname) {
+        final Resource res = this.resourceDao.save(new Resource(uid, lastname,
+                firstname));
+        return this.mapper.map(res, ResourceDto.class);
     }
 
 }

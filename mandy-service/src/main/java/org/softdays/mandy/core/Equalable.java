@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -18,46 +18,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.softdays.mandy.model;
+package org.softdays.mandy.core;
 
 /**
- * The Enum ActivityType.
+ * The Interface Equalable.
  * 
  * @author rpatriarche
- * @since 1.0.0
+ * @since 1.0.1
  */
-public enum ActivityType {
-
-    P("Projet"), A("Absence"), Z("Autre activité");
-
-    private String description;
+public interface Equalable {
 
     /**
-     * Instantiates a new activity type.
+     * Returns true or false if the basic checks provides somes absolute
+     * certainty about equality between objetcs, null if another checks are
+     * mandatory.
      * 
-     * @param desc
-     *            the desc
-     */
-    ActivityType(String desc) {
-	this.description = desc;
-    }
-
-    /**
-     * Gets the name.
+     * @param obj
+     *            the object to which compare equality.
      * 
-     * @return the name
+     * @return a tri-state Boolean object. True if object is the same object,
+     *         false if object is null or not same type and null if objet is
+     *         same type.
      */
-    public String getName() {
-	return this.name();
-    }
-
-    /**
-     * Gets the description.
-     * 
-     * @return the description
-     */
-    public String getDescription() {
-	return description;
-    }
+    Boolean equalsConsideringTechnicalLogic(Object obj);
 
 }

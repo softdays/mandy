@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -18,47 +18,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.softdays.mandy.model;
+package org.softdays.mandy.core.exception;
 
 /**
- * The Enum Quota.
+ * If a client cannot do anything to recover from the exception, make it an
+ * unchecked exception.
+ * 
+ * @see <a href=
+ *      "https://docs.oracle.com/javase/tutorial/essential/exceptions/runtime.html"
+ *      >Oracle documentation: Unchecked Exceptions — The Controversy</a>
  * 
  * @author rpatriarche
  * @since 1.0.0
  */
-public enum Quota {
-    NONE(0f), QUARTER(0.25f), HALF(0.5f), THREE_QUARTERS(0.75f), WHOLE(1f);
+public class UnrecoverableException extends RuntimeException {
 
-    private float value;
-
-    private Quota(float value) {
-	this.value = value;
-    }
+    private static final long serialVersionUID = 1L;
 
     /**
-     * Float value.
+     * Instantiates a new mandy exception.
      * 
-     * @return the float
+     * @param throwable
+     *            the throwable to wrap.
      */
-    public Float floatValue() {
-	return value;
+    public UnrecoverableException(final Throwable throwable) {
+        super(throwable);
     }
 
-    /**
-     * Value of.
-     * 
-     * @param value
-     *            the value
-     * @return the quota
-     */
-    public static Quota valueOf(float value) {
-	Quota result = null;
-	for (Quota quota : Quota.values()) {
-	    if (quota.value == value) {
-		result = quota;
-		break;
-	    }
-	}
-	return result;
-    }
 }

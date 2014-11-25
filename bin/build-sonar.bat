@@ -1,0 +1,2 @@
+mvn sonar:sonar
+pause

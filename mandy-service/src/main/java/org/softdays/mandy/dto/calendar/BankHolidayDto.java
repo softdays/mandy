@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -33,5 +33,50 @@ public class BankHolidayDto {
     private String label;
 
     private Date date;
+
+    /**
+     * Instantiates a new bank holiday dto.
+     */
+    public BankHolidayDto() {
+        super();
+    }
+
+    /**
+     * Gets the label.
+     * 
+     * @return the label
+     */
+    public String getLabel() {
+        return this.label;
+    }
+
+    /**
+     * Sets the label.
+     * 
+     * @param label
+     *            the new label
+     */
+    public void setLabel(final String label) {
+        this.label = label;
+    }
+
+    /**
+     * Gets the date.
+     * 
+     * @return the date
+     */
+    public Date getDate() {
+        return (Date) this.date.clone();
+    }
+
+    /**
+     * Sets the date.
+     * 
+     * @param date
+     *            the new date
+     */
+    public void setDate(final Date date) {
+        this.date = (Date) date.clone();
+    }
 
 }

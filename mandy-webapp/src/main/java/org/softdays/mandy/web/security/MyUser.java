@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -36,7 +36,7 @@ public class MyUser extends User {
 
     private static final long serialVersionUID = 1L;
 
-    private ResourceDto resource;
+    private final ResourceDto resource;
 
     /**
      * Instantiates a new my user.
@@ -46,10 +46,10 @@ public class MyUser extends User {
      * @param authorities
      *            the authorities
      */
-    public MyUser(ResourceDto resource,
-	    Collection<? extends GrantedAuthority> authorities) {
-	super(resource.getLogin(), "N/A", authorities);
-	this.resource = resource;
+    public MyUser(final ResourceDto resource,
+            final Collection<? extends GrantedAuthority> authorities) {
+        super(resource.getLogin(), "N/A", authorities);
+        this.resource = resource;
     }
 
     /**
@@ -58,7 +58,7 @@ public class MyUser extends User {
      * @return the resource
      */
     public ResourceDto getResource() {
-	return resource;
+        return this.resource;
     }
 
 }

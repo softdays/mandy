@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -20,46 +20,103 @@
  */
 package org.softdays.mandy.config;
 
+/**
+ * The Class Configuration.
+ * 
+ * @author rpatriarche
+ * @since 1.0.0
+ */
 public class Configuration {
 
     private String contextRoot = "mandy";
 
-    private String ldapAttributeForLastname = "sn";
+    private String ldapAttrLastname = "sn";
 
-    private String ldapAttributeForFirstname = "givenName";
+    private String ldapAttrFirstname = "givenName";
 
     private String version;
 
+    /**
+     * Instantiates a new configuration.
+     */
+    public Configuration() {
+        super();
+    }
+
+    /**
+     * Gets the context root.
+     * 
+     * @return the context root
+     */
     public String getContextRoot() {
-	return contextRoot;
+        return this.contextRoot;
     }
 
-    public void setContextRoot(String contextRoot) {
-	this.contextRoot = contextRoot;
+    /**
+     * Sets the context root.
+     * 
+     * @param contextRoot
+     *            the new context root
+     */
+    public void setContextRoot(final String contextRoot) {
+        this.contextRoot = contextRoot;
     }
 
-    public String getLdapAttributeForLastname() {
-	return ldapAttributeForLastname;
-    }
-
-    public void setLdapAttributeForLastname(String ldapAttributeForLastname) {
-	this.ldapAttributeForLastname = ldapAttributeForLastname;
-    }
-
-    public String getLdapAttributeForFirstname() {
-	return ldapAttributeForFirstname;
-    }
-
-    public void setLdapAttributeForFirstname(String ldapAttributeForFirstname) {
-	this.ldapAttributeForFirstname = ldapAttributeForFirstname;
-    }
-
+    /**
+     * Gets the version.
+     * 
+     * @return the version
+     */
     public String getVersion() {
-	return version;
+        return this.version;
     }
 
-    public void setVersion(String version) {
-	this.version = version;
+    /**
+     * Sets the version.
+     * 
+     * @param version
+     *            the new version
+     */
+    public void setVersion(final String version) {
+        this.version = version;
+    }
+
+    /**
+     * Gets the ldap attribute for lastname.
+     * 
+     * @return the ldap attribute for lastname
+     */
+    public String getLdapAttrLastname() {
+        return this.ldapAttrLastname;
+    }
+
+    /**
+     * Sets the ldap attribute for lastname.
+     * 
+     * @param ldapAttrLastname
+     *            the new ldap attribute for lastname
+     */
+    public void setLdapAttrLastname(final String ldapAttrLastname) {
+        this.ldapAttrLastname = ldapAttrLastname;
+    }
+
+    /**
+     * Gets the ldap attribute for firstname.
+     * 
+     * @return the ldap attribute for firstname
+     */
+    public String getLdapAttrFirstname() {
+        return this.ldapAttrFirstname;
+    }
+
+    /**
+     * Sets the ldap attribute for firstname.
+     * 
+     * @param ldapAttrFirstname
+     *            the new ldap attribute for firstname
+     */
+    public void setLdapAttrFirstname(final String ldapAttrFirstname) {
+        this.ldapAttrFirstname = ldapAttrFirstname;
     }
 
 }

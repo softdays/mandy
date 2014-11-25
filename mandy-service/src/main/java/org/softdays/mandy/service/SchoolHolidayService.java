@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -20,10 +20,10 @@
  */
 package org.softdays.mandy.service;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 /**
- * Provided by Index-Education
+ * Provided by Index-Education.
  * http://telechargement.index-education.com/vacances.xml
  * 
  * @author rpatriarche
@@ -38,6 +38,6 @@ public interface SchoolHolidayService {
      *            the given date
      * @return true, if is school holiday
      */
-    boolean isSchoolHoliday(Date givenDate);
+    boolean isSchoolHoliday(DateTime givenDate);
 
 }

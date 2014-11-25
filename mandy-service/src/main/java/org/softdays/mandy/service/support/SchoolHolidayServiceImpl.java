@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -20,22 +20,26 @@
  */
 package org.softdays.mandy.service.support;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.softdays.mandy.core.exception.UnrecoverableException;
 import org.softdays.mandy.service.SchoolHolidayService;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * The Class SchoolHolidayServiceImpl.
@@ -58,72 +62,86 @@ public class SchoolHolidayServiceImpl implements SchoolHolidayService {
 
     private static final String ATTR_LIBELLE = "libelle";
 
-    private Collection<Date> schoolHolidays;
+    private Collection<DateTime> schoolHolidays;
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormat
-	    .forPattern("yyyy/MM/dd");
+            .forPattern("yyyy/MM/dd");
 
     /**
      * Instantiates a new school holiday service impl.
      */
     public SchoolHolidayServiceImpl() {
-	super();
-	try {
-	    this.init();
-	} catch (Exception e) {
-	    throw new RuntimeException(e);
-	}
+        super();
+        try {
+            this.init();
+        } catch (FactoryConfigurationError | ParserConfigurationException
+                | SAXException | IOException e) {
+            throw new UnrecoverableException(e);
+        }
     }
 
     /**
-     * Inits the.
+     * Init method.
+     * 
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     * @throws FactoryConfigurationError
      * 
      * @throws Exception
      *             the exception
      */
-    public void init() throws Exception {
-	schoolHolidays = new HashSet<Date>();
-	ClassLoader classLoader = Thread.currentThread()
-		.getContextClassLoader();
-	InputStream input = classLoader.getResourceAsStream(XML_DATASOURCE);
-	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-	Document doc = dBuilder.parse(input);
+    private void init() throws FactoryConfigurationError,
+            ParserConfigurationException, SAXException, IOException {
+        this.schoolHolidays = new HashSet<DateTime>();
+        final Document doc = this.createDocument();
 
-	// optional, but recommended
-	// read this -
-	// http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-	doc.getDocumentElement().normalize();
+        // optional, but recommended
+        // read this:
+        // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+        doc.getDocumentElement().normalize();
 
-	NodeList zones = doc.getElementsByTagName(TAG_ZONE);
-	for (int i = 0; i < zones.getLength(); i++) {
-	    Element zone = (Element) zones.item(i);
-	    if ("A".equals(zone.getAttribute(ATTR_LIBELLE))) {
-		NodeList vacances = zone.getElementsByTagName(TAG_VACANCES);
-		for (int j = 0; j < vacances.getLength(); j++) {
-		    Element vacance = (Element) vacances.item(j);
-		    String debut = vacance.getAttribute(ATTR_DEBUT);
-		    String fin = vacance.getAttribute(ATTR_FIN);
-		    DateTime start = FORMATTER.parseDateTime(debut);
-		    DateTime end = FORMATTER.parseDateTime(fin);
-		    this.addRange(start, end);
-		}
-	    }
-	}
+        final NodeList zones = doc.getElementsByTagName(TAG_ZONE);
+        for (int i = 0; i < zones.getLength(); ++i) {
+            final Element zone = (Element) zones.item(i);
+            if ("A".equals(zone.getAttribute(ATTR_LIBELLE))) {
+                final NodeList vacances = zone
+                        .getElementsByTagName(TAG_VACANCES);
+                for (int j = 0; j < vacances.getLength(); ++j) {
+                    final Element vacance = (Element) vacances.item(j);
+                    final String debut = vacance.getAttribute(ATTR_DEBUT);
+                    final String fin = vacance.getAttribute(ATTR_FIN);
+                    final DateTime start = FORMATTER.parseDateTime(debut);
+                    final DateTime end = FORMATTER.parseDateTime(fin);
+                    this.addRange(start, end);
+                }
+            }
+        }
 
+    }
+
+    private Document createDocument() throws FactoryConfigurationError,
+            ParserConfigurationException, SAXException, IOException {
+        final ClassLoader classLoader = Thread.currentThread()
+                .getContextClassLoader();
+        final InputStream input = classLoader
+                .getResourceAsStream(XML_DATASOURCE);
+        final DocumentBuilderFactory dbFactory = DocumentBuilderFactory
+                .newInstance();
+        final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+
+        return dBuilder.parse(input);
     }
 
     /**
      * Il ne faut pas inclure les bornes.
      */
-    private void addRange(DateTime start, DateTime end) {
-	DateTime d = start.plusDays(1); // J+1
-	while (!d.equals(end)) {
-	    this.schoolHolidays.add(d.toDate());
-	    // on avance, on avance [...] Faut pas qu'on réfléchisse ni qu'on
-	    // pense. Il faut qu'on avance, tagagatsointsoin
-	    d = d.plusDays(1);
-	}
+    private void addRange(final DateTime start, final DateTime end) {
+        DateTime date = start.plusDays(1); // J+1
+        while (!date.equals(end)) {
+            this.schoolHolidays.add(date);
+            date = date.plusDays(1);
+        }
     }
 
     /*
@@ -134,9 +152,9 @@ public class SchoolHolidayServiceImpl implements SchoolHolidayService {
      * util.Date)
      */
     @Override
-    public boolean isSchoolHoliday(Date givenDate) {
+    public boolean isSchoolHoliday(final DateTime givenDate) {
 
-	return this.schoolHolidays.contains(givenDate);
+        return this.schoolHolidays.contains(givenDate);
     }
 
 }

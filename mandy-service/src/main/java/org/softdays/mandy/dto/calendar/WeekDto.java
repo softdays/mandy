@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -22,7 +22,6 @@ package org.softdays.mandy.dto.calendar;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
@@ -41,20 +40,20 @@ import org.softdays.mandy.dto.calendar.DayDto.Status;
 @JsonPropertyOrder({ "num", "days" })
 public class WeekDto {
 
-    public static final int WORKING_DAYS_IN_A_WEEK = 5;
+    public static final int NB_WORKING_DAYS_IN_WEEK = 5;
 
     @JsonBackReference
     private DataGridDto parentGrid;
 
     @JsonManagedReference
-    private List<DayDto> days;
+    private final List<DayDto> days;
 
     /**
      * Instantiates a new week dto.
      */
     public WeekDto() {
-	super();
-	days = new ArrayList<DayDto>();
+        super();
+        this.days = new ArrayList<DayDto>();
     }
 
     /**
@@ -63,9 +62,9 @@ public class WeekDto {
      * @param parentGrid
      *            the parent grid
      */
-    public WeekDto(DataGridDto parentGrid) {
-	this();
-	this.parentGrid = parentGrid;
+    public WeekDto(final DataGridDto parentGrid) {
+        this();
+        this.parentGrid = parentGrid;
     }
 
     /**
@@ -74,11 +73,7 @@ public class WeekDto {
      * @return the num
      */
     public int getNum() {
-	// return parentGrid.getWeeks().indexOf(this) + 1;
-	return new DateTime(days.get(0).getDate()).getWeekOfWeekyear();
-	// Calendar cal = Calendar.getInstance();
-	// cal.setTime(days.get(0).getDate());
-	// return cal.get(Calendar.WEEK_OF_YEAR);
+        return new DateTime(this.days.get(0).getDate()).getWeekOfWeekyear();
     }
 
     /**
@@ -87,7 +82,7 @@ public class WeekDto {
      * @return the days
      */
     public List<DayDto> getDays() {
-	return Collections.unmodifiableList(days);
+        return Collections.unmodifiableList(this.days);
     }
 
     /**
@@ -96,7 +91,7 @@ public class WeekDto {
      * @return the parent grid
      */
     public DataGridDto getParentGrid() {
-	return parentGrid;
+        return this.parentGrid;
     }
 
     /**
@@ -105,8 +100,8 @@ public class WeekDto {
      * @param parentGrid
      *            the new parent grid
      */
-    public void setParentGrid(DataGridDto parentGrid) {
-	this.parentGrid = parentGrid;
+    public void setParentGrid(final DataGridDto parentGrid) {
+        this.parentGrid = parentGrid;
     }
 
     /**
@@ -118,14 +113,14 @@ public class WeekDto {
      *            the status
      * @return the day dto
      */
-    public DayDto newDay(Date date, Status status) {
-	if (isCompleted()) {
-	    throw new IllegalStateException("This week is already completed.");
-	}
-	DayDto day = new DayDto(this, date, status);
-	this.days.add(day);
+    public DayDto createDay(final DateTime date, final Status status) {
+        if (this.isCompleted()) {
+            throw new IllegalStateException("This week is already completed.");
+        }
+        final DayDto day = new DayDto(this, date.toDate(), status);
+        this.days.add(day);
 
-	return day;
+        return day;
     }
 
     /**
@@ -135,7 +130,7 @@ public class WeekDto {
      */
     @JsonIgnore
     public boolean isCompleted() {
-	return this.days.size() == WORKING_DAYS_IN_A_WEEK;
+        return this.days.size() == NB_WORKING_DAYS_IN_WEEK;
     }
 
 }

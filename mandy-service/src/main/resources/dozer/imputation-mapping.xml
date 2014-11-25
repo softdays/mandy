@@ -5,7 +5,7 @@
           http://dozer.sourceforge.net/schema/beanmapping.xsd">
 
     <mapping wildcard="false">
-        <class-a>org.softdays.mandy.model.Imputation</class-a>
+        <class-a>org.softdays.mandy.core.model.Imputation</class-a>
         <class-b>org.softdays.mandy.dto.ImputationDto</class-b>
         <field>
             <a>id</a>

@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.softdays.mandy.dto.calendar;
 
 import java.util.ArrayList;
@@ -47,8 +48,8 @@ public class DataGridDto {
      * Instantiates a new data grid dto.
      */
     public DataGridDto() {
-	super();
-	weeks = new ArrayList<WeekDto>();
+        super();
+        this.weeks = new ArrayList<WeekDto>();
     }
 
     /**
@@ -57,10 +58,10 @@ public class DataGridDto {
      * @param base
      *            the base
      */
-    public DataGridDto(Date base) {
-	DateTime date = new DateTime(base);
-	this.year = date.toString("yyyy");
-	this.month = date.toString("MM");
+    public DataGridDto(final Date base) {
+        final DateTime date = new DateTime(base);
+        this.year = date.toString("yyyy");
+        this.month = date.toString("MM");
     }
 
     /**
@@ -69,7 +70,7 @@ public class DataGridDto {
      * @return the year
      */
     public String getYear() {
-	return year;
+        return this.year;
     }
 
     /**
@@ -78,8 +79,8 @@ public class DataGridDto {
      * @param year
      *            the new year
      */
-    public void setYear(String year) {
-	this.year = year;
+    public void setYear(final String year) {
+        this.year = year;
     }
 
     /**
@@ -88,7 +89,7 @@ public class DataGridDto {
      * @return the month
      */
     public String getMonth() {
-	return month;
+        return this.month;
     }
 
     /**
@@ -97,8 +98,8 @@ public class DataGridDto {
      * @param month
      *            the new month
      */
-    public void setMonth(String month) {
-	this.month = month;
+    public void setMonth(final String month) {
+        this.month = month;
     }
 
     /**
@@ -107,7 +108,7 @@ public class DataGridDto {
      * @return the weeks
      */
     public List<WeekDto> getWeeks() {
-	return Collections.unmodifiableList(weeks);
+        return Collections.unmodifiableList(this.weeks);
     }
 
     /**
@@ -115,11 +116,11 @@ public class DataGridDto {
      * 
      * @return the week dto
      */
-    public WeekDto newWeek() {
-	WeekDto weekDto = new WeekDto(this);
-	this.weeks.add(weekDto);
+    public WeekDto createWeek() {
+        final WeekDto weekDto = new WeekDto(this);
+        this.weeks.add(weekDto);
 
-	return weekDto;
+        return weekDto;
     }
 
 }

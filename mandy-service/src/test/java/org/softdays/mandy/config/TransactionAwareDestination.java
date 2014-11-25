@@ -1,3 +1,24 @@
+/*
+ * MANDY is a simple webapp to track man-day consumption on activities.
+ * 
+ * Copyright 2014, rpatriarche
+ *
+ * This file is part of MANDY software.
+ *
+ * MANDY is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * MANDY is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.softdays.mandy.config;
 
 import java.lang.reflect.InvocationHandler;
@@ -39,87 +60,97 @@ public class TransactionAwareDestination implements Destination {
      * @param transactionManager
      *            the transaction manager to use
      */
-    public TransactionAwareDestination(DataSource dataSource,
-	    PlatformTransactionManager transactionManager) {
-	this.dataSource = new TransactionAwareDataSourceProxy(dataSource);
-	this.transactionManager = transactionManager;
+    public TransactionAwareDestination(final DataSource dataSource,
+            final PlatformTransactionManager transactionManager) {
+        this.dataSource = new TransactionAwareDataSourceProxy(dataSource);
+        this.transactionManager = transactionManager;
     }
 
     @Override
     public Connection getConnection() throws SQLException {
-	return (Connection) Proxy.newProxyInstance(
-		ConnectionProxy.class.getClassLoader(),
-		new Class[] { ConnectionProxy.class },
-		new TransactionAwareInvocationHandler(dataSource));
+        return (Connection) Proxy.newProxyInstance(
+                ConnectionProxy.class.getClassLoader(),
+                new Class[] { ConnectionProxy.class },
+                new TransactionAwareInvocationHandler(this.dataSource));
 
     }
 
     private class TransactionAwareInvocationHandler extends
-	    DefaultTransactionDefinition implements InvocationHandler {
+            DefaultTransactionDefinition implements InvocationHandler {
 
-	private final DataSource targetDataSource;
+        private final DataSource targetDataSource;
 
-	public TransactionAwareInvocationHandler(DataSource targetDataSource) {
-	    this.targetDataSource = targetDataSource;
-	}
+        public TransactionAwareInvocationHandler(
+                final DataSource targetDataSource) {
+            this.targetDataSource = targetDataSource;
+        }
 
-	public Object invoke(Object proxy, Method method, Object[] args)
-		throws Throwable {
+        @Override
+        public Object invoke(final Object proxy, final Method method,
+                final Object[] args) throws Throwable {
 
-	    if (method.getName().equals("commit")) {
-		TransactionStatus status = transactionManager
-			.getTransaction(this);
-		transactionManager.commit(status);
-		return null;
-	    } else if (method.getName().equals("rollback")) {
-		TransactionStatus status = transactionManager
-			.getTransaction(this);
-		transactionManager.rollback(status);
-		return null;
-	    } else
-		try {
-		    Connection connection = targetDataSource.getConnection();
-		    Object retVal = method.invoke(connection, args);
-		    return retVal;
-		} catch (InvocationTargetException ex) {
-		    throw ex.getTargetException();
-		}
-	}
+            if (method.getName().equals("commit")) {
+                final TransactionStatus status = TransactionAwareDestination.this.transactionManager
+                        .getTransaction(this);
+                TransactionAwareDestination.this.transactionManager
+                        .commit(status);
+                return null;
+            } else if (method.getName().equals("rollback")) {
+                final TransactionStatus status = TransactionAwareDestination.this.transactionManager
+                        .getTransaction(this);
+                TransactionAwareDestination.this.transactionManager
+                        .rollback(status);
+                return null;
+            } else {
+                try {
+                    final Connection connection = this.targetDataSource
+                            .getConnection();
+                    final Object retVal = method.invoke(connection, args);
+                    return retVal;
+                } catch (final InvocationTargetException ex) {
+                    throw ex.getTargetException();
+                }
+            }
+        }
     }
 
     @Override
     public String toString() {
-	return "TransactionAwareDestination{" + "dataSource=" + dataSource
-		+ ", transactionManager=" + transactionManager + '}';
+        return "TransactionAwareDestination{" + "dataSource=" + this.dataSource
+                + ", transactionManager=" + this.transactionManager + '}';
     }
 
     @Override
-    public boolean equals(Object o) {
-	if (this == o)
-	    return true;
-	if (o == null || getClass() != o.getClass())
-	    return false;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
 
-	TransactionAwareDestination that = (TransactionAwareDestination) o;
+        final TransactionAwareDestination that = (TransactionAwareDestination) o;
 
-	if (dataSource != null ? !dataSource.equals(that.dataSource)
-		: that.dataSource != null)
-	    return false;
-	if (transactionManager != null ? !transactionManager
-		.equals(that.transactionManager)
-		: that.transactionManager != null)
-	    return false;
+        if (this.dataSource != null ? !this.dataSource.equals(that.dataSource)
+                : that.dataSource != null) {
+            return false;
+        }
+        if (this.transactionManager != null ? !this.transactionManager
+                .equals(that.transactionManager)
+                : that.transactionManager != null) {
+            return false;
+        }
 
-	return true;
+        return true;
     }
 
     @Override
     public int hashCode() {
-	int result = dataSource != null ? dataSource.hashCode() : 0;
-	result = 31
-		* result
-		+ (transactionManager != null ? transactionManager.hashCode()
-			: 0);
-	return result;
+        int result = this.dataSource != null ? this.dataSource.hashCode() : 0;
+        result = 31
+                * result
+                + (this.transactionManager != null ? this.transactionManager
+                        .hashCode() : 0);
+        return result;
     }
 }

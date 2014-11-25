@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -50,6 +50,13 @@ public class MyUserDetailsContextMapper implements UserDetailsContextMapper {
     @Autowired
     private Configuration configurationDto;
 
+    /**
+     * Instantiates a new my user details context mapper.
+     */
+    public MyUserDetailsContextMapper() {
+        super();
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -59,20 +66,25 @@ public class MyUserDetailsContextMapper implements UserDetailsContextMapper {
      * java.lang.String, java.util.Collection)
      */
     @Override
-    public UserDetails mapUserFromContext(DirContextOperations ctx,
-	    String username, Collection<? extends GrantedAuthority> authorities) {
-	ResourceDto resource = resourceService.findByUid(username);
-	if (resource == null) {
-	    String lastname = (String) ctx.getObjectAttribute(configurationDto
-		    .getLdapAttributeForLastname());
-	    String firstname = (String) ctx.getObjectAttribute(configurationDto
-		    .getLdapAttributeForFirstname());
-	    resource = resourceService.create(username, lastname, firstname);
-	}
-	String role = resource.getRole();
-	SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
+    public UserDetails mapUserFromContext(final DirContextOperations ctx,
+            final String username,
+            final Collection<? extends GrantedAuthority> authorities) {
+        ResourceDto resource = this.resourceService.findByUid(username);
+        if (resource == null) {
+            final String lastname = (String) ctx
+                    .getObjectAttribute(this.configurationDto
+                            .getLdapAttrLastname());
+            final String firstname = (String) ctx
+                    .getObjectAttribute(this.configurationDto
+                            .getLdapAttrFirstname());
+            resource = this.resourceService.create(username, lastname,
+                    firstname);
+        }
+        final String role = resource.getRole();
+        final SimpleGrantedAuthority authority = new SimpleGrantedAuthority(
+                role);
 
-	return new MyUser(resource, Arrays.asList(authority));
+        return new MyUser(resource, Arrays.asList(authority));
     }
 
     /*
@@ -85,8 +97,9 @@ public class MyUserDetailsContextMapper implements UserDetailsContextMapper {
      * org.springframework.ldap.core.DirContextAdapter)
      */
     @Override
-    public void mapUserToContext(UserDetails user, DirContextAdapter ctx) {
-	// not used
+    public void mapUserToContext(final UserDetails user,
+            final DirContextAdapter ctx) {
+        // not used
     }
 
 }

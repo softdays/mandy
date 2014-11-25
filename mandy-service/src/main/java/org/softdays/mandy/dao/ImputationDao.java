@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -18,12 +18,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.softdays.mandy.dao;
 
 import java.util.Date;
 import java.util.List;
 
-import org.softdays.mandy.model.Imputation;
+import org.softdays.mandy.core.model.Imputation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -40,18 +41,25 @@ public interface ImputationDao extends JpaRepository<Imputation, Long> {
      * Retourne l'ensemble des imputations retrouvées pour l'utilisateur et pour
      * le mois correspondant à la date indiquée.
      * 
+     * version using just method name but without fetch:
+     * findByResourceIdAndDateBetweenOrderByActivityPositionAscDateAsc
+     * 
      * @param userId
-     *            Identifiant utilisateur.
-     * @param date
-     *            La date du mois pour lequel on souhaite récupérer les
-     *            imputations.
+     *            the user ID.
+     * @param startDate
+     *            the date from which we want to retrieve imputation entries.
+     * @param endDate
+     *            the date until which we want to retrieve imputation entries.
+     * 
+     * 
      * @return Une liste d'entités @{link Imputation}.
      */
-    @Query("select i from #{#entityName} i join fetch i.resource r join fetch i.activity a where r.id=:resourceId and (i.date between :startDate and :endDate) order by a.position asc, i.date asc")
-    // version using just method name but without fetch:
-    // findByResourceIdAndDateBetweenOrderByActivityPositionAscDateAsc
+    @Query("select i from #{#entityName} i " + "join fetch i.resource r "
+            + "join fetch i.activity a " + "where r.id=:resourceId "
+            + "and (i.date between :startDate and :endDate) "
+            + "order by a.position asc, i.date asc")
     List<Imputation> findByResourceAndDateRange(
-	    @Param("resourceId") Long userId,
-	    @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+            @Param("resourceId") Long userId,
+            @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
 }

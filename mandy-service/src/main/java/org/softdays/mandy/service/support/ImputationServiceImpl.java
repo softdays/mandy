@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -21,7 +21,6 @@
 package org.softdays.mandy.service.support;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,12 +28,12 @@ import java.util.Map;
 import javax.transaction.Transactional;
 
 import org.dozer.Mapper;
+import org.joda.time.DateTime;
+import org.softdays.mandy.core.model.Imputation;
 import org.softdays.mandy.dao.ImputationDao;
 import org.softdays.mandy.dto.ImputationDto;
-import org.softdays.mandy.model.Imputation;
 import org.softdays.mandy.service.CalendarService;
 import org.softdays.mandy.service.ImputationService;
-import org.softdays.mandy.service.MapperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,10 +54,14 @@ public class ImputationServiceImpl implements ImputationService {
     private CalendarService calendarService;
 
     @Autowired
-    private MapperService listMapper;
-
-    @Autowired
     private Mapper mapper;
+
+    /**
+     * Instantiates a new imputation service impl.
+     */
+    public ImputationServiceImpl() {
+        super();
+    }
 
     /*
      * (non-Javadoc)
@@ -68,33 +71,33 @@ public class ImputationServiceImpl implements ImputationService {
      * .Long, java.util.Date)
      */
     @Override
-    public Map<Long, List<ImputationDto>> findImputations(Long resourceId,
-	    Date date) {
+    public Map<Long, List<ImputationDto>> findImputations(
+            final Long resourceId, final DateTime givenDate) {
 
-	Date startDate = calendarService.getFirstMondayOfMonth(date);
-	Date endDate = calendarService.getFirstSundayAfterEndOfMonth(date);
+        final DateTime startDate = this.calendarService
+                .getFirstMondayOfMonth(givenDate);
+        final DateTime endDate = this.calendarService
+                .getFirstSundayAfterEndOfMonth(givenDate);
 
-	List<Imputation> imputations = imputationDao
-		.findByResourceAndDateRange(resourceId, startDate, endDate);
+        final List<Imputation> imputations = this.imputationDao
+                .findByResourceAndDateRange(resourceId, startDate.toDate(),
+                        endDate.toDate());
 
-	Map<Long, List<ImputationDto>> results = new LinkedHashMap<>();
-	// ventiler les imputations pour obtenir des lignes
-	for (Imputation imputation : imputations) {
-	    Long activityId = imputation.getActivity().getId();
-	    ImputationDto imputationDto = mapper.map(imputation,
-		    ImputationDto.class);
-	    if (!results.containsKey(activityId)) {
-		results.put(activityId, new ArrayList<ImputationDto>());
-	    }
-	    List<ImputationDto> imputationsDtos = results.get(activityId);
-	    // les imputations sont prélablement ordonnées chronologiquement
-	    imputationsDtos.add(imputationDto);
-	}
+        final Map<Long, List<ImputationDto>> results = new LinkedHashMap<>();
+        // ventiler les imputations pour obtenir des lignes
+        for (final Imputation imputation : imputations) {
+            final Long activityId = imputation.getActivity().getId();
+            final ImputationDto imputationDto = this.mapper.map(imputation,
+                    ImputationDto.class);
+            if (!results.containsKey(activityId)) {
+                results.put(activityId, new ArrayList<ImputationDto>());
+            }
+            final List<ImputationDto> imputationsDtos = results.get(activityId);
+            // les imputations sont préalablement ordonnées chronologiquement
+            imputationsDtos.add(imputationDto);
+        }
 
-	// List<ImputationDto> imputations = utilService.map(imputation,
-	// ImputationDto.class);
-
-	return results;
+        return results;
     }
 
     /*
@@ -105,10 +108,11 @@ public class ImputationServiceImpl implements ImputationService {
      * .mandy.dto.ImputationDto)
      */
     @Override
-    public ImputationDto createImputation(ImputationDto newImputation) {
-	Imputation entity = mapper.map(newImputation, Imputation.class);
-	Imputation imputation = imputationDao.save(entity);
-	return mapper.map(imputation, ImputationDto.class);
+    public ImputationDto createImputation(final ImputationDto newImputation) {
+        final Imputation entity = this.mapper.map(newImputation,
+                Imputation.class);
+        final Imputation imputation = this.imputationDao.save(entity);
+        return this.mapper.map(imputation, ImputationDto.class);
     }
 
     /*
@@ -119,18 +123,18 @@ public class ImputationServiceImpl implements ImputationService {
      * .mandy.dto.ImputationDto)
      */
     @Override
-    public ImputationDto updateImputation(ImputationDto imputationDto) {
-	Long imputationId = imputationDto.getImputationId();
-	Imputation imputation = imputationDao.findOne(imputationId);
-	if (imputation == null) {
-	    throw new IllegalArgumentException("Imputation ID not found: "
-		    + imputationId);
-	}
-	// on synchronise les champs mutables
-	imputation.setQuota(imputationDto.getQuota());
-	imputation.setComment(imputationDto.getComment());
-	// dirty checking will do the trick
-	return mapper.map(imputation, ImputationDto.class);
+    public ImputationDto updateImputation(final ImputationDto imputationDto) {
+        final Long imputationId = imputationDto.getImputationId();
+        final Imputation imputation = this.imputationDao.findOne(imputationId);
+        if (imputation == null) {
+            throw new IllegalArgumentException("Imputation ID not found: "
+                    + imputationId);
+        }
+        // on synchronise les champs mutables
+        imputation.setQuota(imputationDto.getQuota());
+        imputation.setComment(imputationDto.getComment());
+        // dirty checking will do the trick
+        return this.mapper.map(imputation, ImputationDto.class);
     }
 
     /*
@@ -141,7 +145,7 @@ public class ImputationServiceImpl implements ImputationService {
      * .Long)
      */
     @Override
-    public void deleteImputation(Long imputationId) {
-	imputationDao.delete(imputationId);
+    public void deleteImputation(final Long imputationId) {
+        this.imputationDao.delete(imputationId);
     }
 }

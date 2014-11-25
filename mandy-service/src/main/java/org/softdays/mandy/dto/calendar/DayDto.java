@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -42,22 +42,22 @@ public class DayDto {
      * @since 1.0.0
      */
     public enum Status {
-	/**
-	 * Working day
-	 */
-	WD,
-	/**
-	 * Bank Holiday
-	 */
-	BH,
-	/**
-	 * Week End
-	 */
-	WE,
-	/**
-	 * School Holiday (could be a working day)
-	 */
-	SH
+        /**
+         * Working day.
+         */
+        WD,
+        /**
+         * Bank Holiday.
+         */
+        BH,
+        /**
+         * Week End.
+         */
+        WE,
+        /**
+         * School Holiday (could be a working day).
+         */
+        SH
     }
 
     @JsonSerialize(using = JsonDateSerializer.class)
@@ -72,7 +72,7 @@ public class DayDto {
      * Instantiates a new day dto.
      */
     public DayDto() {
-	super();
+        super();
     }
 
     /**
@@ -85,11 +85,11 @@ public class DayDto {
      * @param status
      *            the status
      */
-    public DayDto(WeekDto week, Date date, Status status) {
-	super();
-	this.date = new DateTime(date).toDate();
-	this.week = week;
-	this.status = status;
+    public DayDto(final WeekDto week, final Date date, final Status status) {
+        super();
+        this.date = new DateTime(date).toDate();
+        this.week = week;
+        this.status = status;
     }
 
     /**
@@ -98,7 +98,7 @@ public class DayDto {
      * @return the date
      */
     public Date getDate() {
-	return date;
+        return (Date) this.date.clone();
     }
 
     /**
@@ -107,8 +107,8 @@ public class DayDto {
      * @param date
      *            the new date
      */
-    public void setDate(Date date) {
-	this.date = new DateTime(date).toDate();
+    public void setDate(final Date date) {
+        this.date = new DateTime(date).toDate();
     }
 
     /**
@@ -117,7 +117,7 @@ public class DayDto {
      * @return the status
      */
     public Status getStatus() {
-	return status;
+        return this.status;
     }
 
     /**
@@ -126,8 +126,8 @@ public class DayDto {
      * @param status
      *            the new status
      */
-    public void setStatus(Status status) {
-	this.status = status;
+    public void setStatus(final Status status) {
+        this.status = status;
     }
 
     /**
@@ -136,7 +136,7 @@ public class DayDto {
      * @return the week
      */
     public WeekDto getWeek() {
-	return week;
+        return this.week;
     }
 
     /**
@@ -145,8 +145,8 @@ public class DayDto {
      * @param week
      *            the new week
      */
-    public void setWeek(WeekDto week) {
-	this.week = week;
+    public void setWeek(final WeekDto week) {
+        this.week = week;
     }
 
 }

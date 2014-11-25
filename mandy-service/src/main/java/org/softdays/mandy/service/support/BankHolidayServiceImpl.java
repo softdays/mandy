@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -22,10 +22,9 @@ package org.softdays.mandy.service.support;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
@@ -39,6 +38,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.softdays.mandy.core.exception.UnrecoverableException;
 import org.softdays.mandy.service.BankHolidayService;
 import org.springframework.stereotype.Service;
 
@@ -52,50 +52,57 @@ import org.springframework.stereotype.Service;
 public class BankHolidayServiceImpl implements BankHolidayService {
 
     private static final Logger LOGGER = LoggerFactory
-	    .getLogger(BankHolidayServiceImpl.class);
+            .getLogger(BankHolidayServiceImpl.class);
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormat
-	    .forPattern("yyyyMMdd");
+            .forPattern("yyyyMMdd");
 
-    private Map<Date, String> bankHolidays = new HashMap<>();
+    private final Map<DateTime, String> bankHolidays =
+            new ConcurrentHashMap<>();
 
     /**
      * Instantiates a new bank holiday service impl.
      */
     public BankHolidayServiceImpl() {
-	super();
-	init();
+        super();
+        try {
+            this.init();
+        } catch (IOException | ParserException e) {
+            throw new UnrecoverableException(e);
+        }
     }
 
-    private void init() {
-	long start = System.currentTimeMillis();
-	ClassLoader classLoader = Thread.currentThread()
-		.getContextClassLoader();
-	InputStream ics = classLoader.getResourceAsStream("holidays/basic.ics");
-	CalendarBuilder builder = new CalendarBuilder();
-	Calendar calendar = null;
-	try {
-	    calendar = builder.build(ics);
-	} catch (IOException | ParserException e) {
-	    e.printStackTrace();
-	    LOGGER.error(e.getMessage());
-	    throw new RuntimeException(e);
-	}
+    /**
+     * Initializes the bean.
+     * 
+     * @throws IOException
+     *             thrown when unable to read from the specified reader
+     * @throws ParserException
+     *             thrown if an error occurs during parsing
+     */
+    private void init() throws IOException, ParserException {
+        final long start = System.currentTimeMillis();
+        final ClassLoader classLoader =
+                Thread.currentThread().getContextClassLoader();
+        final InputStream ics =
+                classLoader.getResourceAsStream("holidays/basic.ics");
+        final CalendarBuilder builder = new CalendarBuilder();
+        final Calendar calendar = builder.build(ics);
 
-	ComponentList components = calendar.getComponents();
-	@SuppressWarnings("rawtypes")
-	Iterator i = components.iterator();
-	while (i.hasNext()) {
-	    Component component = (Component) i.next();
-	    Property dstart = component.getProperty("DTSTART");
-	    Property summary = component.getProperty("SUMMARY");
-	    DateTime date = FORMATTER.parseDateTime(dstart.getValue());
-	    bankHolidays.put(date.toDate(), summary.getValue());
-	}
-	long end = System.currentTimeMillis();
-	if (LOGGER.isTraceEnabled()) {
-	    LOGGER.trace("init duration: " + (end - start) + "ms");
-	}
+        final ComponentList components = calendar.getComponents();
+        @SuppressWarnings("rawtypes")
+        final Iterator iterator = components.iterator();
+        while (iterator.hasNext()) {
+            final Component component = (Component) iterator.next();
+            final Property dstart = component.getProperty("DTSTART");
+            final Property summary = component.getProperty("SUMMARY");
+            final DateTime date = FORMATTER.parseDateTime(dstart.getValue());
+            this.bankHolidays.put(date, summary.getValue());
+        }
+        if (LOGGER.isTraceEnabled()) {
+            final long duration = System.currentTimeMillis() - start;
+            LOGGER.trace(String.format("init duration: %s ms", duration));
+        }
     }
 
     /*
@@ -106,8 +113,8 @@ public class BankHolidayServiceImpl implements BankHolidayService {
      * .util.Date)
      */
     @Override
-    public String getBankHolidaySummary(Date givenDate) {
-	return bankHolidays.get(givenDate);
+    public String getBankHolidaySummary(final DateTime givenDate) {
+        return this.bankHolidays.get(givenDate);
     }
 
 }

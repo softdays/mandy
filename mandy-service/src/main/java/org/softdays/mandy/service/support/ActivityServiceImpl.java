@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -47,16 +47,24 @@ public class ActivityServiceImpl implements ActivityService {
     @Autowired
     private MapperService utilService;
 
+    /**
+     * Instantiates a new activity service impl.
+     */
+    public ActivityServiceImpl() {
+        super();
+    }
+
     /*
      * (non-Javadoc)
      * 
      * @see
      * org.softdays.mandy.service.ActivityService#getActivities(java.lang.Long)
      */
-    public List<ActivityDto> getActivities(Long userId) {
+    @Override
+    public List<ActivityDto> getActivities(final Long userId) {
 
-	return utilService.map(
-	// activityDao.findAll(new Sort(Direction.ASC, "position")),
-		activityDao.findByResource(userId), ActivityDto.class);
+        return this.utilService.map(
+        // activityDao.findAll(new Sort(Direction.ASC, "position")),
+                this.activityDao.findByResource(userId), ActivityDto.class);
     }
 }

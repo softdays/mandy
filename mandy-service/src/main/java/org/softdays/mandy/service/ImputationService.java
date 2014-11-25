@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -18,12 +18,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.softdays.mandy.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.DateTime;
 import org.softdays.mandy.dto.ImputationDto;
 
 /**
@@ -45,7 +46,8 @@ public interface ImputationService {
      *            search.
      * @return imputations indexed by activity.id
      */
-    Map<Long, List<ImputationDto>> findImputations(Long resourceId, Date date);
+    Map<Long, List<ImputationDto>> findImputations(Long resourceId,
+            DateTime date);
 
     /**
      * Persists a new imputation.

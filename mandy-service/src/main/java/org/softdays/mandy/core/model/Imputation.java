@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.softdays.mandy.model;
+package org.softdays.mandy.core.model;
 
 import java.util.Date;
 
@@ -32,6 +32,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.softdays.mandy.core.BaseEntity;
+import org.softdays.mandy.core.CoreConstants;
+
 /**
  * Une imputation permet de tracer la charge des ressources sur les activités.
  * Contrainte unique : une seule imputation possible pour une activité, une
@@ -41,18 +46,26 @@ import javax.persistence.UniqueConstraint;
  * @since 1.0.0
  */
 @Entity
-@Table(name = "IMPUTATION", uniqueConstraints = @UniqueConstraint(columnNames = {
-	"ACTIVITY_ID", "RESOURCE_ID", "DATE" }))
-public class Imputation extends AbstractEntity {
+@Table(name = "IMPUTATION", uniqueConstraints = @UniqueConstraint(
+        columnNames = { "ACTIVITY_ID", "RESOURCE_ID", "DATE" }))
+public class Imputation extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn(name = "ACTIVITY_ID", updatable = false, nullable = false, foreignKey = @ForeignKey(name = "FK__IMPUTATION__ACTIVITY"))
+    @JoinColumn(
+            name = "ACTIVITY_ID",
+            updatable = false,
+            nullable = false,
+            foreignKey = @ForeignKey(name = "FK__IMPUTATION__ACTIVITY"))
     @org.hibernate.annotations.ForeignKey(name = "FK__IMPUTATION__ACTIVITY")
     // for hbm2ddl
     private Activity activity;
 
     @ManyToOne
-    @JoinColumn(name = "RESOURCE_ID", updatable = false, nullable = false, foreignKey = @ForeignKey(name = "FK__IMPUTATION__RESOURCE"))
+    @JoinColumn(
+            name = "RESOURCE_ID",
+            updatable = false,
+            nullable = false,
+            foreignKey = @ForeignKey(name = "FK__IMPUTATION__RESOURCE"))
     @org.hibernate.annotations.ForeignKey(name = "FK__IMPUTATION__RESOURCE")
     // for hbm2ddl
     private Resource resource;
@@ -64,14 +77,14 @@ public class Imputation extends AbstractEntity {
     @Column(nullable = false)
     private Float quota;
 
-    @Column(length = 255)
+    @Column(length = CoreConstants.DB_DESCRIPTION_LENGTH)
     private String comment;
 
     /**
      * Instantiates a new imputation.
      */
     public Imputation() {
-	super();
+        super();
     }
 
     /**
@@ -80,8 +93,9 @@ public class Imputation extends AbstractEntity {
      * @param imputationId
      *            the imputation id
      */
-    public Imputation(Long imputationId) {
-	this.setId(imputationId);
+    public Imputation(final Long imputationId) {
+        this();
+        this.setId(imputationId);
     }
 
     /**
@@ -90,7 +104,7 @@ public class Imputation extends AbstractEntity {
      * @return the activity
      */
     public Activity getActivity() {
-	return activity;
+        return this.activity;
     }
 
     /**
@@ -99,8 +113,8 @@ public class Imputation extends AbstractEntity {
      * @param activity
      *            the new activity
      */
-    public void setActivity(Activity activity) {
-	this.activity = activity;
+    public void setActivity(final Activity activity) {
+        this.activity = activity;
     }
 
     /**
@@ -109,7 +123,7 @@ public class Imputation extends AbstractEntity {
      * @return the date
      */
     public Date getDate() {
-	return date;
+        return (Date) this.date.clone();
     }
 
     /**
@@ -118,8 +132,8 @@ public class Imputation extends AbstractEntity {
      * @param date
      *            the new date
      */
-    public void setDate(Date date) {
-	this.date = date;
+    public void setDate(final Date date) {
+        this.date = (Date) date.clone();
     }
 
     /**
@@ -128,7 +142,7 @@ public class Imputation extends AbstractEntity {
      * @return the resource
      */
     public Resource getResource() {
-	return resource;
+        return this.resource;
     }
 
     /**
@@ -137,8 +151,8 @@ public class Imputation extends AbstractEntity {
      * @param resource
      *            the new resource
      */
-    public void setResource(Resource resource) {
-	this.resource = resource;
+    public void setResource(final Resource resource) {
+        this.resource = resource;
     }
 
     /**
@@ -147,7 +161,7 @@ public class Imputation extends AbstractEntity {
      * @return the quota
      */
     public Float getQuota() {
-	return quota;
+        return this.quota;
     }
 
     /**
@@ -156,8 +170,8 @@ public class Imputation extends AbstractEntity {
      * @param quota
      *            the new quota
      */
-    public void setQuota(Float quota) {
-	this.quota = quota;
+    public void setQuota(final Float quota) {
+        this.quota = quota;
     }
 
     /**
@@ -166,7 +180,7 @@ public class Imputation extends AbstractEntity {
      * @return the comment
      */
     public String getComment() {
-	return comment;
+        return this.comment;
     }
 
     /**
@@ -175,8 +189,28 @@ public class Imputation extends AbstractEntity {
      * @param comment
      *            the new comment
      */
-    public void setComment(String comment) {
-	this.comment = comment;
+    public void setComment(final String comment) {
+        this.comment = comment;
     }
 
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().appendSuper(super.hashCode())
+                .append(this.getActivity()).append(this.getComment())
+                .append(this.getDate()).append(this.getQuota())
+                .append(this.getResource()).toHashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        Boolean status = this.equalsConsideringTechnicalLogic(obj);
+        if (status == null) {
+            final Imputation rhs = (Imputation) obj;
+            status = new EqualsBuilder().appendSuper(this.equals(obj))
+                    .append(this.getActivity(), rhs.getActivity())
+                    .append(this.getComment(), rhs.getComment())
+                    .append(this.getDate(), rhs.getDate()).isEquals();
+        }
+        return status;
+    }
 }

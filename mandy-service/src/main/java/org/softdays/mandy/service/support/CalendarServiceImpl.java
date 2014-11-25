@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -20,10 +20,9 @@
  */
 package org.softdays.mandy.service.support;
 
-import java.util.Date;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
+import org.joda.time.ReadableDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.softdays.mandy.dto.calendar.DataGridDto;
@@ -44,7 +43,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CalendarServiceImpl implements CalendarService {
 
-    private static final String FIRST_DAY_OF_THE_MONTH = "01";
+    private static final String FIRST_DAY_OF_MONTH = "01";
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormat
             .forPattern("yyyyMMdd");
@@ -55,6 +54,13 @@ public class CalendarServiceImpl implements CalendarService {
     @Autowired
     private SchoolHolidayService schoolHolidaysService;
 
+    /**
+     * Instantiates a new calendar service impl.
+     */
+    public CalendarServiceImpl() {
+        super();
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -63,63 +69,26 @@ public class CalendarServiceImpl implements CalendarService {
      * .util.Date)
      */
     @Override
-    public DataGridDto getDataGridOfTheMonth(Date base) {
-        // Date base = this.determineBaseDate(givenDate);
-        Date start = getFirstMondayOfMonth(base);
-        Date end = getFirstSundayAfterEndOfMonth(base);
-        Date currentDate = start;
-        DataGridDto dataGrid = new DataGridDto(base);
-        WeekDto week = dataGrid.newWeek();
+    public DataGridDto getDataGridOfTheMonth(final DateTime date) {
+        DateTime currentDate = this.getFirstMondayOfMonth(date);
+        final DateTime end = this.getFirstSundayAfterEndOfMonth(date);
+        final DataGridDto dataGrid = new DataGridDto(date.toDate());
+        WeekDto week = dataGrid.createWeek();
         while (!currentDate.equals(end)) {
-            if (!isEndOfWeek(currentDate)) {
+            if (!this.isEndOfWeek(currentDate)) {
                 // ici on est sûr de devoir insérer un jour ouvré
                 if (week.isCompleted()) {
                     // c'est bien ici qu'il faut gérer les créations de semaines
-                    week = dataGrid.newWeek();
+                    week = dataGrid.createWeek();
                 }
-                week.newDay(currentDate, this.getDateStatus(currentDate));
+                week.createDay(currentDate, this.getDateStatus(currentDate));
             }
-            currentDate = new DateTime(currentDate).plusDays(1).toDate();
+            currentDate = currentDate.plusDays(1);
         }
         return dataGrid;
     }
 
-    /**
-     * Determine base date.
-     * 
-     * @param givenDate
-     *            the given date
-     * @return the date
-     */
-    protected Date determineBaseDate(Date givenDate) {
-        DateTime base = new DateTime(givenDate);
-        if (dateWeekContainsOneDayOfPreviousMonth(base)) {
-            base = base.minusMonths(1);
-        }
-
-        return base.dayOfMonth().withMinimumValue().toDate();
-    }
-
-    /**
-     * Date week contains one day of previous month.
-     * 
-     * @param date
-     *            the date
-     * @return true, if successful
-     */
-    protected boolean dateWeekContainsOneDayOfPreviousMonth(DateTime date) {
-        int week = date.getWeekOfWeekyear();
-        int month = date.getMonthOfYear();
-        DateTime prev = date.minusDays(1);
-        boolean sameMonth = true;
-        while (prev.getWeekOfWeekyear() == week && sameMonth) {
-            sameMonth = prev.getMonthOfYear() == month;
-            prev = prev.minusDays(1);
-        }
-        return !sameMonth;
-    }
-
-    private boolean isMonday(DateTime date) {
+    private boolean isMonday(final ReadableDateTime date) {
         return date.getDayOfWeek() == DateTimeConstants.MONDAY;
     }
 
@@ -131,10 +100,9 @@ public class CalendarServiceImpl implements CalendarService {
      * .lang.String, java.lang.String)
      */
     @Override
-    public Date getFirstDayOfTheMonth(String year, String month) {
+    public DateTime getFirstDayOfTheMonth(final String year, final String month) {
 
-        return FORMATTER.parseDateTime(year + month + FIRST_DAY_OF_THE_MONTH)
-                .toDate();
+        return FORMATTER.parseDateTime(year + month + FIRST_DAY_OF_MONTH);
     }
 
     /*
@@ -145,14 +113,13 @@ public class CalendarServiceImpl implements CalendarService {
      * .util.Date)
      */
     @Override
-    public Date getFirstMondayOfMonth(final Date givenDate) {
-        DateTime date = new DateTime(givenDate);
-        date = date.dayOfMonth().withMinimumValue();
-        while (!isMonday(date)) {
+    public DateTime getFirstMondayOfMonth(final DateTime givenDate) {
+        DateTime date = givenDate.dayOfMonth().withMinimumValue();
+        while (!this.isMonday(date)) {
             date = date.plusDays(1);
         }
 
-        return date.toDate();
+        return date;
     }
 
     /*
@@ -163,25 +130,13 @@ public class CalendarServiceImpl implements CalendarService {
      * (java.util.Date)
      */
     @Override
-    public Date getFirstSundayAfterEndOfMonth(final Date givenDate) {
-        DateTime date = new DateTime(givenDate);
-        date = date.dayOfMonth().withMaximumValue();
+    public DateTime getFirstSundayAfterEndOfMonth(final DateTime givenDate) {
+        DateTime date = givenDate.dayOfMonth().withMaximumValue();
         while (date.getDayOfWeek() != DateTimeConstants.SUNDAY) {
             date = date.plusDays(1);
         }
 
-        return date.toDate();
-    }
-
-    /**
-     * Next.
-     * 
-     * @param date
-     *            the date
-     * @return the date
-     */
-    protected Date next(Date date) {
-        return new DateTime(date).plusDays(1).toDate();
+        return date;
     }
 
     /**
@@ -191,13 +146,13 @@ public class CalendarServiceImpl implements CalendarService {
      *            the given date
      * @return the date status
      */
-    protected Status getDateStatus(Date givenDate) {
+    protected Status getDateStatus(final DateTime givenDate) {
         Status status = Status.WD;
-        if (isBankHoliday(givenDate)) {
+        if (this.isBankHoliday(givenDate)) {
             status = Status.BH;
-        } else if (isSchoolHoliday(givenDate)) {
+        } else if (this.isSchoolHoliday(givenDate)) {
             status = Status.SH;
-        } else if (isEndOfWeek(givenDate)) {
+        } else if (this.isEndOfWeek(givenDate)) {
             status = Status.WE;
         }
 
@@ -211,8 +166,8 @@ public class CalendarServiceImpl implements CalendarService {
      *            the given date
      * @return true, if is school holiday
      */
-    protected boolean isSchoolHoliday(Date givenDate) {
-        return schoolHolidaysService.isSchoolHoliday(givenDate);
+    protected boolean isSchoolHoliday(final DateTime givenDate) {
+        return this.schoolHolidaysService.isSchoolHoliday(givenDate);
     }
 
     /**
@@ -222,9 +177,8 @@ public class CalendarServiceImpl implements CalendarService {
      *            the given date
      * @return true, if is end of week
      */
-    protected boolean isEndOfWeek(Date givenDate) {
-        DateTime date = new DateTime(givenDate);
-        int dayOfWeek = date.getDayOfWeek();
+    protected boolean isEndOfWeek(final ReadableDateTime date) {
+        final int dayOfWeek = date.getDayOfWeek();
         return dayOfWeek == DateTimeConstants.SUNDAY
                 || dayOfWeek == DateTimeConstants.SATURDAY;
     }
@@ -236,9 +190,9 @@ public class CalendarServiceImpl implements CalendarService {
      *            the given date
      * @return true, if is bank holiday
      */
-    protected boolean isBankHoliday(Date givenDate) {
-        String bankHolidaySummary = bankHolidayService
-                .getBankHolidaySummary(givenDate);
+    protected boolean isBankHoliday(final DateTime givenDate) {
+        final String bankHolidaySummary =
+                this.bankHolidayService.getBankHolidaySummary(givenDate);
         return bankHolidaySummary != null;
     }
 }

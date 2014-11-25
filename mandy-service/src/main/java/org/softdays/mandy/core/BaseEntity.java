@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -18,32 +18,44 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.softdays.mandy.model;
+package org.softdays.mandy.core;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
- * Classe de base pour les entités, gère l'identifiant technique.
+ * Classe de base pour les entités. Gère l'identifiant technique, factorise la
+ * base de la méthode equals().
  * 
  * @author rpatriarche
- * @since 1.0.0
+ * @since 1.0.1
  */
 @MappedSuperclass
-public abstract class AbstractEntity {
+public class BaseEntity extends BaseEqualable implements Identifiable {
 
     @Id
     @GeneratedValue
     private Long id;
 
     /**
-     * Gets the id.
-     * 
-     * @return the id
+     * Instantiates a new base entity.
      */
+    public BaseEntity() {
+        super();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.softdays.mandy.model.Identifiable#getId()
+     */
+    @Override
     public Long getId() {
-	return id;
+        return this.id;
     }
 
     /**
@@ -52,37 +64,25 @@ public abstract class AbstractEntity {
      * @param id
      *            the new id
      */
-    public void setId(Long id) {
-	this.id = id;
+    public void setId(final Long id) {
+        this.id = id;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object o) {
-	if (this == o)
-	    return true;
-	if (!(o instanceof AbstractEntity))
-	    return false;
-
-	AbstractEntity that = (AbstractEntity) o;
-
-	if (id != null ? !id.equals(that.id) : that.id != null)
-	    return false;
-
-	return true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
-	return id != null ? id.hashCode() : 0;
+        return new HashCodeBuilder().appendSuper(super.hashCode())
+                .append(this.getId()).toHashCode();
     }
+
+    @Override
+    public boolean equals(final Object obj) {
+        Boolean status = this.equalsConsideringTechnicalLogic(obj);
+        if (status == null) {
+            final Identifiable other = (Identifiable) obj;
+            status = new EqualsBuilder().append(this.getId(), other.getId())
+                    .isEquals();
+        }
+        return status;
+    }
+
 }

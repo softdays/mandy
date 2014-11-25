@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -22,7 +22,13 @@ package org.softdays.mandy.web.resources;
 
 import javax.ws.rs.core.MediaType;
 
-public class MandyConstants {
+/**
+ * Provides Mandy constants.
+ * 
+ * @author rpatriarche
+ * @since 1.0.0
+ */
+public final class MandyConstants {
 
     public static final String ENCODING = "utf-8";
     public static final String CHARSET = ";charset=" + ENCODING;
@@ -30,14 +36,16 @@ public class MandyConstants {
 
     public static final String URI_ROOT = "/";
     public static final String URI_ACTIVITIES = "activities";
-    public static final String URI_DATAGRID = "datagrid/{year}/{month}";
-    public static final String URI_IMPUTATIONS_YEAR_MONTH = "imputations/{year}/{month}";
-    public static final String URI_CALENDAR_IMPUTATIONS = "imputations";
+    public static final String URI_DATAGRID_GET = "datagrid/{year}/{month}";
     public static final String URI_IMPUTATIONS = "imputations";
+    public static final String URI_IMPUTATIONS_GET = URI_IMPUTATIONS
+            + "/{year}/{month}";
+    public static final String URI_CALENDAR_IMPUTATIONS = "imputations";
+
     public static final String URI_IMPUTATIONS_IID = URI_IMPUTATIONS + "/{id}";
 
     private MandyConstants() {
-	super();
+        super();
     }
 
 }

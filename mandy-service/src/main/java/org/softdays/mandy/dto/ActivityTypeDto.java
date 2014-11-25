@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -33,12 +33,19 @@ public class ActivityTypeDto {
     private String description;
 
     /**
+     * Instantiates a new activity type dto.
+     */
+    public ActivityTypeDto() {
+        super();
+    }
+
+    /**
      * Gets the name.
      * 
      * @return the name
      */
     public String getName() {
-	return name;
+        return this.name;
     }
 
     /**
@@ -47,8 +54,8 @@ public class ActivityTypeDto {
      * @param name
      *            the new name
      */
-    public void setName(String name) {
-	this.name = name;
+    public void setName(final String name) {
+        this.name = name;
     }
 
     /**
@@ -57,7 +64,7 @@ public class ActivityTypeDto {
      * @return the description
      */
     public String getDescription() {
-	return description;
+        return this.description;
     }
 
     /**
@@ -66,16 +73,18 @@ public class ActivityTypeDto {
      * @param description
      *            the new description
      */
-    public void setDescription(String description) {
-	this.description = description;
+    public void setDescription(final String description) {
+        this.description = description;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-	return "TypeActivityDto [name=" + name + "]";
+        return "TypeActivityDto [name=" + this.name + "]";
     }
 
 }

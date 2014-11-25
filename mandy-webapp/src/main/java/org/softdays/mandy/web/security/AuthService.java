@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -35,15 +35,33 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     /**
+     * Instantiates a new auth service.
+     */
+    public AuthService() {
+        super();
+    }
+
+    /**
      * Gets the current token.
      * 
      * @return the current token
      */
     public ResourceDto getCurrentToken() {
-	SecurityContext ctx = SecurityContextHolder.getContext();
-	MyUser user = (MyUser) ctx.getAuthentication().getPrincipal();
+        final SecurityContext ctx = SecurityContextHolder.getContext();
+        final MyUser user = (MyUser) ctx.getAuthentication().getPrincipal();
 
-	return user == null ? null : user.getResource();
+        return user == null ? null : user.getResource();
+    }
+
+    /**
+     * Returns the current user resource id.
+     * 
+     * @since 1.0.1
+     * 
+     * @return the resource ID.
+     */
+    public Long getCurrentUserId() {
+        return this.getCurrentToken().getResourceId();
     }
 
 }

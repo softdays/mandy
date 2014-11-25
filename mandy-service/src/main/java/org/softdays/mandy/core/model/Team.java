@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.softdays.mandy.model;
+package org.softdays.mandy.core.model;
 
 import java.util.Set;
 
@@ -29,7 +29,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.NaturalId;
+import org.softdays.mandy.core.BaseEntity;
+import org.softdays.mandy.core.CoreConstants;
 
 /**
  * The Class Team.
@@ -39,24 +43,34 @@ import org.hibernate.annotations.NaturalId;
  */
 @Entity
 @Table(name = "TEAM")
-public class Team extends AbstractEntity {
+public class Team extends BaseEntity {
 
     @NaturalId(mutable = true)
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = CoreConstants.DB_SHORT_LABEL_LENGTH)
     private String code;
 
     @NaturalId(mutable = true)
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = CoreConstants.DB_LONG_LABEL_LENGTH)
     private String label;
 
     @ManyToMany
-    @JoinTable(name = "ACTIVITY_TEAM", joinColumns = { @JoinColumn(name = "TEAM_ID") }, inverseJoinColumns = { @JoinColumn(name = "ACTIVITY_ID") })
-    @org.hibernate.annotations.ForeignKey(name = "FK__ACTIVITY_TEAM__TEAM", inverseName = "FK__ACTIVITY_TEAM__ACTIVITY")
-    // for hbm2ddl
+    @JoinTable(name = "ACTIVITY_TEAM", joinColumns = { @JoinColumn(
+            name = "TEAM_ID") }, inverseJoinColumns = { @JoinColumn(
+            name = "ACTIVITY_ID") })
+    @org.hibernate.annotations.ForeignKey(
+            name = "FK__ACTIVITY_TEAM__TEAM",
+            inverseName = "FK__ACTIVITY_TEAM__ACTIVITY")
     private Set<Activity> activities;
 
     @ManyToMany(mappedBy = "teams")
     private Set<Resource> resources;
+
+    /**
+     * Instantiates a new team.
+     */
+    public Team() {
+        super();
+    }
 
     /**
      * Gets the code.
@@ -64,7 +78,7 @@ public class Team extends AbstractEntity {
      * @return the code
      */
     public String getCode() {
-	return code;
+        return this.code;
     }
 
     /**
@@ -73,8 +87,8 @@ public class Team extends AbstractEntity {
      * @param code
      *            the new code
      */
-    public void setCode(String code) {
-	this.code = code;
+    public void setCode(final String code) {
+        this.code = code;
     }
 
     /**
@@ -83,7 +97,7 @@ public class Team extends AbstractEntity {
      * @return the label
      */
     public String getLabel() {
-	return label;
+        return this.label;
     }
 
     /**
@@ -92,8 +106,8 @@ public class Team extends AbstractEntity {
      * @param label
      *            the new label
      */
-    public void setLabel(String label) {
-	this.label = label;
+    public void setLabel(final String label) {
+        this.label = label;
     }
 
     /**
@@ -102,7 +116,7 @@ public class Team extends AbstractEntity {
      * @return the activities
      */
     public Set<Activity> getActivities() {
-	return activities;
+        return this.activities;
     }
 
     /**
@@ -111,8 +125,8 @@ public class Team extends AbstractEntity {
      * @param activities
      *            the new activities
      */
-    public void setActivities(Set<Activity> activities) {
-	this.activities = activities;
+    public void setActivities(final Set<Activity> activities) {
+        this.activities = activities;
     }
 
     /**
@@ -121,7 +135,7 @@ public class Team extends AbstractEntity {
      * @return the resources
      */
     public Set<Resource> getResources() {
-	return resources;
+        return this.resources;
     }
 
     /**
@@ -130,8 +144,26 @@ public class Team extends AbstractEntity {
      * @param resources
      *            the new resources
      */
-    public void setResources(Set<Resource> resources) {
-	this.resources = resources;
+    public void setResources(final Set<Resource> resources) {
+        this.resources = resources;
     }
 
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().appendSuper(super.hashCode())
+                .append(this.getCode()).append(this.getLabel()).toHashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        Boolean status = this.equalsConsideringTechnicalLogic(obj);
+        if (status == null) {
+            final Team rhs = (Team) obj;
+
+            status = new EqualsBuilder().appendSuper(this.equals(obj))
+                    .append(this.getCode(), rhs.getCode())
+                    .append(this.getLabel(), rhs.getLabel()).isEquals();
+        }
+        return status;
+    }
 }

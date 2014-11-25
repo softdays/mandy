@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -20,13 +20,17 @@
  */
 package org.softdays.mandy.dto;
 
+import java.io.Serializable;
+
 /**
  * The Class ResourceDto.
  * 
  * @author rpatriarche
  * @since 1.0.0
  */
-public class ResourceDto {
+public class ResourceDto implements Serializable {
+
+    private static final long serialVersionUID = -3871591683430897889L;
 
     private Long resourceId;
 
@@ -39,12 +43,19 @@ public class ResourceDto {
     private String role;
 
     /**
+     * Instantiates a new resource dto.
+     */
+    public ResourceDto() {
+        super();
+    }
+
+    /**
      * Gets the resource id.
      * 
      * @return the resource id
      */
     public Long getResourceId() {
-	return resourceId;
+        return this.resourceId;
     }
 
     /**
@@ -53,8 +64,8 @@ public class ResourceDto {
      * @param resourceId
      *            the new resource id
      */
-    public void setResourceId(Long resourceId) {
-	this.resourceId = resourceId;
+    public void setResourceId(final Long resourceId) {
+        this.resourceId = resourceId;
     }
 
     /**
@@ -63,7 +74,7 @@ public class ResourceDto {
      * @return the login
      */
     public String getLogin() {
-	return login;
+        return this.login;
     }
 
     /**
@@ -72,8 +83,8 @@ public class ResourceDto {
      * @param login
      *            the new login
      */
-    public void setLogin(String login) {
-	this.login = login;
+    public void setLogin(final String login) {
+        this.login = login;
     }
 
     /**
@@ -82,7 +93,7 @@ public class ResourceDto {
      * @return the last name
      */
     public String getLastName() {
-	return lastName;
+        return this.lastName;
     }
 
     /**
@@ -91,8 +102,8 @@ public class ResourceDto {
      * @param lastName
      *            the new last name
      */
-    public void setLastName(String lastName) {
-	this.lastName = lastName;
+    public void setLastName(final String lastName) {
+        this.lastName = lastName;
     }
 
     /**
@@ -101,7 +112,7 @@ public class ResourceDto {
      * @return the first name
      */
     public String getFirstName() {
-	return firstName;
+        return this.firstName;
     }
 
     /**
@@ -110,8 +121,8 @@ public class ResourceDto {
      * @param firstName
      *            the new first name
      */
-    public void setFirstName(String firstName) {
-	this.firstName = firstName;
+    public void setFirstName(final String firstName) {
+        this.firstName = firstName;
     }
 
     /**
@@ -120,7 +131,7 @@ public class ResourceDto {
      * @return the role
      */
     public String getRole() {
-	return role;
+        return this.role;
     }
 
     /**
@@ -129,8 +140,8 @@ public class ResourceDto {
      * @param role
      *            the new role
      */
-    public void setRole(String role) {
-	this.role = role;
+    public void setRole(final String role) {
+        this.role = role;
     }
 
 }

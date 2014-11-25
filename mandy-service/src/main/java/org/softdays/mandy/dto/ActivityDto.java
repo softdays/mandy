@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -20,8 +20,11 @@
  */
 package org.softdays.mandy.dto;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
- * Created by rpatriarche on 09/03/14.
+ * The activity DTO.
  * 
  * @author rpatriarche
  * @since 1.0.0
@@ -40,6 +43,7 @@ public class ActivityDto {
      * Instantiates a new activity dto.
      */
     public ActivityDto() {
+        super();
     }
 
     /**
@@ -48,7 +52,7 @@ public class ActivityDto {
      * @return the id
      */
     public Long getId() {
-	return id;
+        return this.id;
     }
 
     /**
@@ -57,8 +61,8 @@ public class ActivityDto {
      * @param id
      *            the new id
      */
-    public void setId(Long id) {
-	this.id = id;
+    public void setId(final Long id) {
+        this.id = id;
     }
 
     /**
@@ -67,7 +71,7 @@ public class ActivityDto {
      * @return the type
      */
     public String getType() {
-	return type;
+        return this.type;
     }
 
     /**
@@ -76,8 +80,8 @@ public class ActivityDto {
      * @param type
      *            the new type
      */
-    public void setType(String type) {
-	this.type = type;
+    public void setType(final String type) {
+        this.type = type;
     }
 
     /**
@@ -86,7 +90,7 @@ public class ActivityDto {
      * @return the short label
      */
     public String getShortLabel() {
-	return shortLabel;
+        return this.shortLabel;
     }
 
     /**
@@ -95,8 +99,8 @@ public class ActivityDto {
      * @param shortLabel
      *            the new short label
      */
-    public void setShortLabel(String shortLabel) {
-	this.shortLabel = shortLabel;
+    public void setShortLabel(final String shortLabel) {
+        this.shortLabel = shortLabel;
     }
 
     /**
@@ -105,7 +109,7 @@ public class ActivityDto {
      * @return the long label
      */
     public String getLongLabel() {
-	return longLabel;
+        return this.longLabel;
     }
 
     /**
@@ -114,44 +118,34 @@ public class ActivityDto {
      * @param longLabel
      *            the new long label
      */
-    public void setLongLabel(String longLabel) {
-	this.longLabel = longLabel;
+    public void setLongLabel(final String longLabel) {
+        this.longLabel = longLabel;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
+    /**
+     * Doit être surchargée en cohérence avec la surcharge de equals().
      */
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((id == null) ? 0 : id.hashCode());
-	return result;
+        return new HashCodeBuilder().appendSuper(super.hashCode())
+                .append(this.getId()).toHashCode();
     }
 
-    // nécessaire si utilisation au sein d'une LinkedhashMap
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
+    /**
+     * Surcharge nécessaire si utilisation au sein d'une LinkedhashMap.
      */
     @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	ActivityDto other = (ActivityDto) obj;
-	if (id == null) {
-	    if (other.id != null)
-		return false;
-	} else if (!id.equals(other.id))
-	    return false;
-	return true;
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        }
+        final ActivityDto other = (ActivityDto) obj;
+
+        return new EqualsBuilder().appendSuper(this.equals(obj))
+                .append(this.getId(), other.getId()).isEquals();
     }
 
     /*
@@ -161,8 +155,8 @@ public class ActivityDto {
      */
     @Override
     public String toString() {
-	return "ActivityDto [id=" + id + ", shortLabel=" + shortLabel
-		+ ", type=" + type + "]";
+        return "ActivityDto [id=" + this.id + ", shortLabel=" + this.shortLabel
+                + ", type=" + this.type + "]";
     }
 
 }

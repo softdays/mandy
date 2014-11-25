@@ -1,6 +1,24 @@
+/*
+ * MANDY is a simple webapp to track man-day consumption on activities.
+ * 
+ * Copyright 2014, rpatriarche
+ *
+ * This file is part of MANDY software.
+ *
+ * MANDY is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * MANDY is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.softdays.mandy.service.support;
-
-import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.junit.Assert;
@@ -8,117 +26,92 @@ import org.junit.Test;
 
 public class CalendarServiceTest {
 
-    private CalendarServiceImpl calendarService = new CalendarServiceImpl();
-    private Date givenDate = new DateTime(2014, 7, 12, 0, 0).toDate();
+    private final CalendarServiceImpl calendarService = new CalendarServiceImpl();
+    private final DateTime givenDate = new DateTime(2014, 7, 12, 0, 0);
 
     @Test
     public void getFirstMondayOfTheMonthCasNominal() {
-	Date firstMonday = calendarService.getFirstMondayOfMonth(givenDate);
-	Date expected = new DateTime(2014, 7, 7, 0, 0).toDate();
-	Assert.assertEquals(expected, firstMonday);
+        final DateTime firstMonday = this.calendarService
+                .getFirstMondayOfMonth(this.givenDate);
+        final DateTime expected = new DateTime(2014, 7, 7, 0, 0);
+        Assert.assertEquals(expected, firstMonday);
     }
 
     @Test
     public void getFirstMondayOfTheMonthLimiteInf() {
-	Date firstMonday = calendarService.getFirstMondayOfMonth(givenDate);
-	Date expected = new DateTime(2014, 7, 7, 0, 0).toDate();
-	Assert.assertEquals(expected, firstMonday);
+        final DateTime firstMonday = this.calendarService
+                .getFirstMondayOfMonth(this.givenDate);
+        final DateTime expected = new DateTime(2014, 7, 7, 0, 0);
+        Assert.assertEquals(expected, firstMonday);
     }
 
     @Test
     public void getFirstMondayOfTheMonthLimiteSup() {
-	Date firstMonday = calendarService.getFirstMondayOfMonth(givenDate);
-	Date expected = new DateTime(2014, 7, 7, 0, 0).toDate();
-	Assert.assertEquals(expected, firstMonday);
+        final DateTime firstMonday = this.calendarService
+                .getFirstMondayOfMonth(this.givenDate);
+        final DateTime expected = new DateTime(2014, 7, 7, 0, 0);
+        Assert.assertEquals(expected, firstMonday);
     }
 
     @Test
     public void getFirstMondayOfTheMonthGivenDateEqualsFirstMonday() {
-	Date givenDate = new DateTime(2014, 7, 7, 0, 0).toDate();
-	Date firstMonday = calendarService.getFirstMondayOfMonth(givenDate);
-	Assert.assertEquals(givenDate, firstMonday);
+        final DateTime givenDate = new DateTime(2014, 7, 7, 0, 0);
+        final DateTime firstMonday = this.calendarService
+                .getFirstMondayOfMonth(givenDate);
+        Assert.assertEquals(givenDate, firstMonday);
     }
 
     @Test
     public void getFirstSundayAfterEndOfMonthCasNominal() {
-	Date lastSunday = calendarService
-		.getFirstSundayAfterEndOfMonth(givenDate);
-	Date expected = new DateTime(2014, 8, 3, 0, 0).toDate();
-	Assert.assertEquals(expected, lastSunday);
+        final DateTime lastSunday = this.calendarService
+                .getFirstSundayAfterEndOfMonth(this.givenDate);
+        final DateTime expected = new DateTime(2014, 8, 3, 0, 0);
+        Assert.assertEquals(expected, lastSunday);
     }
 
     @Test
     public void getFirstSundayAfterEndOfMonthLimiteSup() {
-	Date givenDate = new DateTime(2014, 7, 31, 0, 0).toDate();
-	Date lastSunday = calendarService
-		.getFirstSundayAfterEndOfMonth(givenDate);
-	Date expected = new DateTime(2014, 8, 3, 0, 0).toDate();
-	Assert.assertEquals(expected, lastSunday);
+        final DateTime givenDate = new DateTime(2014, 7, 31, 0, 0);
+        final DateTime lastSunday = this.calendarService
+                .getFirstSundayAfterEndOfMonth(givenDate);
+        final DateTime expected = new DateTime(2014, 8, 3, 0, 0);
+        Assert.assertEquals(expected, lastSunday);
     }
 
     @Test
     public void getFirstSundayAfterEndOfMonthLimiteInf() {
-	Date givenDate = new DateTime(2014, 8, 1, 0, 0).toDate();
-	Date lastSunday = calendarService
-		.getFirstSundayAfterEndOfMonth(givenDate);
-	Date expected = new DateTime(2014, 8, 31, 0, 0).toDate();
-	Assert.assertEquals(expected, lastSunday);
-    }
-
-    @Test
-    public void nextCasNominal() {
-	Date next = calendarService.next(givenDate);
-	Date expected = new DateTime(2014, 7, 13, 0, 0).toDate();
-	Assert.assertEquals(expected, next);
-    }
-
-    @Test
-    public void nextAvecChangementMoisAnnee() {
-	Date givenDate = new DateTime(2014, 12, 31, 0, 0).toDate();
-	Date next = calendarService.next(givenDate);
-	Date expected = new DateTime(2015, 1, 1, 0, 0).toDate();
-	Assert.assertEquals(expected, next);
+        final DateTime givenDate = new DateTime(2014, 8, 1, 0, 0);
+        final DateTime lastSunday = this.calendarService
+                .getFirstSundayAfterEndOfMonth(givenDate);
+        final DateTime expected = new DateTime(2014, 8, 31, 0, 0);
+        Assert.assertEquals(expected, lastSunday);
     }
 
     @Test
     public void isEndOfWeekShouldBeTrue() {
-	Date givenDate = new DateTime(2014, 7, 6, 0, 0).toDate();
-	Assert.assertTrue(calendarService.isEndOfWeek(givenDate));
+        final DateTime givenDate = new DateTime(2014, 7, 6, 0, 0);
+        Assert.assertTrue(this.calendarService.isEndOfWeek(givenDate));
     }
 
     @Test
     public void isEndOfWeekShouldBeTrueToo() {
-	Assert.assertTrue(calendarService.isEndOfWeek(givenDate));
+        Assert.assertTrue(this.calendarService.isEndOfWeek(this.givenDate));
     }
 
     @Test
     public void isEndOfWeekShouldBeFalse() {
-	Date givenDate = new DateTime(2014, 7, 14, 0, 0).toDate();
-	Assert.assertFalse(calendarService.isEndOfWeek(givenDate));
+        final DateTime givenDate = new DateTime(2014, 7, 14, 0, 0);
+        Assert.assertFalse(this.calendarService.isEndOfWeek(givenDate));
     }
 
     @Test
     public void testJodaTimeWeekNumberOfYear() {
-	// ISO8601 week algorithm, the first week of the year
-	// is that in which at least 4 days are in the year
+        // ISO8601 week algorithm, the first week of the year
+        // is that in which at least 4 days are in the year
 
-	// en 2016 le 1/1 tombe un vendredi => numero de semaine : 53
-	int nb = new DateTime(2016, 1, 1, 0, 0).getWeekOfWeekyear();
-	Assert.assertEquals(53, nb);
-    }
-
-    @Test
-    public void dateWeekContainsOneDayOfPreviousMonthSouldReturnFalse() {
-	DateTime date = new DateTime(2014, 8, 4, 0, 0);
-	Assert.assertFalse(calendarService
-		.dateWeekContainsOneDayOfPreviousMonth(date));
-    }
-
-    @Test
-    public void dateWeekContainsOneDayOfPreviousMonthSouldReturnTrue() {
-	DateTime date = new DateTime(2014, 8, 1, 0, 0);
-	Assert.assertTrue(calendarService
-		.dateWeekContainsOneDayOfPreviousMonth(date));
+        // en 2016 le 1/1 tombe un vendredi => numero de semaine : 53
+        final int nb = new DateTime(2016, 1, 1, 0, 0).getWeekOfWeekyear();
+        Assert.assertEquals(53, nb);
     }
 
 }

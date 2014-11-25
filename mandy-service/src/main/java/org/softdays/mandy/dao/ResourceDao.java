@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -18,9 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.softdays.mandy.dao;
 
-import org.softdays.mandy.model.Resource;
+import org.softdays.mandy.core.model.Resource;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

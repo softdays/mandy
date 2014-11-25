@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -40,6 +40,13 @@ public class MapperServiceImpl implements MapperService {
     @Autowired
     private Mapper mapper;
 
+    /**
+     * Instantiates a new mapper service impl.
+     */
+    public MapperServiceImpl() {
+        super();
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -48,14 +55,14 @@ public class MapperServiceImpl implements MapperService {
      */
     @Override
     public <T> List<T> map(final Iterable<?> iterable,
-	    final Class<T> destinationClass) {
-	List<T> result = new ArrayList<T>();
-	for (Object source : iterable) {
-	    T dest = mapper.map(source, destinationClass);
-	    result.add(dest);
-	}
+            final Class<T> destinationClass) {
+        final List<T> result = new ArrayList<T>();
+        for (final Object source : iterable) {
+            final T dest = this.mapper.map(source, destinationClass);
+            result.add(dest);
+        }
 
-	return result;
+        return result;
     }
 
 }

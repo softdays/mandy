@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.softdays.mandy.model;
+package org.softdays.mandy.core.model;
 
 import java.util.Set;
 
@@ -32,6 +32,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.softdays.mandy.core.BaseEntity;
+import org.softdays.mandy.core.CoreConstants;
+
 /**
  * Représente une personne en capacité d'imputer sur des activités.
  * 
@@ -40,7 +45,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "RESOURCE")
-public class Resource extends AbstractEntity {
+public class Resource extends BaseEntity {
 
     /**
      * The Enum Role.
@@ -49,28 +54,28 @@ public class Resource extends AbstractEntity {
      * @since 1.0.0
      */
     public enum Role {
-	ROLE_USER, ROLE_MANAGER, ROLE_ADMIN;
+        ROLE_USER, ROLE_MANAGER, ROLE_ADMIN;
 
-	/**
-	 * Gets the name.
-	 * 
-	 * @return the name
-	 */
-	public String getName() {
-	    return this.name();
-	}
+        /**
+         * Gets the name.
+         * 
+         * @return the name
+         */
+        public String getName() {
+            return this.name();
+        }
     }
 
     /**
      * Identifiant LDAP.
      */
-    @Column(nullable = false, length = 25)
+    @Column(nullable = false, length = CoreConstants.DB_UID_LENGTH)
     private String uid;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = CoreConstants.DB_NAME_LENGTH)
     private String lastName;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = CoreConstants.DB_NAME_LENGTH)
     private String firstName;
 
     @Column(columnDefinition = "varchar(25) not null default 'ROLE_USER'")
@@ -81,8 +86,12 @@ public class Resource extends AbstractEntity {
     private Set<Imputation> imputations;
 
     @ManyToMany
-    @JoinTable(name = "TEAM_RESOURCE", joinColumns = { @JoinColumn(name = "RESOURCE_ID") }, inverseJoinColumns = { @JoinColumn(name = "TEAM_ID") })
-    @org.hibernate.annotations.ForeignKey(name = "FK__TEAM_RESOURCE__RESOURCE", inverseName = "FK__TEAM_RESOURCE__TEAM")
+    @JoinTable(name = "TEAM_RESOURCE", joinColumns = { @JoinColumn(
+            name = "RESOURCE_ID") }, inverseJoinColumns = { @JoinColumn(
+            name = "TEAM_ID") })
+    @org.hibernate.annotations.ForeignKey(
+            name = "FK__TEAM_RESOURCE__RESOURCE",
+            inverseName = "FK__TEAM_RESOURCE__TEAM")
     // for hbm2ddl
     private Set<Team> teams;
 
@@ -90,7 +99,7 @@ public class Resource extends AbstractEntity {
      * Instantiates a new resource.
      */
     public Resource() {
-	super();
+        super();
     }
 
     /**
@@ -103,12 +112,13 @@ public class Resource extends AbstractEntity {
      * @param firstname
      *            the firstname
      */
-    public Resource(String uid, String lastname, String firstname) {
-	this();
-	this.uid = uid;
-	this.lastName = lastname;
-	this.firstName = firstname;
-	this.role = Role.ROLE_USER;
+    public Resource(final String uid, final String lastname,
+            final String firstname) {
+        this();
+        this.uid = uid;
+        this.lastName = lastname;
+        this.firstName = firstname;
+        this.role = Role.ROLE_USER;
     }
 
     /**
@@ -117,7 +127,7 @@ public class Resource extends AbstractEntity {
      * @return the uid
      */
     public String getUid() {
-	return uid;
+        return this.uid;
     }
 
     /**
@@ -126,8 +136,8 @@ public class Resource extends AbstractEntity {
      * @param uid
      *            the new uid
      */
-    public void setUid(String uid) {
-	this.uid = uid;
+    public void setUid(final String uid) {
+        this.uid = uid;
     }
 
     /**
@@ -136,7 +146,7 @@ public class Resource extends AbstractEntity {
      * @return the last name
      */
     public String getLastName() {
-	return lastName;
+        return this.lastName;
     }
 
     /**
@@ -145,8 +155,8 @@ public class Resource extends AbstractEntity {
      * @param lastName
      *            the new last name
      */
-    public void setLastName(String lastName) {
-	this.lastName = lastName;
+    public void setLastName(final String lastName) {
+        this.lastName = lastName;
     }
 
     /**
@@ -155,7 +165,7 @@ public class Resource extends AbstractEntity {
      * @return the first name
      */
     public String getFirstName() {
-	return firstName;
+        return this.firstName;
     }
 
     /**
@@ -164,8 +174,8 @@ public class Resource extends AbstractEntity {
      * @param firstName
      *            the new first name
      */
-    public void setFirstName(String firstName) {
-	this.firstName = firstName;
+    public void setFirstName(final String firstName) {
+        this.firstName = firstName;
     }
 
     /**
@@ -174,7 +184,7 @@ public class Resource extends AbstractEntity {
      * @return the role
      */
     public Role getRole() {
-	return role;
+        return this.role;
     }
 
     /**
@@ -183,8 +193,8 @@ public class Resource extends AbstractEntity {
      * @param role
      *            the new role
      */
-    public void setRole(Role role) {
-	this.role = role;
+    public void setRole(final Role role) {
+        this.role = role;
     }
 
     /**
@@ -193,7 +203,7 @@ public class Resource extends AbstractEntity {
      * @return the teams
      */
     public Set<Team> getTeams() {
-	return teams;
+        return this.teams;
     }
 
     /**
@@ -202,8 +212,8 @@ public class Resource extends AbstractEntity {
      * @param teams
      *            the new teams
      */
-    public void setTeams(Set<Team> teams) {
-	this.teams = teams;
+    public void setTeams(final Set<Team> teams) {
+        this.teams = teams;
     }
 
     /**
@@ -212,7 +222,7 @@ public class Resource extends AbstractEntity {
      * @return the imputations
      */
     public Set<Imputation> getImputations() {
-	return imputations;
+        return this.imputations;
     }
 
     /**
@@ -221,8 +231,31 @@ public class Resource extends AbstractEntity {
      * @param imputations
      *            the new imputations
      */
-    public void setImputations(Set<Imputation> imputations) {
-	this.imputations = imputations;
+    public void setImputations(final Set<Imputation> imputations) {
+        this.imputations = imputations;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().appendSuper(super.hashCode())
+                .append(this.getUid()).append(this.getLastName())
+                .append(this.getFirstName()).append(this.getRole())
+                .toHashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        Boolean status = this.equalsConsideringTechnicalLogic(obj);
+        if (status == null) {
+            final Resource rhs = (Resource) obj;
+
+            status = new EqualsBuilder().appendSuper(this.equals(obj))
+                    .append(this.getUid(), rhs.getUid())
+                    .append(this.getLastName(), rhs.getLastName())
+                    .append(this.getFirstName(), rhs.getFirstName())
+                    .append(this.getRole(), rhs.getRole()).isEquals();
+        }
+        return status;
     }
 
 }

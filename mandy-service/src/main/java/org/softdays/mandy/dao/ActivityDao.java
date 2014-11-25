@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -18,11 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.softdays.mandy.dao;
 
 import java.util.List;
 
-import org.softdays.mandy.model.Activity;
+import org.softdays.mandy.core.model.Activity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -43,9 +44,9 @@ public interface ActivityDao extends JpaRepository<Activity, Integer> {
      * @return the list
      */
     @Query("select distinct a from #{#entityName} a left join fetch a.teams t"
-	    + " where :resourceId in elements(t.resources)"
-	    + " or a.type <> org.softdays.mandy.model.ActivityType.P"
-	    + " order by a.type asc, a.position asc")
+            + " where :resourceId in elements(t.resources)"
+            + " or a.type <> org.softdays.mandy.core.model.ActivityType.P"
+            + " order by a.type asc, a.position asc")
     List<Activity> findByResource(@Param("resourceId") Long userId);
 
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.Date;
 
 import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.joda.time.DateTime;
@@ -42,7 +41,14 @@ import org.springframework.stereotype.Component;
 public class JsonDateSerializer extends JsonSerializer<Date> {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormat
-	    .forPattern("yyyy-MM-dd");
+            .forPattern("yyyy-MM-dd");
+
+    /**
+     * Instantiates a new json date serializer.
+     */
+    public JsonDateSerializer() {
+        super();
+    }
 
     /*
      * (non-Javadoc)
@@ -52,11 +58,10 @@ public class JsonDateSerializer extends JsonSerializer<Date> {
      * org.codehaus.jackson.map.SerializerProvider)
      */
     @Override
-    public void serialize(Date date, JsonGenerator gen,
-	    SerializerProvider provider) throws IOException,
-	    JsonProcessingException {
+    public void serialize(final Date date, final JsonGenerator gen,
+            final SerializerProvider provider) throws IOException {
 
-	gen.writeString(FORMATTER.print(new DateTime(date)));
+        gen.writeString(FORMATTER.print(new DateTime(date)));
     }
 
 }

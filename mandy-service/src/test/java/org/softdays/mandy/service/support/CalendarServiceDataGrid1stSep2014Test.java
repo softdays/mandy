@@ -1,6 +1,25 @@
-package org.softdays.mandy.service.support;
+/*
+ * MANDY is a simple webapp to track man-day consumption on activities.
+ * 
+ * Copyright 2014, rpatriarche
+ *
+ * This file is part of MANDY software.
+ *
+ * MANDY is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * MANDY is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-import java.util.Date;
+package org.softdays.mandy.service.support;
 
 import javax.annotation.PostConstruct;
 
@@ -26,37 +45,37 @@ public class CalendarServiceDataGrid1stSep2014Test {
     /**
      * Intérêt du test : cette grille contient 5 semaines
      */
-    private Date givenDate = new DateTime(2014, 9, 1, 0, 0).toDate();
+    private final DateTime givenDate = new DateTime(2014, 9, 1, 0, 0);
 
     private DataGridDto grid;
 
     @PostConstruct
     public void init() {
-	grid = calendarService.getDataGridOfTheMonth(givenDate);
+        this.grid = this.calendarService.getDataGridOfTheMonth(this.givenDate);
     }
 
     @Test
     public void datagridShouldContainsFiveWeeks() {
-	Assert.assertEquals(5, grid.getWeeks().size());
+        Assert.assertEquals(5, this.grid.getWeeks().size());
     }
 
     @Test
     public void eachWeekShouldContainsFiveDays() {
-	for (WeekDto week : grid.getWeeks()) {
-	    Assert.assertEquals(5, week.getDays().size());
-	}
+        for (final WeekDto week : this.grid.getWeeks()) {
+            Assert.assertEquals(5, week.getDays().size());
+        }
     }
 
     @Test
     public void checkFirstDayOfTheDataGrid() {
-	Assert.assertEquals(new DateTime(2014, 9, 1, 0, 0).toDate(), grid
-		.getWeeks().get(0).getDays().get(0).getDate());
+        Assert.assertEquals(new DateTime(2014, 9, 1, 0, 0).toDate(), this.grid
+                .getWeeks().get(0).getDays().get(0).getDate());
     }
 
     @Test
     public void checkLastDayOfTheDataGrid() {
-	Assert.assertEquals(new DateTime(2014, 10, 3, 0, 0).toDate(), grid
-		.getWeeks().get(4).getDays().get(4).getDate());
+        Assert.assertEquals(new DateTime(2014, 10, 3, 0, 0).toDate(), this.grid
+                .getWeeks().get(4).getDays().get(4).getDate());
     }
 
 }

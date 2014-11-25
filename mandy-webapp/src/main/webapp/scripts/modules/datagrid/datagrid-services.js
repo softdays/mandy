@@ -8,15 +8,15 @@
  * @since 1.0
  * @author rpatriarche
  */
-define(['angular',
-        'angular-resource',
-        'mandy-common'],
-    function(angular){
-        'use strict';
+define([
+           'angular', 'angular-resource', 'mandy-common'
+       ], function(angular){
+    'use strict';
 
-        var module = angular.module('mdDatagridService', ['ngResource', 'mdCommon']);
+    var module = angular.module('mdDatagridService', ['ngResource', 'mdCommon']);
 
-        module.service('CalendarService', ['$resource', 'CONTEXT_ROOT', 'ErrorService', 'Utils', function($resource, CONTEXT_ROOT, errorService, utils){
+    module.service('CalendarService', [
+        '$resource', 'CONTEXT_ROOT', 'ErrorService', function($resource, CONTEXT_ROOT, errorService){
 
             var Calendar = $resource(CONTEXT_ROOT + "/api/datagrid/:year/:month");
 
@@ -29,20 +29,19 @@ define(['angular',
                  */
                 loadDataGrid: function(year, month){
 
-                    //var fdate = utils.formatDate(date);
-
-                    return Calendar.get({year: year, month: month},
-                        angular.noop,
-                        function(httpResponse){
-                            errorService.errorHandler(httpResponse,
-                                "Erreur technique récupération grille de données");
-                        }
-                    );
+                    return Calendar.get({
+                                            year: year,
+                                            month: month
+                                        }, angular.noop, function(httpResponse){
+                        errorService.errorHandler(httpResponse, "Erreur technique récupération grille de données");
+                    });
                 }
             };
-        }]);
+        }
+    ]);
 
-        module.service('ActivityService', ['$resource', 'CONTEXT_ROOT', function($resource, CONTEXT_ROOT){
+    module.service('ActivityService', [
+        '$resource', 'CONTEXT_ROOT', function($resource, CONTEXT_ROOT){
 
             var Activities = $resource(CONTEXT_ROOT + "/api/activities");
 
@@ -55,37 +54,32 @@ define(['angular',
                  */
                 getUserActivities: function(){
 
-                    return Activities.query({},
-                        angular.noop,
-                        function(httpResponse){
-                            errorService.errorHandler(httpResponse,
-                                "Erreur technique récupération activités");
-                        }
-                    );
+                    return Activities.query({}, angular.noop, function(httpResponse){
+                        errorService.errorHandler(httpResponse, "Erreur technique récupération activités");
+                    });
                 }
             };
-        }]);
+        }
+    ]);
 
-        module.service('ImputationService', ['$resource', 'CONTEXT_ROOT', '$log', 'ErrorService', function($resource, CONTEXT_ROOT, $log, errorService){
+    module.service('ImputationService', [
+        '$resource', 'CONTEXT_ROOT', '$log', 'ErrorService', function($resource, CONTEXT_ROOT, $log, errorService){
 
-            var Imputations = $resource(CONTEXT_ROOT + "/api/imputations/:id",
-                {id: '@id'},
-                {
-                    'query': {
-                        method: 'GET',
-                        url: CONTEXT_ROOT + "/api/imputations/:year/:month"
-                    },
-                    'save': {
-                        method: 'POST'
-                    },
-                    'update': {
-                        method: 'PUT'
-                    },
-                    'remove': {
-                        method: 'DELETE'
-                    }
+            var Imputations = $resource(CONTEXT_ROOT + "/api/imputations/:id", {id: '@id'}, {
+                'query': {
+                    method: 'GET',
+                    url: CONTEXT_ROOT + "/api/imputations/:year/:month"
+                },
+                'save': {
+                    method: 'POST'
+                },
+                'update': {
+                    method: 'PUT'
+                },
+                'remove': {
+                    method: 'DELETE'
                 }
-            );
+            });
 
             /**
              * @alias mandy/imputation/service
@@ -98,16 +92,18 @@ define(['angular',
                  */
                 findImputations: function(userId, year, month){
 
-                    return Imputations.query({user: userId, year: year, month: month},
-                        function(data){
-                            $log.debug("imputations = " + data);
-                        },
+                    return Imputations.query({
+                                                 user: userId,
+                                                 year: year,
+                                                 month: month
+                                             }, function(data){
+                                                 $log.debug("imputations = " + data);
+                                             },
 
-                        function(httpResponse){
-                            errorService.errorHandler(httpResponse,
-                                "Erreur technique récupération imputations");
-                        }
-                    );
+                                             function(httpResponse){
+                                                 errorService.errorHandler(httpResponse,
+                                                                           "Erreur technique récupération imputations");
+                                             });
                 },
 
                 createImputation: function(userId, activityId, date, quota, comment){
@@ -119,40 +115,19 @@ define(['angular',
                     imputations.comment = comment;
                     // attention les méthodes d'instances Angular#Resource
                     // retournent directement la promise
-                    return imputations.$save(
-                        imputations,
-                        angular.noop,
-                        function(httpResponse){
-                            errorService.errorHandler(httpResponse,
-                                "Erreur technique creation imputation");
-                        }
-                    );
-
-//                	return Imputations.save(
-//                			{},
-//                			{
-//                				resourceId: userId, 
-//                				activityId: activityId,
-//                				date: date, 
-//                				quota: quota
-//                			}, 
-//                			angular.noop,
-//                			function (httpResponse) 
-//                			{ 
-//                				// cas d'erreur
-//                			}
-//                	);
+                    return imputations.$save(imputations, angular.noop, function(httpResponse){
+                        errorService.errorHandler(httpResponse, "Erreur technique creation imputation");
+                    });
                 },
 
                 updateImputation: function(imputation){
                     return Imputations.update({id: imputation.imputationId},
-                        imputation,
-                        angular.noop,
-                        function(httpResponse){
-                            errorService.errorHandler(httpResponse,
-                                "Erreur technique update imputation");
-                        }
-                    );
+                                              imputation,
+                                              angular.noop,
+                                              function(httpResponse){
+                                                  errorService.errorHandler(httpResponse,
+                                                                            "Erreur technique update imputation");
+                                              });
                 },
 
                 deleteImputation: function(imputationId){
@@ -161,19 +136,14 @@ define(['angular',
                     // au retour de la requête
                     // cet objet possède également une propriété '$promise'
                     // depuis angular 1.2
-                    return Imputations.remove({id: imputationId},
-                        {},
-                        angular.noop,
-                        function(httpResponse){
-                            errorService.errorHandler(httpResponse,
-                                "Erreur technique delete imputation");
-                        }
-                    );
+                    return Imputations.remove({id: imputationId}, {}, angular.noop, function(httpResponse){
+                        errorService.errorHandler(httpResponse, "Erreur technique delete imputation");
+                    });
                 }
             };
-        }]);
+        }
+    ]);
 
-        return module;
+    return module;
 
-    }
-);
+});

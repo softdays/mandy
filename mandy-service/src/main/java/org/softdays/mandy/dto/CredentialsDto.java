@@ -1,4 +1,4 @@
-/**
+/*
  * MANDY is a simple webapp to track man-day consumption on activities.
  * 
  * Copyright 2014, rpatriarche
@@ -33,12 +33,19 @@ public class CredentialsDto {
     private String password;
 
     /**
+     * Instantiates a new credentials dto.
+     */
+    public CredentialsDto() {
+        super();
+    }
+
+    /**
      * Gets the login.
      * 
      * @return the login
      */
     public String getLogin() {
-	return login;
+        return this.login;
     }
 
     /**
@@ -47,8 +54,8 @@ public class CredentialsDto {
      * @param login
      *            the new login
      */
-    public void setLogin(String login) {
-	this.login = login;
+    public void setLogin(final String login) {
+        this.login = login;
     }
 
     /**
@@ -57,7 +64,7 @@ public class CredentialsDto {
      * @return the password
      */
     public String getPassword() {
-	return password;
+        return this.password;
     }
 
     /**
@@ -66,8 +73,8 @@ public class CredentialsDto {
      * @param password
      *            the new password
      */
-    public void setPassword(String password) {
-	this.password = password;
+    public void setPassword(final String password) {
+        this.password = password;
     }
 
 }

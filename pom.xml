@@ -44,7 +44,7 @@
 	</modules>
 
 	<scm>
-		<connection>scm:git:ssh://git@github.com/softdays/mandy.git</connection>
+		<connection>origin</connection>
 		<url>https://github.com/softdays/mandy</url>
 		<developerConnection>origin</developerConnection>
 		<tag>HEAD</tag>

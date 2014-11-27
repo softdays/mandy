@@ -18,6 +18,7 @@ Mandy is licensed under the [GNU Affero General Public License][3].
 
 ## Contact
 
+
 Contact: [rpatriarche][2]  
 Web site: [softdays.org][1]
 

@@ -44,9 +44,9 @@
 	</modules>
 
 	<scm>
-		<connection>scm:git:git://git@github.com:softdays/mandy.git</connection>
+		<connection>scm:git:ssh://git@github.com:softdays/mandy.git</connection>
 		<url>https://github.com/softdays/mandy</url>
-		<developerConnection>scm:git:git//git@github.com:softdays/mandy.git</developerConnection>
+		<developerConnection>scm:git:ssh://git@github.com:softdays/mandy.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
@@ -71,11 +71,11 @@
 				<version>2.5</version>
 				<configuration>
 					<tagNameFormat>@{project.version}</tagNameFormat>
-					<username>softdays</username>
+					<!--username>softdays</username-->
 					<!--password>xxxxxxxx</password -->
 					<autoVersionSubmodules>true</autoVersionSubmodules>
-					<!--preparationGoals>clean verify</preparationGoals -->
-					<!--arguments>-Dmaven.test.skip=true</arguments -->
+					<preparationGoals>clean package</preparationGoals>
+					<arguments>-DskipTests</arguments>
 					<!--
 					<providerImplementations>
 					  <git>jgit</git>

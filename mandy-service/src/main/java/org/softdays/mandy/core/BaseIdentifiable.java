@@ -35,7 +35,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * @since 1.0.1
  */
 @MappedSuperclass
-public class BaseEntity extends BaseEqualable implements Identifiable {
+public class BaseIdentifiable extends BaseEqualable implements Identifiable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue
@@ -44,7 +46,7 @@ public class BaseEntity extends BaseEqualable implements Identifiable {
     /**
      * Instantiates a new base entity.
      */
-    public BaseEntity() {
+    public BaseIdentifiable() {
         super();
     }
 
@@ -79,8 +81,9 @@ public class BaseEntity extends BaseEqualable implements Identifiable {
         Boolean status = this.equalsConsideringTechnicalLogic(obj);
         if (status == null) {
             final Identifiable other = (Identifiable) obj;
-            status = new EqualsBuilder().append(this.getId(), other.getId())
-                    .isEquals();
+            status =
+                    new EqualsBuilder().append(this.getId(), other.getId())
+                            .isEquals();
         }
         return status;
     }

@@ -10,23 +10,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <button type="button" class="btn btn-default"
-                        title="Moins"
-                        ng-click="minusQuota()"
-                        ng-disabled="detailsDialogImputationValue == '0.00'">
-                        <span class="glyphicon glyphicon-minus"></span>
-                    </button>
-                    <div class="progress">
-                      <div class="progress-bar" role="progressbar" aria-valuenow="{{progressValue}}" aria-valuemin="0" aria-valuemax="100" ng-style="progressValueStyle">
-                        {{imputationValue}}
-                      </div>
-                    </div>
-                    <button type="button" class="btn btn-default"
-                        title="Plus"
-                        ng-click="plusQuota()"
-                        ng-disabled="imputationValue == '1.00'">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </button>
+                    <md-datagrid-slider-imputation-value />
                 </div>
                 <div class="row">
                    <textarea class="form-control" rows="3" ng-model="imputationComment" ng-disabled="imputationValue == '0.00'">{{imputationComment}}</textarea>

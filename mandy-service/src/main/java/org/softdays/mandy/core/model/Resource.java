@@ -34,7 +34,7 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.softdays.mandy.core.BaseEntity;
+import org.softdays.mandy.core.BaseIdentifiable;
 import org.softdays.mandy.core.CoreConstants;
 
 /**
@@ -45,7 +45,9 @@ import org.softdays.mandy.core.CoreConstants;
  */
 @Entity
 @Table(name = "RESOURCE")
-public class Resource extends BaseEntity {
+public class Resource extends BaseIdentifiable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * The Enum Role.
@@ -119,6 +121,10 @@ public class Resource extends BaseEntity {
         this.lastName = lastname;
         this.firstName = firstname;
         this.role = Role.ROLE_USER;
+    }
+
+    public Resource(final Long id) {
+        this.setId(id);
     }
 
     /**
@@ -249,11 +255,12 @@ public class Resource extends BaseEntity {
         if (status == null) {
             final Resource rhs = (Resource) obj;
 
-            status = new EqualsBuilder().appendSuper(this.equals(obj))
-                    .append(this.getUid(), rhs.getUid())
-                    .append(this.getLastName(), rhs.getLastName())
-                    .append(this.getFirstName(), rhs.getFirstName())
-                    .append(this.getRole(), rhs.getRole()).isEquals();
+            status =
+                    new EqualsBuilder().appendSuper(this.equals(obj))
+                            .append(this.getUid(), rhs.getUid())
+                            .append(this.getLastName(), rhs.getLastName())
+                            .append(this.getFirstName(), rhs.getFirstName())
+                            .append(this.getRole(), rhs.getRole()).isEquals();
         }
         return status;
     }

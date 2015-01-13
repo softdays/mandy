@@ -31,16 +31,19 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.softdays.mandy.dto.ActivityDto;
 import org.softdays.mandy.dto.ImputationDto;
+import org.softdays.mandy.dto.PreferencesDto;
 import org.softdays.mandy.dto.ResourceDto;
 import org.softdays.mandy.dto.calendar.DataGridDto;
 import org.softdays.mandy.service.ActivityService;
 import org.softdays.mandy.service.CalendarService;
 import org.softdays.mandy.service.ImputationService;
+import org.softdays.mandy.service.ResourceService;
 import org.softdays.mandy.web.security.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -70,6 +73,9 @@ public class MandyResource {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private ResourceService resourceService;
+
     /**
      * Instantiates a new mandy resource.
      */
@@ -83,12 +89,31 @@ public class MandyResource {
      * @return the resource dto
      */
     @GET
-    @Path("/user/session")
+    @Path("user")
     @Produces(MandyConstants.JSON_UTF8)
     @Secured("ROLE_USER")
     public ResourceDto currentUser() {
 
         return this.authService.getCurrentToken();
+    }
+
+    @GET
+    @Path("preferences")
+    @Produces(MandyConstants.JSON_UTF8)
+    @Secured("ROLE_USER")
+    public PreferencesDto getPreferences() {
+        final Long currentUserId = this.authService.getCurrentUserId();
+        return this.resourceService.findResourcePreferences(currentUserId);
+    }
+
+    @PUT
+    @Path("preferences")
+    @Produces(MandyConstants.JSON_UTF8)
+    @Secured("ROLE_USER")
+    public PreferencesDto updatePreferences(final PreferencesDto preferences) {
+        final Long currentUserId = this.authService.getCurrentUserId();
+        preferences.setResourceId(currentUserId); // just to be sure
+        return this.resourceService.updateResourcePreferences(preferences);
     }
 
     /**
@@ -100,7 +125,7 @@ public class MandyResource {
     @Path(MandyConstants.URI_ACTIVITIES)
     @Produces(MandyConstants.JSON_UTF8)
     @Secured("ROLE_USER")
-    public List<ActivityDto> activities() {
+    public List<ActivityDto> activities(@QueryParam("filter") final String filter) {
         final Long currentUserId = this.authService.getCurrentUserId();
 
         return this.activityService.getActivities(currentUserId);
@@ -120,9 +145,9 @@ public class MandyResource {
     @Produces(MandyConstants.JSON_UTF8)
     @Secured("ROLE_USER")
     public DataGridDto datagrid(@PathParam("year") final String year,
-            @PathParam("month") final String month) {
-        final DateTime date = this.calendarService.getFirstDayOfTheMonth(year,
-                month);
+                                @PathParam("month") final String month) {
+        final DateTime date =
+                this.calendarService.getFirstDayOfTheMonth(year, month);
 
         return this.calendarService.getDataGridOfTheMonth(date);
     }
@@ -140,18 +165,17 @@ public class MandyResource {
     @Path(MandyConstants.URI_IMPUTATIONS_GET)
     @Produces(MandyConstants.JSON_UTF8)
     @Secured("ROLE_USER")
-    public Map<Long, List<ImputationDto>> getImputations(
-            @PathParam("year") final String year,
-            @PathParam("month") final String month) {
-        final Long resourceId = this.authService.getCurrentToken()
-                .getResourceId();
+    public Map<Long, List<ImputationDto>> getImputations(@PathParam("year") final String year,
+                                                         @PathParam("month") final String month) {
+        final Long resourceId =
+                this.authService.getCurrentToken().getResourceId();
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("resourceId: " + resourceId);
             LOGGER.debug("year: " + year);
             LOGGER.debug("month: " + month);
         }
-        final DateTime date = this.calendarService.getFirstDayOfTheMonth(year,
-                month);
+        final DateTime date =
+                this.calendarService.getFirstDayOfTheMonth(year, month);
 
         return this.imputationService.findImputations(resourceId, date);
     }
@@ -180,7 +204,7 @@ public class MandyResource {
      * @return the imputation dto
      */
     @PUT
-    @Path(MandyConstants.URI_IMPUTATIONS_IID)
+    @Path(MandyConstants.URI_IMPUTATIONS_ID)
     @Consumes(MandyConstants.JSON_UTF8)
     @Secured("ROLE_USER")
     public ImputationDto updateImputation(final ImputationDto imputationDto) {
@@ -195,11 +219,10 @@ public class MandyResource {
      *            the imputation id
      */
     @DELETE
-    @Path(MandyConstants.URI_IMPUTATIONS_IID)
+    @Path(MandyConstants.URI_IMPUTATIONS_ID)
     @Consumes(MandyConstants.JSON_UTF8)
     @Secured("ROLE_USER")
     public void deleteImputation(@PathParam("id") final Long imputationId) {
         this.imputationService.deleteImputation(imputationId);
     }
-
 }

@@ -33,7 +33,7 @@ import javax.persistence.Table;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.NaturalId;
-import org.softdays.mandy.core.BaseEntity;
+import org.softdays.mandy.core.BaseIdentifiable;
 import org.softdays.mandy.core.CoreConstants;
 
 /**
@@ -44,7 +44,9 @@ import org.softdays.mandy.core.CoreConstants;
  */
 @Entity
 @Table(name = "ACTIVITY")
-public class Activity extends BaseEntity {
+public class Activity extends BaseIdentifiable {
+
+    private static final long serialVersionUID = 1L;
 
     @NaturalId(mutable = true)
     @Column(nullable = false, length = CoreConstants.DB_SHORT_LABEL_LENGTH)
@@ -204,11 +206,12 @@ public class Activity extends BaseEntity {
         Boolean status = this.equalsConsideringTechnicalLogic(obj);
         if (status == null) {
             final Activity rhs = (Activity) obj;
-            status = new EqualsBuilder().appendSuper(this.equals(obj))
-                    .append(this.getShortLabel(), rhs.getShortLabel())
-                    .append(this.getLongLabel(), rhs.getLongLabel())
-                    .append(this.getPosition(), rhs.getPosition())
-                    .append(this.getType(), rhs.getType()).isEquals();
+            status =
+                    new EqualsBuilder().appendSuper(this.equals(obj))
+                            .append(this.getShortLabel(), rhs.getShortLabel())
+                            .append(this.getLongLabel(), rhs.getLongLabel())
+                            .append(this.getPosition(), rhs.getPosition())
+                            .append(this.getType(), rhs.getType()).isEquals();
         }
         return status;
     }

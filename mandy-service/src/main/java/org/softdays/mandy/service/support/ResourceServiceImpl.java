@@ -21,8 +21,11 @@
 package org.softdays.mandy.service.support;
 
 import org.dozer.Mapper;
+import org.softdays.mandy.core.model.Preferences;
 import org.softdays.mandy.core.model.Resource;
+import org.softdays.mandy.dao.PreferencesDao;
 import org.softdays.mandy.dao.ResourceDao;
+import org.softdays.mandy.dto.PreferencesDto;
 import org.softdays.mandy.dto.ResourceDto;
 import org.softdays.mandy.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,9 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Autowired
     private ResourceDao resourceDao;
+
+    @Autowired
+    private PreferencesDao preferencesDao;
 
     @Autowired
     private Mapper mapper;
@@ -72,10 +78,43 @@ public class ResourceServiceImpl implements ResourceService {
      */
     @Override
     public ResourceDto create(final String uid, final String lastname,
-            final String firstname) {
-        final Resource res = this.resourceDao.save(new Resource(uid, lastname,
-                firstname));
+                              final String firstname) {
+        final Resource res =
+                this.resourceDao.save(new Resource(uid, lastname, firstname));
+
+        this.preferencesDao.save(new Preferences(res));
+
         return this.mapper.map(res, ResourceDto.class);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.softdays.mandy.service.ResourceService#findResourcePreferences(java
+     * .lang.Long)
+     */
+    @Override
+    public PreferencesDto findResourcePreferences(final Long resourceId) {
+        PreferencesDto dto = null;
+        // check if the user has custom preferences
+        final Preferences preferences = this.preferencesDao.findOne(resourceId);
+        if (preferences == null) {
+            // initialize with default business values
+            dto = new PreferencesDto();
+        } else {
+            dto = this.mapper.map(preferences, PreferencesDto.class);
+        }
+
+        return dto;
+    }
+
+    @Override
+    public PreferencesDto updateResourcePreferences(final PreferencesDto preferencesDto) {
+        final Preferences preferences =
+                this.mapper.map(preferencesDto, Preferences.class);
+        return this.mapper.map(this.preferencesDao.save(preferences),
+                PreferencesDto.class);
     }
 
 }

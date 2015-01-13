@@ -34,7 +34,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.softdays.mandy.core.BaseEntity;
+import org.softdays.mandy.core.BaseIdentifiable;
 import org.softdays.mandy.core.CoreConstants;
 
 /**
@@ -48,7 +48,9 @@ import org.softdays.mandy.core.CoreConstants;
 @Entity
 @Table(name = "IMPUTATION", uniqueConstraints = @UniqueConstraint(
         columnNames = { "ACTIVITY_ID", "RESOURCE_ID", "DATE" }))
-public class Imputation extends BaseEntity {
+public class Imputation extends BaseIdentifiable {
+
+    private static final long serialVersionUID = 1L;
 
     @ManyToOne
     @JoinColumn(
@@ -206,10 +208,11 @@ public class Imputation extends BaseEntity {
         Boolean status = this.equalsConsideringTechnicalLogic(obj);
         if (status == null) {
             final Imputation rhs = (Imputation) obj;
-            status = new EqualsBuilder().appendSuper(this.equals(obj))
-                    .append(this.getActivity(), rhs.getActivity())
-                    .append(this.getComment(), rhs.getComment())
-                    .append(this.getDate(), rhs.getDate()).isEquals();
+            status =
+                    new EqualsBuilder().appendSuper(this.equals(obj))
+                            .append(this.getActivity(), rhs.getActivity())
+                            .append(this.getComment(), rhs.getComment())
+                            .append(this.getDate(), rhs.getDate()).isEquals();
         }
         return status;
     }

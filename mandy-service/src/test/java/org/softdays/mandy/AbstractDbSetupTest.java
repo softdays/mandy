@@ -21,12 +21,14 @@
 
 package org.softdays.mandy;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.Statement;
 
 import javax.sql.DataSource;
 
 import org.dbunit.IDatabaseTester;
+import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.ITable;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
@@ -61,22 +63,10 @@ public abstract class AbstractDbSetupTest {
                 operation);
     }
 
-    public ITable query(final String sql) {
-        ITable table = null;
-        try {
-            table = this.databaseTester.getConnection().createQueryTable(
-                    RESULT_TABLE_NAME, sql);
-            return table;
-        } catch (final Exception e) {
-            Assert.fail(e.getMessage());
-        }
-        return null;
-    }
-
     public void execute(final String sql) {
         try {
-            final Connection c = this.databaseTester.getConnection()
-                    .getConnection();
+            final Connection c =
+                    this.databaseTester.getConnection().getConnection();
             final Statement s = c.createStatement();
             s.executeUpdate(sql);
             s.close();
@@ -85,4 +75,35 @@ public abstract class AbstractDbSetupTest {
         }
     }
 
+    public ITable query(final String sql) {
+        ITable table = null;
+        try {
+            table =
+                    this.databaseTester.getConnection().createQueryTable(
+                            RESULT_TABLE_NAME, sql);
+            return table;
+        } catch (final Exception e) {
+            Assert.fail(e.getMessage());
+        }
+        return null;
+    }
+
+    public Float getFirstRowAsFloat(final ITable table, final String column) {
+        try {
+            return ((Double) table.getValue(0, column)).floatValue();
+        } catch (final DataSetException e) {
+            Assert.fail(e.getMessage());
+        }
+        return null;
+    }
+
+    public Long getFirstRowAsLong(final ITable table, final String column) {
+        try {
+            final BigInteger bigInt = (BigInteger) table.getValue(0, column);
+            return Long.valueOf(bigInt.longValue());
+        } catch (final DataSetException e) {
+            Assert.fail(e.getMessage());
+        }
+        return null;
+    }
 }

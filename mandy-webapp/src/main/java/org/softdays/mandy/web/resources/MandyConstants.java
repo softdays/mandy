@@ -36,13 +36,13 @@ public final class MandyConstants {
 
     public static final String URI_ROOT = "/";
     public static final String URI_ACTIVITIES = "activities";
+    public static final String URI_RESOURCES = "resources";
     public static final String URI_DATAGRID_GET = "datagrid/{year}/{month}";
     public static final String URI_IMPUTATIONS = "imputations";
     public static final String URI_IMPUTATIONS_GET = URI_IMPUTATIONS
             + "/{year}/{month}";
-    public static final String URI_CALENDAR_IMPUTATIONS = "imputations";
 
-    public static final String URI_IMPUTATIONS_IID = URI_IMPUTATIONS + "/{id}";
+    public static final String URI_IMPUTATIONS_ID = URI_IMPUTATIONS + "/{id}";
 
     private MandyConstants() {
         super();

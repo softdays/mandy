@@ -81,6 +81,7 @@
                                     <a ng-class="getQuotaClasses(item, quota)" ng-click="updateImputation(item, quota.floatValue)" ng-disabled="!workingDay ">{{quota.printValue}}</a>
                                 </span>
                               </div>
+                              <div ng-include src="'partials/datagrid-imputation-slider.html'" />
                         </div>
                     </td>
                 </tr>

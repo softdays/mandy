@@ -17,9 +17,9 @@
     ('SIECLE ADM', 'Administration Siecle', 'P', 9),
     ('TS', 'Téléservices Scolarité', 'P', 10),
     ('TS ADMIN', 'Admininistration Téléservices', 'P', 11), 	
-	('NETSYNCHRO', 'NetSynchro', 'P', 12),
+	('NETSYNC', 'NetSynchro', 'P', 12),
 	('SIECLESYNC', 'SiecleSynchro', 'P', 13),
-	('GIN-WEB', 'Gestion Identité Numérique (Web)', 'P', 14),
+	('GIN-WEB', 'Gestion Identité Numérique', 'P', 14),
 	('MOBILITE', 'Mobilité', 'P', 15),
 	('TELEPMT', 'Télépaiement', 'P', 16),	
 	('GFC', 'Gestion Financière et Comptable', 'P', 0);

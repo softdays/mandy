@@ -4,6 +4,8 @@
 
 @import "../frameworks/bootstrap/less/bootstrap";
 
+@import "../frameworks/bootstrap-toogle/css/bootstrap-toggle.min.css";
+
 @import url(//fonts.googleapis.com/css?family=Leckerli+One);
 
 /* 
@@ -480,8 +482,33 @@ a[disabled] {
     
 }/*close #datagrid*/
 
-#view-error {
+#error {
 	margin-top: 25px;
+	
+	.alert {
+       
+       div[ng-bind-html='stack'] {  
+       
+          h1, p, h3, hr {
+            display:none;
+          } 
+       }       
+      
+	}
+	
+	#stack-expander {
+	   button:focus {
+	       outline: 0;
+	   }
+	   
+	   button {
+	       padding-left: 0;
+	   }
+	   
+	   .btn-link:hover, .btn-link:focus {
+	       text-decoration: none;
+	   }
+	}
 }
 
 #view-loading {
@@ -519,6 +546,63 @@ a[disabled] {
 	   .btn {
 	       vertical-align:middle;
 	   }
+	}
+}
+
+#preferences {
+	padding-top: 20px;
+	
+	input[type='email'] {
+	   width: 400px;
+	}
+	
+	.pref-toggle {
+	   .toggle {	   
+	      width: 147px !important; /* prevents side-effect of dynamic width computation performed by bootstrap-toogle */
+	   }
+	   
+	   .alert {
+	       margin-top: 10px;
+	       margin-bottom: 0;
+	   }	
+	}
+	
+	.disabled {	
+	   cursor: not-allowed;
+	}
+	
+	.pref-notif-freq {
+	   div.btn-group > button:first-child {
+	       width: 132px;
+	   }
+	}
+	
+	.pref-activity > label.disabled, div.toggle[disabled='disabled '] * {
+	   cursor: not-allowed;
+	}
+	
+	.pref-activity {
+	
+	   line-height: @env27px;
+	   margin-top: 2px;
+	   margin-bottom: 2px;
+	   
+	   & > * {
+	       vertical-align: middle;
+	   }
+	   
+	   & > label {
+	       font-weight: normal;
+	       
+	       .pref-activity-label {
+	           margin-left: 3px;
+	           
+	           &.strike {
+	               text-decoration : line-through;
+	           }
+	       }
+	   }
+	   
 	}
 }
 

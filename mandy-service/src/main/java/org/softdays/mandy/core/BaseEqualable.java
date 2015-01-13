@@ -20,6 +20,8 @@
  */
 package org.softdays.mandy.core;
 
+import java.io.Serializable;
+
 /**
  * This base class allows to compare to objects in terms of technical and
  * business logic.
@@ -27,7 +29,9 @@ package org.softdays.mandy.core;
  * @author rpatriarche
  * @since 1.0.1
  */
-public class BaseEqualable implements Equalable {
+public class BaseEqualable implements Equalable, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Instantiates a new abstract equalable.

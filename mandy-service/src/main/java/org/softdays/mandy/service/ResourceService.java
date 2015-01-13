@@ -21,6 +21,7 @@
 
 package org.softdays.mandy.service;
 
+import org.softdays.mandy.dto.PreferencesDto;
 import org.softdays.mandy.dto.ResourceDto;
 
 /**
@@ -53,5 +54,25 @@ public interface ResourceService {
      * @return A instance of {@link ResourceDto}.
      */
     ResourceDto create(String uid, String lastname, String firstname);
+
+    /**
+     * Find resource global preferences.
+     * 
+     * @since 1.1.0
+     * 
+     * @param resourceId
+     *            the resource id
+     * @return the preferences dto
+     */
+    PreferencesDto findResourcePreferences(Long resourceId);
+
+    /**
+     * Updates resources preferences.
+     * 
+     * @param preferences
+     *            The DTO to use to retrieve new preferences values.
+     * @return The same DTO.
+     */
+    PreferencesDto updateResourcePreferences(PreferencesDto preferences);
 
 }

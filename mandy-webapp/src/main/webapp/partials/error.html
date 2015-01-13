@@ -1,7 +1,15 @@
-<div id="view-error">
+<div id="error">
 	<div role="alert" class="alert alert-danger">
 		<p><strong>{{alert.title}}&nbsp;</strong></p>
 		<p>{{alert.context}}</p>
 		<p><em>{{alert.details}}</em></p>
+		<p id="stack-expander" ng-model="expanded" ng-init="expanded=false">
+			<button type="button" class="btn btn-link" data-toggle="collapse" data-target="#stack" ng-click="expanded=!expanded">
+			  <span ng-show="!expanded">Afficher</span><span ng-show="expanded">Masquer</span> le rapport d'exécution
+			  <span class="glyphicon glyphicon-collapse-down" aria-hidden="true" ng-show="!expanded"></span>
+			  <span class="glyphicon glyphicon-collapse-up" aria-hidden="true" ng-show="expanded"></span>
+			</button>
+		</p>
+		<div id="stack" ng-bind-html="stack" class="collapse"></div>
 	</div>
 </div>

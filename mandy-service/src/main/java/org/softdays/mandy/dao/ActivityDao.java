@@ -34,7 +34,7 @@ import org.springframework.data.repository.query.Param;
  * @author rpatriarche
  * @since 1.0.0
  */
-public interface ActivityDao extends JpaRepository<Activity, Integer> {
+public interface ActivityDao extends JpaRepository<Activity, Long> {
 
     /**
      * Find by resource.

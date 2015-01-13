@@ -32,7 +32,7 @@ import javax.persistence.Table;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.NaturalId;
-import org.softdays.mandy.core.BaseEntity;
+import org.softdays.mandy.core.BaseIdentifiable;
 import org.softdays.mandy.core.CoreConstants;
 
 /**
@@ -43,7 +43,9 @@ import org.softdays.mandy.core.CoreConstants;
  */
 @Entity
 @Table(name = "TEAM")
-public class Team extends BaseEntity {
+public class Team extends BaseIdentifiable {
+
+    private static final long serialVersionUID = 1L;
 
     @NaturalId(mutable = true)
     @Column(nullable = false, length = CoreConstants.DB_SHORT_LABEL_LENGTH)
@@ -160,9 +162,10 @@ public class Team extends BaseEntity {
         if (status == null) {
             final Team rhs = (Team) obj;
 
-            status = new EqualsBuilder().appendSuper(this.equals(obj))
-                    .append(this.getCode(), rhs.getCode())
-                    .append(this.getLabel(), rhs.getLabel()).isEquals();
+            status =
+                    new EqualsBuilder().appendSuper(this.equals(obj))
+                            .append(this.getCode(), rhs.getCode())
+                            .append(this.getLabel(), rhs.getLabel()).isEquals();
         }
         return status;
     }

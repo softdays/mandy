@@ -76,12 +76,12 @@
                                     <span class="glyphicon glyphicon-comment"></span>
                                 </button>
                               </div>
-                              <div class="btn-radio-quota-group">
+                              <!--div class="btn-radio-quota-group">
                                 <span ng-repeat="quota in quotas">
                                     <a ng-class="getQuotaClasses(item, quota)" ng-click="updateImputation(item, quota.floatValue)" ng-disabled="!workingDay ">{{quota.printValue}}</a>
                                 </span>
-                              </div>
-                              <div ng-include src="'partials/datagrid-imputation-slider.html'" />
+                              </div-->
+                              <md-datagrid-slider />
                         </div>
                     </td>
                 </tr>

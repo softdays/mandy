@@ -208,11 +208,74 @@ define(
         };
       });
 
-      module.directive('mdDatagridSliderImputationValue', function() {
-        return {
-          templateUrl : 'partials/datagrid-imputation-slider.html'
-        };
-      });
+      module.directive('mdDatagridSlider', [
+          '$rootScope',
+          'Utils',
+          function($rootScope, utils) {
+            return {
+
+              templateUrl : 'partials/datagrid-slider.html',
+
+              scope : {
+                quota : '=ngModel'
+              },
+
+              link : function(scope, element, attrs) {
+
+                scope.$watch('quota', function(newValue, oldValue) {
+                  updateProgressBarModel(newValue);
+                });
+
+                /**
+                 * Allows to update quota of the imputation 'copy' displayed in
+                 * modal.
+                 * 
+                 * @param minus
+                 *          If true, the current value will be reduced, if null
+                 *          or false the value will be increased.
+                 * 
+                 * @private
+                 */
+                function updateCurrentValue(minus) {
+                  scope.quota = utils.getNewQuota(scope.quota,
+                      $rootScope.preferences.granularity, minus);
+                }
+
+                /**
+                 * Prepare PM from given new value.
+                 * 
+                 * @private
+                 */
+                function updateProgressBarModel(newValue) {
+                  scope.progressValue = newValue * 100;
+                  scope.progressValueStyle = {
+                    width : (scope.progressValue + '%')
+                  };
+                  scope.progressLabel = utils.formatQuota(newValue);
+                }
+
+                /**
+                 * Allows to update quota of the imputation 'copy' displayed in
+                 * modal.
+                 * 
+                 * @public
+                 */
+                scope.minusQuota = function() {
+                  updateCurrentValue(true);
+                };
+
+                /**
+                 * Allows to update quota of the imputation 'copy' displayed in
+                 * modal.
+                 * 
+                 * @public
+                 */
+                scope.plusQuota = function() {
+                  updateCurrentValue();
+                };
+              }
+            };
+          } ]);
 
       return module;
     });

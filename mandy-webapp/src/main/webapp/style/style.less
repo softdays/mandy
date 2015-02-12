@@ -515,23 +515,33 @@ a[disabled] {
 	margin: 25px;
 }
 
+md-datagrid-slider {
+	.progress {
+       width: 80%;
+       display: inline-block;
+       vertical-align:middle;
+       margin-bottom: 0;
+       height: 25px;
+       
+       .progress-bar {
+           line-height: 27px;
+           font-size: @env20px; /* 20:14 */
+           font-weight: bold;
+           padding-left: @env5px;
+           
+           &[aria-valuenow="0"] {
+            color: #666;         
+           }
+       }
+    }
+    
+    .btn {
+        vertical-align:middle;
+    }
+}
+
 
 #imputation-details {
-	
-	.progress {
-	   width: 80%;
-	   display: inline-block;
-	   vertical-align:middle;
-	   margin-bottom: 0;
-	   height: 25px;
-	   
-	   .progress-bar {
-	       line-height: 27px;
-	       font-size: @env20px; /* 20:14 */
-	       font-weight: bold;
-	       padding-left: @env5px;
-	   }
-	}
 	
 	.modal-body {
 	   .row {
@@ -541,10 +551,6 @@ a[disabled] {
 	   
 	   textarea {
            resize: none;
-	   }
-	   
-	   .btn {
-	       vertical-align:middle;
 	   }
 	}
 }

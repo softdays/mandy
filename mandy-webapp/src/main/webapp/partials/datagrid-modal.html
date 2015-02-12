@@ -10,10 +10,13 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <md-datagrid-slider-imputation-value />
+                    <md-datagrid-slider ng-model="quota" />
                 </div>
                 <div class="row">
-                   <textarea class="form-control" rows="3" ng-model="imputationComment" ng-disabled="imputationValue == '0.00'">{{imputationComment}}</textarea>
+                   <textarea class="form-control" 
+                             rows="3" 
+                             ng-model="imputationComment" 
+                             ng-disabled="imputationValue == '0.00'">{{imputationComment}}</textarea>
                 </div>
             </div>
             <div class="modal-footer">

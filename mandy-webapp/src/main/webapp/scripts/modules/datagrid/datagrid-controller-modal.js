@@ -24,35 +24,6 @@ define([ 'angular', 'mandy-common', 'mandy-datagrid-service' ], function(
       function($rootScope, $scope, $log, globals, utils) {
 
         /**
-         * Allows to update quota of the imputation 'copy' displayed in modal.
-         * 
-         * @param minus
-         *          If true, the current value will be reduced, if null or false
-         *          the value will be increased.
-         * 
-         * @private
-         */
-        var updateCurrentValue = function(minus) {
-          var value = utils.getNewQuota($scope.imputationValue,
-              $rootScope.preferences.granularity, minus);
-          updateImputationValue(value);
-        };
-
-        /**
-         * Prepare PM from given new value.
-         * 
-         * @private
-         */
-        var updateImputationValue = function(newValue) {
-          var value = utils.formatQuota(newValue);
-          $scope.progressValue = value * 100;
-          $scope.progressValueStyle = {
-            width : ($scope.progressValue + '%')
-          };
-          $scope.imputationValue = value;
-        };
-
-        /**
          * Find activity label from its is.
          * 
          * @private
@@ -106,7 +77,6 @@ define([ 'angular', 'mandy-common', 'mandy-datagrid-service' ], function(
             $scope.imputationComment = "";
           }
 
-          updateImputationValue(quota);
           angular.element("#imputation-details").modal();
           angular.element("#imputation-details").on('shown.bs.modal',
               function() {
@@ -131,26 +101,24 @@ define([ 'angular', 'mandy-common', 'mandy-datagrid-service' ], function(
           angular.element('#imputation-details').modal('hide');
 
           $scope.saveModalChanges($scope.imputationId, $scope.activityId,
-              +$scope.imputationValue, $scope.imputationComment);
+              +$scope.quota, $scope.imputationComment);
         };
 
         /**
          * Allows to update quota of the imputation 'copy' displayed in modal.
          * 
          * @public
+         * 
+         * $scope.minusQuota = function() { updateCurrentValue(true); };
          */
-        $scope.minusQuota = function() {
-          updateCurrentValue(true);
-        };
 
         /**
          * Allows to update quota of the imputation 'copy' displayed in modal.
          * 
          * @public
+         * 
+         * $scope.plusQuota = function() { updateCurrentValue(); };
          */
-        $scope.plusQuota = function() {
-          updateCurrentValue();
-        };
 
         /**
          * TODO: Prevents to save if the imputation quota is empty in creation

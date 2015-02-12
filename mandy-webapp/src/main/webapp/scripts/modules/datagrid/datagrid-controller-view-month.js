@@ -300,6 +300,9 @@ define(
                       var activityId = ngCell.attr('data-activity-id');
                       var date = ngCell.attr('data-date');
                       var quota = ngCell.find(".value").text();
+                      if (quota === '-') {
+                        quota = 0;
+                      }
 
                       $scope.showModal(imputationId, activityId, date, quota);
                     };

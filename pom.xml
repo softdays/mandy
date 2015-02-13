@@ -6,7 +6,7 @@
 	<groupId>org.softdays.mandy</groupId>
 	<artifactId>mandy-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.1.0</version>
 	<name>Mandy</name>
 	<description>A simple webapp to track man-day consumption on activities</description>
 	<url>http://www.softdays.org</url>
@@ -45,7 +45,7 @@
 		<connection>scm:git:ssh://git@github.com/softdays/mandy.git</connection>
 		<url>https://github.com/softdays/mandy</url>
 		<developerConnection>scm:git:ssh://git@github.com/softdays/mandy.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>1.1.0</tag>
 	</scm>
 
 	<build>

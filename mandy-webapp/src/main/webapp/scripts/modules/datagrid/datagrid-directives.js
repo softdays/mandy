@@ -213,15 +213,19 @@ define(
           'Utils',
           function($rootScope, utils) {
             return {
-
+              // refer external template
               templateUrl : 'partials/datagrid-slider.html',
-
+              // declare the directive scope as private
               scope : {
                 quota : '=ngModel'
               },
-
+              // this function is called on each md-datagrid-slider instance
+              // initialisation
               link : function(scope, element, attrs) {
-
+                /**
+                 * TODO: check performance and potentiel memory leaks using
+                 * watch here
+                 */
                 scope.$watch('quota', function(newValue, oldValue) {
                   updateProgressBarModel(newValue);
                 });
@@ -247,6 +251,7 @@ define(
                  * @private
                  */
                 function updateProgressBarModel(newValue) {
+                  newValue = newValue || 0;
                   scope.progressValue = newValue * 100;
                   scope.progressValueStyle = {
                     width : (scope.progressValue + '%')

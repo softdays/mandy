@@ -93,6 +93,14 @@ define([ 'angular', 'mandy-common', 'mandy-datagrid-service' ], function(
         });
 
         /**
+         * Clear imputation data (imputation will be deleted if user save).
+         */
+        $scope.clearImputation = function() {
+          $scope.quota = 0;
+          $scope.imputationComment = "";
+        };
+
+        /**
          * Save imputation details from modal data model.
          * 
          * @borrows saveModalChanges (parent scope action)

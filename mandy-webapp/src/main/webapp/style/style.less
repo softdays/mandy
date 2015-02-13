@@ -285,11 +285,9 @@ a[disabled] {
 	                .noSelect(); 
 	                
 	                &.activity {
-	                   padding-left: 3px;
-	                }
-	                
-	                &.activity {
 	                   text-align:left;
+	                   padding-left: 3px;
+	                   vertical-align: middle;
 	                }
 	                
 	                &.selected {
@@ -416,41 +414,9 @@ a[disabled] {
                     width: 100%;
                     padding: 0 @env5px;
                     
-                    .btn-radio-quota-group {                    
-                        padding-top: 7px; /*centrage vertical par/ au bouton flottant de droite */
-                        
-                        > span {
-                            display: inline-block;
-                            width: @btn-radio-quota-width;
-                            height: 100%;
-                            
-                           .btn-radio-quota {   
-                                display: inline-block;     
-                                height: 100%;       
-	                            color: black;
-	                            padding-left: 24px;
-	                            background-size: 20px;
-	                            background-position: left center;
-	                            background-image: url('../images/radio-button-off.svg');
-                                background-repeat: no-repeat;
-                                .noSelect();
-	                            
-	                            &.checked {
-	                                 background-image: url('../images/radio-button-on.svg');
-	                            }
-	                            
-	                            &:hover {
-	                                text-decoration: none;
-	                                cursor: pointer;
-	                            }
-	                            
-	                            &[disabled] {
-                                    opacity: 0.5;
-                                }
-	                        }
-	                        
-	                        
-                        }
+                    
+                    .slider-container {
+                        margin-right: 45px;
                     }
                     
                     .btn-group {
@@ -516,30 +482,38 @@ a[disabled] {
 }
 
 md-datagrid-slider {
+	width: 100%;
+	display: block;
+	
 	.progress {
-       width: 80%;
-       display: inline-block;
-       vertical-align:middle;
-       margin-bottom: 0;
+	   position: relative;
+	   top: 4px; /* fix vertical center */
        height: 25px;
+       margin: 0 45px;
        
        .progress-bar {
            line-height: 27px;
            font-size: @env20px; /* 20:14 */
            font-weight: bold;
            padding-left: @env5px;
-           
-           &[aria-valuenow="0"] {
-            color: #666;         
-           }
+           min-width: 3em;
        }
     }
     
     .btn {
-        vertical-align:middle;
+        display: block; 
     }
+    
+    .btn.minus {
+        float: left;
+    }
+    
+    .btn.plus {
+        float: right;
+    }
+    
+    
 }
-
 
 #imputation-details {
 	

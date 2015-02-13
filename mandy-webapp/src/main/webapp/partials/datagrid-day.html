@@ -59,29 +59,33 @@
                                 </button>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuImputation">
                                     <li role="presentation" ng-repeat="quota in quotas">
-                                        <a role="menuitem" tabindex="-1" ng-click="updateImputation(item, quota.floatValue)">{{quota.printValue}}</a>
+                                        <a role="menuitem" tabindex="-1" 
+                                           ng-click="updateImputation(item, quota.floatValue)">{{quota.printValue}}</a>
                                     </li>                                   
                                  </ul>
                               </div>
                               <div class="btn-group">
-                                <button type="button" class="btn btn-default btn-comment" ng-click="showImputationDetails(item)" ng-disabled="isCommentButtonDisabled(item)">
+                                <button type="button" 
+                                        class="btn btn-default btn-comment" 
+                                        ng-click="showImputationDetails(item)" 
+                                        ng-disabled="isCommentButtonDisabled(item)">
                                     <span class="glyphicon glyphicon-comment"></span>
                                 </button>
                               </div>
                         </div>
                         <!-- VIEW XS: quota selector is radio buttons + comment button -->
                         <div class="imputation-toolbar hidden-xxs">
-                              <div class="btn-group"> <!-- First child because float left -->
-                                <button type="button" class="btn btn-default btn-comment" ng-click="showImputationDetails(item)" ng-disabled="isCommentButtonDisabled(item)">
+                              <div class="btn-group"> <!-- First child because float right -->
+                                <button type="button" 
+                                        class="btn btn-default btn-comment" 
+                                        ng-click="showImputationDetails(item)" 
+                                        ng-disabled="isCommentButtonDisabled(item)">
                                     <span class="glyphicon glyphicon-comment"></span>
                                 </button>
                               </div>
-                              <!--div class="btn-radio-quota-group">
-                                <span ng-repeat="quota in quotas">
-                                    <a ng-class="getQuotaClasses(item, quota)" ng-click="updateImputation(item, quota.floatValue)" ng-disabled="!workingDay ">{{quota.printValue}}</a>
-                                </span>
-                              </div-->
-                              <md-datagrid-slider />
+                              <div class="slider-container">
+                                <md-datagrid-slider ng-model="item.imputation.quota" />
+                              </div>                              
                         </div>
                     </td>
                 </tr>

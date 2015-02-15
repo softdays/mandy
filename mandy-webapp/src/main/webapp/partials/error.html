@@ -10,6 +10,7 @@
 			  <span class="glyphicon glyphicon-collapse-up" aria-hidden="true" ng-show="expanded"></span>
 			</button>
 		</p>
-		<div id="stack" ng-bind-html="stack" class="collapse"></div>
+		<!-- stackSafeHtml property is exposed by the error controller scope -->
+		<div id="stack" ng-bind-html="stackSafeHtml" class="collapse"></div>
 	</div>
 </div>

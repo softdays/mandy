@@ -67,53 +67,52 @@ define(
           } ]);
 
       // Configuration of the router
-      app.config([
-          '$httpProvider',
-          '$routeProvider',
-          '$locationProvider',
-          '$logProvider',
-          function($httpProvider, $routeProvider, $locationProvider,
-              $logProvider) {
-            $logProvider.debugEnabled(true);
+      app
+          .config([
+              '$httpProvider',
+              '$routeProvider',
+              '$locationProvider',
+              '$logProvider',
+              function($httpProvider, $routeProvider, $locationProvider,
+                  $logProvider) {
+                $logProvider.debugEnabled(true);
 
-            /*
-             * $httpProvider.interceptors.push(function($q) { return {
-             * responseError : function(rejection) { if (rejection.status == 0) {
-             * window.location = "/"; return; } return $q.reject(rejection); } };
-             * });
-             */
+                // active resource cache (not recommanded or you have to deal
+                // with server sync)
+                // $httpProvider.defaults.cache = false;
 
-            // inactive le cache par défaut
-            // $httpProvider.defaults.cache = false;
-            // Declare the basic routes
-            $routeProvider.when('/', {
-              templateUrl : "partials/loading.html",
-              controller : 'MainController',
-              resolve : {
-                user : [ 'UserService', function(userService) {
-                  return userService.getUserData();
-                } ],
-                preferences : [ 'PreferencesService',
-                    function(preferencesService) {
-                      return preferencesService.getUserPreferences();
-                    } ]
-              }
-            });
+                // Put standard Ajax header to detect Ajax request server-side
+                $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
-            $routeProvider.when('/error', {
-              templateUrl : "partials/error.html",
-              controller : 'ErrorController'
-            });
+                // Declare the basic routes
+                $routeProvider.when('/', {
+                  templateUrl : "partials/loading.html",
+                  controller : 'MainController',
+                  resolve : {
+                    user : [ 'UserService', function(userService) {
+                      return userService.getUserData();
+                    } ],
+                    preferences : [ 'PreferencesService',
+                        function(preferencesService) {
+                          return preferencesService.getUserPreferences();
+                        } ]
+                  }
+                });
 
-            $routeProvider.otherwise({
-              redirectTo : '/error'
-            });
+                $routeProvider.when('/error', {
+                  templateUrl : "partials/error.html",
+                  controller : 'ErrorController'
+                });
 
-            $routeProvider.when('/logout', {
-              redirectTo : '/'
-            });
+                $routeProvider.otherwise({
+                  redirectTo : '/error'
+                });
 
-          } ]);
+                $routeProvider.when('/logout', {
+                  redirectTo : '/'
+                });
+
+              } ]);
 
       // Definition of the main controller
       app

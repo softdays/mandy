@@ -333,6 +333,9 @@ define(
                 // socket error (server is down)
                 title = "Serveur inaccessible";
                 details = "Le serveur ne répond pas, veuillez contacter l'administrateur de l'application pour qu'il redémarre le bouzin.";
+              } else if (status === 401) {
+                // force redirection to the home page to display login form
+                window.location = "./";
               } else {
                 details = httpResponse.statusText ? httpResponse.statusText
                     : "aucune information récupérable";
@@ -364,7 +367,7 @@ define(
       module.controller('ErrorController', [ '$rootScope', '$scope', '$sce',
 
       function($rootScope, $scope, $sce) {
-        $scope.stack = $sce.trustAsHtml($rootScope.alert.stack);
+        $scope.stackSafeHtml = $sce.trustAsHtml($rootScope.alert.stack);
       } ]);
 
       module

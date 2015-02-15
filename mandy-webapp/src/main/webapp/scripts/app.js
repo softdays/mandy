@@ -18,11 +18,17 @@ define(
           'mdDatagrid', 'mdPreferences' ]);
 
       app.run([
+          '$templateCache',
           '$http',
           '$rootScope',
-          function($http, $rootScope) {
+          function($templateCache, $http, $rootScope) {
             // $http.defaults.cache = false; // pas la peine de le faire ici,
             // c'est géré par le httpProvider
+
+            // put error partial in cache
+            $http.get('partials/error.html', {
+              cache : $templateCache
+            });
 
             // définition des variables globales
             // il est nécessaire de les déclarer dès
@@ -70,9 +76,15 @@ define(
               $logProvider) {
             $logProvider.debugEnabled(true);
 
+            /*
+             * $httpProvider.interceptors.push(function($q) { return {
+             * responseError : function(rejection) { if (rejection.status == 0) {
+             * window.location = "/"; return; } return $q.reject(rejection); } };
+             * });
+             */
+
             // inactive le cache par défaut
             // $httpProvider.defaults.cache = false;
-
             // Declare the basic routes
             $routeProvider.when('/', {
               templateUrl : "partials/loading.html",

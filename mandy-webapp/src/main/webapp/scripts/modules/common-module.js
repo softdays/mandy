@@ -18,22 +18,6 @@ define(
 
       var module = angular.module('mdCommon', []);
 
-      // /**
-      // * This interceptor disables cache associated to the response URL.
-      // */
-      // module.factory('NoCacheInterceptorFactory', [ '$log', '$cacheFactory',
-      // function($log, $cacheFactory) {
-      // var cache = $cacheFactory.get('$http');
-      // // To invalidate the resource cache on PUT
-      // return {
-      // response : function(response) {
-      // cache.remove(response.config.url);
-      // $log.debug('cache entry removed', response.config.url);
-      // return response.data;
-      // }
-      // };
-      // } ]);
-
       var UtilsService = function() {
         var DATAGRID_PARAMS = "[year]/YYYY/[month]/MM";
         var DATAGRID_PARAMS_FOR_VIEW_DAY = DATAGRID_PARAMS + "/[day]/DD";
@@ -342,20 +326,28 @@ define(
           function($rootScope, $location, $log, $timeout) {
 
             this.errorHandler = function(httpResponse, context) {
-              var status = httpResponse.status ? httpResponse.status : "???";
-              var details = httpResponse.statusText ? httpResponse.statusText
-                  : "aucune information récupérable";
-              var stack = httpResponse.data;
-              stack = stack.substring((stack.indexOf("<body>") + 6), stack
-                  .indexOf("</body>"));
-              var title = "Code HTTP " + status;
-              details = "Détails : " + details;
+              var status, details, stack, title;
+              status = httpResponse.status === undefined ? "???"
+                  : httpResponse.status;
+              if (status === 0) {
+                // socket error (server is down)
+                title = "Serveur inaccessible";
+                details = "Le serveur ne répond pas, veuillez contacter l'administrateur de l'application pour qu'il redémarre le bouzin.";
+              } else {
+                details = httpResponse.statusText ? httpResponse.statusText
+                    : "aucune information récupérable";
+                stack = httpResponse.data;
+                stack = stack.substring((stack.indexOf("<body>") + 6), stack
+                    .indexOf("</body>"));
+                title = "Code HTTP " + status;
+                details = "Détails : " + details;
+              }
               $log.debug("[" + title + "] " + context + ", " + details);
               $rootScope.alert = {
                 title : title,
-                context : context,
                 details : details,
-                stack : stack
+                stack : stack,
+                context : context
               };
               $rootScope.selectedTab = 0;
               // delay to be sure the modal (if opened) is closed before

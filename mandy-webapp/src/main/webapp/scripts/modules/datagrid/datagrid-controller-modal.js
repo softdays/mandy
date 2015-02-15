@@ -67,7 +67,14 @@ define([ 'angular', 'mandy-common', 'mandy-datagrid-service' ], function(
           $scope.imputationId = imputationId;
           $scope.imputationDate = date;
           $scope.activityId = activityId;
-          $scope.quota = quota;
+          $scope.quota = +quota;
+
+          if (imputationId) {
+            $scope.imputation = $scope.findImputation($scope.activityId,
+                $scope.imputationId);
+          } else {
+            $scope.imputation = undefined;
+          }
 
           $scope.imputationActivity = findActivityLabel(activityId);
 
@@ -113,34 +120,16 @@ define([ 'angular', 'mandy-common', 'mandy-datagrid-service' ], function(
         };
 
         /**
-         * Allows to update quota of the imputation 'copy' displayed in modal.
-         * 
-         * @public
-         * 
-         * $scope.minusQuota = function() { updateCurrentValue(true); };
-         */
-
-        /**
-         * Allows to update quota of the imputation 'copy' displayed in modal.
-         * 
-         * @public
-         * 
-         * $scope.plusQuota = function() { updateCurrentValue(); };
-         */
-
-        /**
-         * TODO: Prevents to save if the imputation quota is empty in creation
-         * case. Be careful to not prevent deletion!
+         * Prevents to save if the imputation quota is empty in creation case.
+         * Be careful to not prevent deletion!
          * 
          * @public
          */
         $scope.isButtonSaveDisabled = function() {
-          var imputation = $scope.findImputation($scope.activityId,
-              $scope.imputationId);
           var disabled = false;
-          if (imputation) {
+          if ($scope.imputation) {
             // existing imputation
-            disabled = imputation.quota === $scope.quota
+            disabled = $scope.imputation.quota === $scope.quota
                 && $scope.imputation.comment === $scope.imputationComment;
           } else {
             // not yet existing

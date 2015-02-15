@@ -304,7 +304,7 @@ define(
                         quota = 0;
                       }
 
-                      $scope.showModal(imputationId, activityId, date, quota);
+                      $scope.showModal(imputationId, activityId, date, +quota);
                     };
 
                   } ]);

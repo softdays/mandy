@@ -251,8 +251,8 @@ define(
                  * @private
                  */
                 function updateProgressBarModel(newValue) {
-                  newValue = newValue || 0;
-                  scope.progressValue = newValue * 100;
+                  var val = newValue || 0;
+                  scope.progressValue = val * 100;
                   scope.progressValueStyle = {
                     width : (scope.progressValue + '%')
                   };

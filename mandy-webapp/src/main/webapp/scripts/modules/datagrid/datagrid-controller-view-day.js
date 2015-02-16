@@ -86,7 +86,9 @@ define(
                      * @binding
                      */
                     $scope.isCommentButtonDisabled = function(item) {
-                      return !$scope.workingDay || item.printQuota === "0.00";
+                      return !$scope.workingDay
+                          || item.imputation === undefined
+                          || item.imputation.quota === 0;
                     };
 
                     var preparePresentationModel = function(strDate) {

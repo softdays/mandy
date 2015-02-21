@@ -84,7 +84,9 @@
                                 </button>
                               </div>
                               <div class="slider-container">
-                                <md-datagrid-slider ng-model="item.imputation.quota" />
+                                <md-datagrid-slider quota="item.imputation.quota" 
+                                                    item="item" 
+                                                    on-changed="updateImputation(item, quota)" />
                               </div>                              
                         </div>
                     </td>

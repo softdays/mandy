@@ -17,7 +17,7 @@ define(
 
       module
           .directive(
-              'mandyDatagridHeader',
+              'mdDatagridHeader',
               [
                   "$q",
                   "Utils",
@@ -217,14 +217,19 @@ define(
               templateUrl : 'partials/datagrid-slider.html',
               // declare the directive scope as private
               scope : {
-                quota : '=ngModel'
+                quota : '=',
+                item : '=', // required to be pass as callback argument
+                callback : '&onChanged'
               },
               // this function is called on each md-datagrid-slider instance
               // initialisation
               link : function(scope, element, attrs) {
+
                 /**
                  * TODO: check performance and potentiel memory leaks using
                  * watch here
+                 * 
+                 * @handler
                  */
                 scope.$watch('quota', function(newValue, oldValue) {
                   updateProgressBarModel(newValue);
@@ -243,6 +248,10 @@ define(
                 function updateCurrentValue(minus) {
                   scope.quota = utils.getNewQuota(scope.quota,
                       $rootScope.preferences.granularity, minus);
+                  scope.callback({
+                    'item' : scope.item,
+                    'quota' : scope.quota
+                  });
                 }
 
                 /**

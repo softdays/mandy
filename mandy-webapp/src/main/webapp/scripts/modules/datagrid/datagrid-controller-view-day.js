@@ -166,6 +166,28 @@ define(
                         .getQuotasModel($rootScope.preferences.granularity);
 
                     /**
+                     * @binding
+                     */
+                    $scope.completenessCssClasses = {};
+
+                    /**
+                     * Updates completeness indicator.
+                     * 
+                     * @private
+                     */
+                    function updateCompletenessIndicator() {
+                      var classes = {};
+                      classes.completeness = true;
+                      classes.glyphicon = true;
+                      var iconName = utils.getCompletenessGlyphiconClass(
+                          $scope.imputationsMap, strDate);
+
+                      classes[iconName] = true;
+
+                      $scope.completenessCssClasses = classes;
+                    }
+
+                    /**
                      * TODO: services should directly return promises (that way
                      * angular will resolve them before instantiate the
                      * controller)
@@ -179,6 +201,8 @@ define(
                             function() {
                               $scope.workingDay = utils.isWorkingDay(strDate,
                                   $scope.datagrid);
+
+                              updateCompletenessIndicator();
 
                               $scope
                                   .$watch(
@@ -273,6 +297,7 @@ define(
                      */
                     $scope.updateImputation = function(pmItem, newQuotaValue,
                         newComment) {
+
                       var comment = newComment ? newComment : IGNORE_COMMENT;
                       if (isSyncRequired(pmItem, newQuotaValue, newComment)) {
                         // first synchronize backend using parent scope function
@@ -285,16 +310,15 @@ define(
                             .then(function(imputation) {
                               switch (asyncToken.type) {
                               case 'D':
-                                // update pm
-                                delete pmItem.imputation;
                                 pmItem.printQuota = utils.formatQuota(0);
-                                // remove imputation entry from flobal
-                                // model
+                                // remove imputation entry from model
                                 var index = $scope.findImputationIndex(
                                     pmItem.activity.id,
                                     pmItem.imputation.imputationId);
                                 $scope.imputationsMap[pmItem.activity.id]
                                     .splice(index, 1);
+                                // update pm
+                                delete pmItem.imputation;
                                 break;
 
                               case 'C':
@@ -321,6 +345,10 @@ define(
                               default:
                                 break;
                               }
+
+                              // updates completeness indicator
+                              updateCompletenessIndicator();
+
                             });
                       }
                     };

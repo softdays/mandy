@@ -21,7 +21,7 @@
 package org.softdays.mandy.service.support;
 
 import org.dozer.Mapper;
-import org.softdays.mandy.core.model.Preferences;
+import org.softdays.mandy.core.model.Preference;
 import org.softdays.mandy.core.model.Resource;
 import org.softdays.mandy.dao.PreferencesDao;
 import org.softdays.mandy.dao.ResourceDao;
@@ -82,7 +82,7 @@ public class ResourceServiceImpl implements ResourceService {
         final Resource res =
                 this.resourceDao.save(new Resource(uid, lastname, firstname));
 
-        this.preferencesDao.save(new Preferences(res));
+        this.preferencesDao.save(new Preference(res));
 
         return this.mapper.map(res, ResourceDto.class);
     }
@@ -98,7 +98,7 @@ public class ResourceServiceImpl implements ResourceService {
     public PreferencesDto findResourcePreferences(final Long resourceId) {
         PreferencesDto dto = null;
         // check if the user has custom preferences
-        final Preferences preferences = this.preferencesDao.findOne(resourceId);
+        final Preference preferences = this.preferencesDao.findOne(resourceId);
         if (preferences == null) {
             // initialize with default business values
             dto = new PreferencesDto();
@@ -111,8 +111,8 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public PreferencesDto updateResourcePreferences(final PreferencesDto preferencesDto) {
-        final Preferences preferences =
-                this.mapper.map(preferencesDto, Preferences.class);
+        final Preference preferences =
+                this.mapper.map(preferencesDto, Preference.class);
         return this.mapper.map(this.preferencesDao.save(preferences),
                 PreferencesDto.class);
     }

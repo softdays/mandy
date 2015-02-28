@@ -31,6 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.softdays.mandy.AbstractDbSetupTest;
 import org.softdays.mandy.dao.ActivityDao;
+import org.softdays.mandy.dataset.CommonOperations;
 import org.softdays.mandy.dto.ActivityDto;
 import org.softdays.mandy.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;

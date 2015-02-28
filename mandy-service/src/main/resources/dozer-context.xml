@@ -13,7 +13,8 @@
     <bean id="mapper" class="org.dozer.spring.DozerBeanMapperFactoryBean">
         <property name="mappingFiles"
                   value="classpath*:/dozer/*mapping.xml"/>
-        <!--
+                  
+        <!-- 
         <property name="customConverters">
             <list>
                 <bean class="org.dozer.converters.CustomConverter"/>

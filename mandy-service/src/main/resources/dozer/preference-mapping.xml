@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+
+	<mapping wildcard="false">
+		<class-a>org.softdays.mandy.core.model.Preference</class-a>
+		<class-b>org.softdays.mandy.dto.PreferencesDto</class-b>
+
+		<field>
+			<a>id</a>
+			<b>resourceId</b>
+		</field>
+
+		<field>
+			<a>granularity</a>
+			<b>granularity</b>
+		</field>
+
+		<field custom-converter="org.softdays.mandy.dto.converter.ActivityListToIdentifierListConverter">
+			<a>filteredActivities</a>
+			<b>activitiesFilter</b>
+		</field>
+
+	</mapping>
+
+</mappings>

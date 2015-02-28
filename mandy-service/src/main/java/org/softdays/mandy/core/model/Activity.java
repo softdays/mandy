@@ -80,6 +80,11 @@ public class Activity extends BaseIdentifiable {
         super();
     }
 
+    public Activity(Long source) {
+        this();
+        this.setId(source);
+    }
+
     /**
      * Gets the type.
      * 

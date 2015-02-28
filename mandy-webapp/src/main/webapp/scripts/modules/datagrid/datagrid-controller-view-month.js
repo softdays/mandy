@@ -307,5 +307,10 @@ define(
                       $scope.showModal(imputationId, activityId, date, +quota);
                     };
 
+                    /**
+                     * @binding
+                     */
+                    $scope.countHiddenActivities = $rootScope.preferences.activitiesFilter.length;
+
                   } ]);
     });

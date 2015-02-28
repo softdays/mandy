@@ -20,6 +20,9 @@
  */
 package org.softdays.mandy.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.softdays.mandy.core.model.Quota;
 
@@ -29,6 +32,8 @@ public class PreferencesDto {
     private Long resourceId;
 
     private Float granularity = Quota.HALF.floatValue();
+
+    private List<Long> activitiesFilter = new ArrayList<>();
 
     public PreferencesDto() {
         super();
@@ -53,6 +58,14 @@ public class PreferencesDto {
 
     public void setGranularity(final Float granularity) {
         this.granularity = granularity;
+    }
+
+    public List<Long> getActivitiesFilter() {
+        return this.activitiesFilter;
+    }
+
+    public void setActivitiesFilter(final List<Long> activitiesFilter) {
+        this.activitiesFilter = activitiesFilter;
     }
 
 }

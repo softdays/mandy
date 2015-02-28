@@ -67,22 +67,22 @@ public class MyUserDetailsContextMapper implements UserDetailsContextMapper {
      */
     @Override
     public UserDetails mapUserFromContext(final DirContextOperations ctx,
-            final String username,
-            final Collection<? extends GrantedAuthority> authorities) {
+                                          final String username,
+                                          final Collection<? extends GrantedAuthority> authorities) {
         ResourceDto resource = this.resourceService.findByUid(username);
         if (resource == null) {
-            final String lastname = (String) ctx
-                    .getObjectAttribute(this.configurationDto
+            final String lastname =
+                    (String) ctx.getObjectAttribute(this.configurationDto
                             .getLdapAttrLastname());
-            final String firstname = (String) ctx
-                    .getObjectAttribute(this.configurationDto
+            final String firstname =
+                    (String) ctx.getObjectAttribute(this.configurationDto
                             .getLdapAttrFirstname());
-            resource = this.resourceService.create(username, lastname,
-                    firstname);
+            resource =
+                    this.resourceService.create(username, lastname, firstname);
         }
         final String role = resource.getRole();
-        final SimpleGrantedAuthority authority = new SimpleGrantedAuthority(
-                role);
+        final SimpleGrantedAuthority authority =
+                new SimpleGrantedAuthority(role);
 
         return new MyUser(resource, Arrays.asList(authority));
     }
@@ -98,7 +98,7 @@ public class MyUserDetailsContextMapper implements UserDetailsContextMapper {
      */
     @Override
     public void mapUserToContext(final UserDetails user,
-            final DirContextAdapter ctx) {
+                                 final DirContextAdapter ctx) {
         // not used
     }
 

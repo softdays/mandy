@@ -23,6 +23,9 @@ package org.softdays.mandy.service.support;
 
 import static com.ninja_squad.dbsetup.Operations.sequenceOf;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import org.dbunit.Assertion;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.DataSetException;
@@ -33,6 +36,7 @@ import org.junit.Test;
 import org.softdays.mandy.AbstractDbSetupTest;
 import org.softdays.mandy.core.model.Quota;
 import org.softdays.mandy.core.model.Resource.Role;
+import org.softdays.mandy.dataset.CommonOperations;
 import org.softdays.mandy.dto.PreferencesDto;
 import org.softdays.mandy.dto.ResourceDto;
 import org.softdays.mandy.service.ResourceService;
@@ -51,8 +55,10 @@ public class ResourceServiceTest extends AbstractDbSetupTest {
         // Prepare
         final Operation operation =
                 sequenceOf(CommonOperations.DELETE_ALL,
+                        CommonOperations.INSERT_REFERENCE_ACTIVITIES,
                         CommonOperations.INSERT_REFERENCE_RESOURCES,
-                        CommonOperations.INSERT_PREFERENCES);
+                        CommonOperations.INSERT_PREFERENCES,
+                        CommonOperations.INSERT_PREFERENCES_ACTIVITIES);
         final DbSetup dbSetup = this.createDbSetup(operation);
         dbSetupTracker.launchIfNecessary(dbSetup);
     }
@@ -96,32 +102,61 @@ public class ResourceServiceTest extends AbstractDbSetupTest {
     }
 
     @Test
-    public void findPreferencesShouldReturnNotNullDtoInitWithDefaultValues() {
+    public void findPreferencesShouldReturnNotNullDtoInitWithDefaultValuesAndNoFilteredActivity() {
         // this user has no preferences stored
         final PreferencesDto prefs =
                 this.resourceService
                         .findResourcePreferences(CommonOperations.ID_RPA);
         Assert.assertNotNull(prefs);
         Assert.assertEquals(Quota.HALF.floatValue(), prefs.getGranularity());
+        Assert.assertTrue(prefs.getActivitiesFilter().isEmpty());
     }
 
     @Test
-    public void findPreferencesShouldReturnNotNullWithHalfGranularity() {
+    public void findPreferencesShouldReturnNotNullWithHalfGranularityAndTwoFilteredActivities() {
         final PreferencesDto prefs =
                 this.resourceService
                         .findResourcePreferences(CommonOperations.ID_CHO);
         Assert.assertNotNull(prefs);
         Assert.assertEquals(Quota.HALF.floatValue(), prefs.getGranularity());
+        Assert.assertEquals(2, prefs.getActivitiesFilter().size());
+        Assert.assertTrue(prefs.getActivitiesFilter().contains(
+                CommonOperations.ACTIVITY_VIESCO_ID));
+        Assert.assertTrue(prefs.getActivitiesFilter().contains(
+                CommonOperations.ACTIVITY_LSUN_ID));
     }
 
     @Test
-    public void findPreferencesShouldReturnNotNullWithQuarterGranularity() {
+    public void updatePreferencesShouldChangeFilteredActivitiesOrder() {
+        final PreferencesDto prefs =
+                this.resourceService
+                        .findResourcePreferences(CommonOperations.ID_CHO);
+        Assert.assertNotNull(prefs);
+        Assert.assertEquals(2, prefs.getActivitiesFilter().size());
+        Collections.reverse(prefs.getActivitiesFilter());
+        this.resourceService.updateResourcePreferences(prefs);
+        final StringBuilder sql =
+                new StringBuilder(
+                        "select * from mandy.preference_activity where preference_id=")
+                        .append(CommonOperations.ID_CHO);
+        final ITable table = this.query(sql.toString());
+        Assert.assertEquals(2, table.getRowCount());
+        Assert.assertEquals(CommonOperations.ACTIVITY_LSUN_ID,
+                this.getValueAsLong(table, 0, "activity_id"));
+        Assert.assertEquals(CommonOperations.ACTIVITY_VIESCO_ID,
+                this.getValueAsLong(table, 1, "activity_id"));
+    }
+
+    @Test
+    public void findPreferencesShouldReturnNotNullWithQuarterGranularityAndOneFilteredActivity() {
         final PreferencesDto prefs =
                 this.resourceService
                         .findResourcePreferences(CommonOperations.ID_LMO);
         Assert.assertNotNull(prefs);
         Assert.assertEquals(Quota.QUARTER.floatValue(), prefs.getGranularity());
-
+        Assert.assertEquals(1, prefs.getActivitiesFilter().size());
+        Assert.assertTrue(prefs.getActivitiesFilter().contains(
+                CommonOperations.ACTIVITY_LSL_ID));
     }
 
     @Test
@@ -149,6 +184,62 @@ public class ResourceServiceTest extends AbstractDbSetupTest {
         table = this.query(sql.toString());
         final Float value = this.getFirstRowAsFloat(table, "granularity");
         Assert.assertEquals(Quota.QUARTER.floatValue(), value);
+    }
+
+    @Test
+    public void updatePreferencesShouldUpdateActivitiesFilter() {
+        final StringBuilder sql =
+                new StringBuilder(
+                        "select * from mandy.preference_activity where preference_id=")
+                        .append(CommonOperations.ID_LMO).append(
+                                " order by activity_id");
+        ITable table = this.query(sql.toString());
+        Assert.assertEquals(1, table.getRowCount());
+        Long activityId = this.getValueAsLong(table, 0, "activity_id");
+        Assert.assertEquals(CommonOperations.ACTIVITY_LSL_ID, activityId);
+
+        PreferencesDto prefs =
+                this.resourceService
+                        .findResourcePreferences(CommonOperations.ID_LMO);
+
+        prefs.getActivitiesFilter().add(CommonOperations.ACTIVITY_LSUN_ID);
+
+        prefs = this.resourceService.updateResourcePreferences(prefs);
+        Assert.assertNotNull(prefs);
+
+        table = this.query(sql.toString());
+        Assert.assertEquals(2, table.getRowCount());
+        activityId = this.getValueAsLong(table, 0, "activity_id");
+        Assert.assertEquals(CommonOperations.ACTIVITY_LSUN_ID, activityId);
+        activityId = this.getValueAsLong(table, 1, "activity_id");
+        Assert.assertEquals(CommonOperations.ACTIVITY_LSL_ID, activityId);
+    }
+
+    @Test
+    public void updatePreferencesShouldCreateActivitiesFilter()
+            throws DataSetException {
+        final StringBuilder sql =
+                new StringBuilder(
+                        "select * from mandy.preference_activity where preference_id=")
+                        .append(CommonOperations.ID_RPA);
+        ITable table = this.query(sql.toString());
+        Assert.assertEquals(0, table.getRowCount());
+
+        final PreferencesDto userPrefs =
+                new PreferencesDto(CommonOperations.ID_RPA);
+        userPrefs.setActivitiesFilter(Arrays.asList(
+                CommonOperations.ACTIVITY_CP_ID,
+                CommonOperations.ACTIVITY_EM_ID));
+        final PreferencesDto dto =
+                this.resourceService.updateResourcePreferences(userPrefs);
+        Assert.assertNotNull(dto);
+
+        table = this.query(sql.toString());
+        Assert.assertEquals(2, table.getRowCount());
+        Long activityId = this.getValueAsLong(table, 0, "activity_id");
+        Assert.assertEquals(CommonOperations.ACTIVITY_CP_ID, activityId);
+        activityId = this.getValueAsLong(table, 1, "activity_id");
+        Assert.assertEquals(CommonOperations.ACTIVITY_EM_ID, activityId);
     }
 
     @Test

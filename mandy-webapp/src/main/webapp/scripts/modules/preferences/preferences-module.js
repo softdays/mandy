@@ -85,50 +85,100 @@ define([ 'angular', 'angular-route', 'angular-resource', 'mandy-common',
 
   } ]);
 
-  module.controller('PreferencesController', [
-      '$rootScope',
-      '$scope',
-      '$log',
-      '$timeout',
-      'Utils',
-      'PreferencesService',
-      'preferences',
-      'activities',
-      function($rootScope, $scope, $log, $timeout, utils, prefService,
-          preferences, activities) {
+  module.controller('PreferencesController',
+      [
+          '$rootScope',
+          '$scope',
+          '$log',
+          '$timeout',
+          'Utils',
+          'PreferencesService',
+          'preferences',
+          'activities',
+          function($rootScope, $scope, $log, $timeout, utils, prefService,
+              preferences, activities) {
 
-        $rootScope.selectedTab = 3;
-        $scope.useFineGranularity = (preferences.granularity === 0.25);
-        $scope.activities = activities;
+            $rootScope.selectedTab = 3;
+            $rootScope.preferences = preferences;
+            $scope.useFineGranularity = (preferences.granularity === 0.25);
+            $scope.activities = activities;
 
-        /**
-         * Handles user preferences change event.
-         * 
-         * @event
-         */
-        $scope.$on('md.preferences.changed', function(event, prefs) {
-          $scope.useFineGranularity = (prefs.granularity === 0.25);
-        });
+            /**
+             * @binding
+             */
+            $scope.isActivityVisible = function(activityId) {
+              return $.inArray(+activityId,
+                  $rootScope.preferences.activitiesFilter) === -1;
+            };
 
-        /**
-         * @event granularity toggle-button change.
-         */
-        angular.element('.pref-granularity input[data-toggle="toggle"]')
-            .change(function(event) {
-              var status = angular.element(this).prop('checked');
-              $log.debug('checked: ' + status);
-              $rootScope.preferences.granularity = status ? 0.25 : 0.5;
-              prefService.updateUserPreferences($rootScope.preferences);
+            /**
+             * @binding
+             */
+            $scope.getActivityLabelCssClasses = function(activityId) {
+              return {
+                'pref-activity-label' : true,
+                strike : !$scope.isActivityVisible(activityId)
+              };
+            };
+
+            /**
+             * Handles user preferences change event.
+             * 
+             * @event
+             */
+            $scope.$on('md.preferences.changed', function(event, prefs) {
+              $scope.useFineGranularity = (prefs.granularity === 0.25);
             });
 
-        /**
-         * Initializes toggle-buttons.
-         */
-        $timeout(function() {
-          angular.element('input[data-toggle="toggle"]').bootstrapToggle();
-        });
+            /**
+             * @event granularity toggle-button change.
+             */
+            angular.element('.pref-granularity input[data-toggle="toggle"]')
+                .change(function(event) {
+                  var status = angular.element(this).prop('checked');
+                  $log.debug('checked: ' + status);
+                  $rootScope.preferences.granularity = status ? 0.25 : 0.5;
+                  prefService.updateUserPreferences($rootScope.preferences);
+                });
 
-      } ]);
+            /**
+             * @private
+             * @callback
+             */
+            function activityVisibilityChangeEventHandler(event) {
+              var activityId = +angular.element(this).attr('data-activity-id');
+              var visible = angular.element(this).prop('checked');
+              if (visible) {
+                // remove if exists in filter list
+                $rootScope.preferences.activitiesFilter = $.grep(
+                    $rootScope.preferences.activitiesFilter, function(
+                        currentActivityId) {
+                      // the item will be in the result array only if the test
+                      // returns true
+                      return currentActivityId !== activityId;
+                    });
+              } else {
+                // add if not exists in filter list
+                if ($.inArray(activityId,
+                    $rootScope.preferences.activitiesFilter) === -1) {
+                  $rootScope.preferences.activitiesFilter.push(activityId);
+                }
+              }
+              prefService.updateUserPreferences($rootScope.preferences);
+            }
+
+            /**
+             * Initializing
+             */
+            $timeout(function() {
+              // Initializes toggle-buttons.
+              angular.element('input[data-toggle="toggle"]').bootstrapToggle();
+              // Registers change listener (must be called when dom is rendered)
+              angular.element('.pref-activities input[data-toggle="toggle"]')
+                  .change(activityVisibilityChangeEventHandler);
+            });
+
+          } ]);
 
   return module;
 });

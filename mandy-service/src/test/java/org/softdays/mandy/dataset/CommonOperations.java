@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.softdays.mandy.service.support;
+package org.softdays.mandy.dataset;
 
 import static com.ninja_squad.dbsetup.Operations.deleteAllFrom;
 import static com.ninja_squad.dbsetup.Operations.insertInto;
@@ -60,8 +60,8 @@ public class CommonOperations {
 
     public static final Operation DELETE_ALL = deleteAllFrom(
             "MANDY.IMPUTATION", "MANDY.TEAM_RESOURCE", "MANDY.ACTIVITY_TEAM",
-            "MANDY.PREFERENCES", "MANDY.RESOURCE", "MANDY.TEAM",
-            "MANDY.ACTIVITY");
+            "MANDY.PREFERENCE_ACTIVITY", "MANDY.PREFERENCES", "MANDY.RESOURCE",
+            "MANDY.TEAM", "MANDY.ACTIVITY");
 
     // les activités sur lesquels on peut imputer des charges
     public static final Operation INSERT_REFERENCE_ACTIVITIES =
@@ -150,6 +150,17 @@ public class CommonOperations {
                     .values(ACTIVITY_LSUN_ID, ID_TEAM_SCO)
                     .values(ACTIVITY_TS_ID, ID_TEAM_SCO)
                     .values(ACTIVITY_VIESCO_ID, ID_TEAM_SCO)
+
+                    .build());
+
+    public static final Operation INSERT_PREFERENCES_ACTIVITIES =
+            sequenceOf(insertInto("MANDY.PREFERENCE_ACTIVITY")
+
+            .columns("PREFERENCE_ID", "ACTIVITY_ID", "ACTIVITY_ORDER")
+
+            .values(ID_CHO, ACTIVITY_VIESCO_ID, 0)
+                    .values(ID_CHO, ACTIVITY_LSUN_ID, 1)
+                    .values(ID_LMO, ACTIVITY_LSL_ID, 0)
 
                     .build());
 

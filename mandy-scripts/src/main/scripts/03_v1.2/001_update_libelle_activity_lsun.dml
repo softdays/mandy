@@ -1,0 +1,1 @@
+UPDATE mandy.activity SET long_label= 'Livret Scolaire Unique Numérique' WHERE id=13;

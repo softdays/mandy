@@ -5,15 +5,6 @@
 			<label class="col-sm-3 control-label">Granularité<span class="visible-xs-inline visible-lg-inline"> des imputations</span>&nbsp;:</label>
 			<div class="col-sm-9 pref-toggle">
 				<input type="checkbox" data-toggle="toggle" data-off="Demi-journée" data-on="Quart de journée" data-width="147" ng-checked="useFineGranularity" />
-				<!--div ng-show="useFineGranularity" class="alert alert-warning" role="alert">
-	                 <strong>Avertissement !</strong>
-	                 Basculer vers une granularité moins fine alignera vos imputations 
-	                 non compatibles sur la valeur supérieure la plus proche. Attention 
-	                 ce changement peut affecter la cohérence de vos saisies existantes,
-	                 il vous faudra alors passer par les fonctions de reporting pour 
-	                 identifier les cas problématiques et réajuster vos saisies le cas 
-	                 échéant.
-	             </div-->
 			</div>
 		</div>
 		<div class="form-group pref-notif" >
@@ -48,20 +39,18 @@
 			</div>
 		</div>
 		<div class="form-group pref-activities">
-            <label for="inputEmail" class="col-sm-3 control-label">Activités<span class="visible-xs-inline visible-lg-inline"> visibles </span>&nbsp;:</label>
+            <label for="inputEmail" class="col-sm-3 control-label">Activités<span class="visible-xs-inline visible-lg-inline">&nbsp;visibles</span>&nbsp;:</label>
             <div class="col-sm-9">
                 <div class="pref-activity" data-activity-id="{{activity.id}}" ng-repeat="activity in activities">
-		            <label class="disabled">
+		            <label>
 		              <input id="activity-{{activity.id}}" 
 		                     data-activity-id="{{activity.id}}" 
 		                     type="checkbox" 
 		                     data-toggle="toggle" 
 		                     data-on="Oui" data-off="Non" 
 		                     data-size="small" 
-		                     ng-model="myActivityCheck" 
-		                     ng-init="myActivityCheck=true"
-		                     disabled="disabled" />
- 		              <span ng-class="{'pref-activity-label':true, strike:!myActivityCheck}">{{activity.longLabel}}&nbsp;({{activity.shortLabel}})</span>
+		                     ng-checked="isActivityVisible(activity.id)" />
+ 		              <span ng-class="getActivityLabelCssClasses(activity.id)">{{activity.longLabel}}&nbsp;({{activity.shortLabel}})</span>
 		            </label>
                 </div>
             </div>

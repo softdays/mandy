@@ -98,8 +98,14 @@ public abstract class AbstractDbSetupTest {
     }
 
     public Long getFirstRowAsLong(final ITable table, final String column) {
+        return this.getValueAsLong(table, 0, column);
+    }
+
+    public Long getValueAsLong(final ITable table, final int rowIndex,
+                               final String column) {
         try {
-            final BigInteger bigInt = (BigInteger) table.getValue(0, column);
+            final BigInteger bigInt =
+                    (BigInteger) table.getValue(rowIndex, column);
             return Long.valueOf(bigInt.longValue());
         } catch (final DataSetException e) {
             Assert.fail(e.getMessage());

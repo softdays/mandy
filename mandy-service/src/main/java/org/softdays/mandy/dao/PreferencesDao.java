@@ -20,7 +20,7 @@
  */
 package org.softdays.mandy.dao;
 
-import org.softdays.mandy.core.model.Preferences;
+import org.softdays.mandy.core.model.Preference;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -30,6 +30,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.1.0
  */
 public interface PreferencesDao extends
-        JpaRepository<Preferences, Long> {
+        JpaRepository<Preference, Long> {
 
 }

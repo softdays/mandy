@@ -1,5 +1,5 @@
 ====================================================================
- Mandy, a simple webapp to track man-day consumption on activities
+ Mandy, a simple webapp to track actual work on activities
 ====================================================================
 
 ```

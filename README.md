@@ -1,6 +1,7 @@
 ====================================================================
  Mandy, a simple webapp to track actual work on activities
 ====================================================================
+test
 
 ```
 Mandy is an HTML5 webapp using a REST backend.

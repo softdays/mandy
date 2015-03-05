@@ -60,7 +60,7 @@ public class CommonOperations {
 
     public static final Operation DELETE_ALL = deleteAllFrom(
             "MANDY.IMPUTATION", "MANDY.TEAM_RESOURCE", "MANDY.ACTIVITY_TEAM",
-            "MANDY.PREFERENCE_ACTIVITY", "MANDY.PREFERENCES", "MANDY.RESOURCE",
+            "MANDY.PREFERENCE_ACTIVITY", "MANDY.PREFERENCE", "MANDY.RESOURCE",
             "MANDY.TEAM", "MANDY.ACTIVITY");
 
     // les activités sur lesquels on peut imputer des charges
@@ -119,7 +119,7 @@ public class CommonOperations {
 
     // les préférences des personnes
     public static final Operation INSERT_PREFERENCES = sequenceOf(insertInto(
-            "MANDY.PREFERENCES")
+            "MANDY.PREFERENCE")
 
     .columns("RESOURCE_ID", "GRANULARITY")
 

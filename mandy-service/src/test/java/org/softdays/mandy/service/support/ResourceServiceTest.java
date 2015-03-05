@@ -90,7 +90,7 @@ public class ResourceServiceTest extends AbstractDbSetupTest {
         Assert.assertEquals(Role.ROLE_USER.name(), user.getRole());
 
         final StringBuilder sql =
-                new StringBuilder("select * from mandy.preferences").append(
+                new StringBuilder("select * from mandy.preference").append(
                         " where resource_id=").append(user.getResourceId());
 
         final ITable table = this.query(sql.toString());
@@ -163,7 +163,7 @@ public class ResourceServiceTest extends AbstractDbSetupTest {
     public void updatePreferencesShouldModifyGranularity() {
         final StringBuilder sql =
                 new StringBuilder(
-                        "select * from mandy.preferences where resource_id=")
+                        "select * from mandy.preference where resource_id=")
                         .append(CommonOperations.ID_CHO);
         ITable table = this.query(sql.toString());
         try {
@@ -246,7 +246,7 @@ public class ResourceServiceTest extends AbstractDbSetupTest {
     public void updatePreferencesShouldCreatePreferenceBecauseThereIsNoPreferencesForThisUser() {
         final StringBuilder sql =
                 new StringBuilder(
-                        "select * from mandy.preferences where resource_id=")
+                        "select * from mandy.preference where resource_id=")
                         .append(CommonOperations.ID_RPA);
         ITable table = this.query(sql.toString());
         Assert.assertEquals(0, table.getRowCount());
@@ -272,7 +272,7 @@ public class ResourceServiceTest extends AbstractDbSetupTest {
     public void updatePreferencesShouldNotDoAnythingBecauseThereIsNoChange() {
         final StringBuilder sql =
                 new StringBuilder(
-                        "select * from mandy.preferences where resource_id=")
+                        "select * from mandy.preference where resource_id=")
                         .append(CommonOperations.ID_RPA);
         final ITable table1 = this.query(sql.toString());
         final PreferencesDto userPrefs =

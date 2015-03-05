@@ -127,7 +127,7 @@
 					<hibernatetool>
 						<jpaconfiguration persistenceunit="Default"
 							propertyfile="src/test/resources/hbm2ddl-hibernate.properties" />
-						<hbm2ddl export="false" create="true" update="false"
+						<hbm2ddl export="false" create="false" update="true"
 							format="true" outputfilename="base.ddl" />
 					</hibernatetool>
 				</configuration>

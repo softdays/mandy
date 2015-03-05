@@ -79,7 +79,7 @@ public class ActivityServiceTest extends AbstractDbSetupTest {
     }
 
     @Test
-    public void getActivitiesForUnkwonn() {
+    public void getActivitiesForUnkwown() {
         // mark this test as read-only test
         dbSetupTracker.skipNextLaunch();
         final List<ActivityDto> activities = this.activityService

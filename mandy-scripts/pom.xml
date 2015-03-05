@@ -6,7 +6,7 @@
 	<parent>        
         <groupId>org.softdays.mandy</groupId>
 		<artifactId>mandy-parent</artifactId>
-        <version>1.1.2-SNAPSHOT</version>
+        <version>1.2.0</version>
     </parent>    
 
     <artifactId>mandy-scripts</artifactId>

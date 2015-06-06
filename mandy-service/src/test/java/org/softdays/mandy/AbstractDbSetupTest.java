@@ -65,8 +65,8 @@ public abstract class AbstractDbSetupTest {
 
     public void execute(final String sql) {
         try {
-            final Connection c =
-                    this.databaseTester.getConnection().getConnection();
+            final Connection c = this.databaseTester.getConnection()
+                    .getConnection();
             final Statement s = c.createStatement();
             s.executeUpdate(sql);
             s.close();
@@ -78,9 +78,8 @@ public abstract class AbstractDbSetupTest {
     public ITable query(final String sql) {
         ITable table = null;
         try {
-            table =
-                    this.databaseTester.getConnection().createQueryTable(
-                            RESULT_TABLE_NAME, sql);
+            table = this.databaseTester.getConnection().createQueryTable(
+                    RESULT_TABLE_NAME, sql);
             return table;
         } catch (final Exception e) {
             Assert.fail(e.getMessage());
@@ -102,11 +101,20 @@ public abstract class AbstractDbSetupTest {
     }
 
     public Long getValueAsLong(final ITable table, final int rowIndex,
-                               final String column) {
+            final String column) {
         try {
-            final BigInteger bigInt =
-                    (BigInteger) table.getValue(rowIndex, column);
+            final BigInteger bigInt = (BigInteger) table.getValue(rowIndex,
+                    column);
             return Long.valueOf(bigInt.longValue());
+        } catch (final DataSetException e) {
+            Assert.fail(e.getMessage());
+        }
+        return null;
+    }
+
+    public Boolean getFirstRowAsBoolean(final ITable table, final String column) {
+        try {
+            return (Boolean) table.getValue(0, column);
         } catch (final DataSetException e) {
             Assert.fail(e.getMessage());
         }

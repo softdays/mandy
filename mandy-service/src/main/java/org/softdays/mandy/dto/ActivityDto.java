@@ -28,6 +28,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * 
  * @author rpatriarche
  * @since 1.0.0
+ * @version 1.3.0 Rename type by category and add new type
  */
 public class ActivityDto {
 
@@ -37,7 +38,11 @@ public class ActivityDto {
 
     private String longLabel;
 
-    private String type;
+    private Character category;
+
+    private Character type;
+
+    private Long parentActivityId;
 
     /**
      * Instantiates a new activity dto.
@@ -65,12 +70,20 @@ public class ActivityDto {
         this.id = id;
     }
 
+    public Character getCategory() {
+        return category;
+    }
+
+    public void setCategory(final Character category) {
+        this.category = category;
+    }
+
     /**
      * Gets the type.
      * 
      * @return the type
      */
-    public String getType() {
+    public Character getType() {
         return this.type;
     }
 
@@ -80,7 +93,7 @@ public class ActivityDto {
      * @param type
      *            the new type
      */
-    public void setType(final String type) {
+    public void setType(final Character type) {
         this.type = type;
     }
 
@@ -122,13 +135,21 @@ public class ActivityDto {
         this.longLabel = longLabel;
     }
 
+    public Long getParentActivityId() {
+        return parentActivityId;
+    }
+
+    public void setParentActivityId(final Long parentActivityId) {
+        this.parentActivityId = parentActivityId;
+    }
+
     /**
      * Doit être surchargée en cohérence avec la surcharge de equals().
      */
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().appendSuper(super.hashCode())
-                .append(this.getId()).toHashCode();
+        return new HashCodeBuilder().appendSuper(super.hashCode()).append(this.getId())
+                .toHashCode();
     }
 
     /**
@@ -148,15 +169,10 @@ public class ActivityDto {
                 .append(this.getId(), other.getId()).isEquals();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
-        return "ActivityDto [id=" + this.id + ", shortLabel=" + this.shortLabel
-                + ", type=" + this.type + "]";
+        return "ActivityDto [id=" + id + ", shortLabel=" + shortLabel + ", longLabel=" + longLabel
+                + ", category=" + category + ", type=" + type + "]";
     }
 
 }

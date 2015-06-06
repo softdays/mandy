@@ -24,6 +24,9 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.dozer.Mapper;
+import org.softdays.mandy.core.model.Activity;
+import org.softdays.mandy.core.model.Resource;
 import org.softdays.mandy.dao.ActivityDao;
 import org.softdays.mandy.dto.ActivityDto;
 import org.softdays.mandy.service.ActivityService;
@@ -47,6 +50,9 @@ public class ActivityServiceImpl implements ActivityService {
     @Autowired
     private MapperService utilService;
 
+    @Autowired
+    private Mapper mapper;
+
     /**
      * Instantiates a new activity service impl.
      */
@@ -54,17 +60,20 @@ public class ActivityServiceImpl implements ActivityService {
         super();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.softdays.mandy.service.ActivityService#getActivities(java.lang.Long)
-     */
     @Override
     public List<ActivityDto> getActivities(final Long userId) {
 
-        return this.utilService.map(
-        // activityDao.findAll(new Sort(Direction.ASC, "position")),
-                this.activityDao.findByResource(userId), ActivityDto.class);
+        return this.utilService.map(this.activityDao.findByResource(new Resource(userId)),
+                ActivityDto.class);
+    }
+
+    @Override
+    public ActivityDto createSubActivity(final ActivityDto activityDto) {
+        Activity newActivity = mapper.map(activityDto, Activity.class);
+
+        Integer maxPos = activityDao.findMaxPosition(activityDto.getParentActivityId());
+        newActivity.setPosition(++maxPos);
+
+        return mapper.map(activityDao.save(newActivity), ActivityDto.class);
     }
 }

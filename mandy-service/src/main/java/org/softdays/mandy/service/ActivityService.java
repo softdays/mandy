@@ -40,5 +40,15 @@ public interface ActivityService {
      * 
      * @return A list of {@link ActivityDto}
      */
-    List<ActivityDto> getActivities(Long userId);
+    List<ActivityDto> getActivities(final Long userId);
+
+    /**
+     * Creates a new activity. MUST specify a parent activity.
+     * 
+     * @param activityDto
+     *            The activity descriptor.
+     * 
+     * @return The identified activity just created.
+     */
+    ActivityDto createSubActivity(final ActivityDto activityDto);
 }

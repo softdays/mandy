@@ -1,6 +1,12 @@
 <div id="preferences">
 
 	<form class="form-horizontal" role="form">
+		<div class="form-group pref-detailed-way">
+			<label class="col-sm-3 control-label">Mode<span class="visible-xs-inline visible-lg-inline"> de saisie</span>&nbsp;:</label>
+			<div class="col-sm-9 pref-toggle">
+				<input type="checkbox" data-toggle="toggle" data-off="Grosse maille" data-on="Détaillé" data-width="147" ng-checked="useDetailedWay" />
+			</div>
+		</div>
 		<div class="form-group pref-granularity">
 			<label class="col-sm-3 control-label">Granularité<span class="visible-xs-inline visible-lg-inline"> des imputations</span>&nbsp;:</label>
 			<div class="col-sm-9 pref-toggle">

@@ -30,7 +30,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.softdays.mandy.AbstractDbSetupTest;
-import org.softdays.mandy.dao.ActivityDao;
+import org.softdays.mandy.core.model.ActivityCategory;
+import org.softdays.mandy.core.model.ActivityType;
 import org.softdays.mandy.dataset.CommonOperations;
 import org.softdays.mandy.dto.ActivityDto;
 import org.softdays.mandy.service.ActivityService;
@@ -43,9 +44,6 @@ public class ActivityServiceTest extends AbstractDbSetupTest {
 
     @Autowired
     private ActivityService activityService;
-
-    @Autowired
-    private ActivityDao activityDao;
 
     @Before
     public void initDataset() {
@@ -61,21 +59,37 @@ public class ActivityServiceTest extends AbstractDbSetupTest {
     }
 
     @Test
+    public void checkCurrentData() {
+        final ITable table = this.query("select * from mandy.activity");
+        // 2 abs + 5 sco + 1 gfc + 1 no rattachée à une team
+        Assert.assertEquals(9, table.getRowCount());
+    }
+
+    @Test
     public void getActivitiesForRpa() {
         // mark this test as read-only test
         dbSetupTracker.skipNextLaunch();
         final ITable table = this
-                .query("select * from mandy.activity where type<>'P'");
+                .query("select * from mandy.activity where category<>'"
+                        + ActivityCategory.PROJECT.getId() + "'");
         Assert.assertEquals(2, table.getRowCount());
+
         final List<ActivityDto> activities = this.activityService
                 .getActivities(CommonOperations.ID_RPA);
-        Assert.assertEquals(6, activities.size());
+        Assert.assertEquals(8, activities.size()); // 2 abs + 1 gfc + 5 sco = 8
         // check first
         Assert.assertEquals(CommonOperations.ACTIVITY_CP_LABEL,
                 activities.get(0).getLongLabel());
+        Assert.assertEquals(ActivityCategory.ABSENCE.getId(), activities.get(0)
+                .getCategory());
+        Assert.assertEquals(ActivityType.UNS.getId(), activities.get(0)
+                .getType());
         // check last
+        int lastIndex = activities.size() - 1;
         Assert.assertEquals(CommonOperations.ACTIVITY_LSUN_LABEL, activities
-                .get(activities.size() - 1).getLongLabel());
+                .get(lastIndex).getLongLabel());
+        Assert.assertEquals(ActivityType.UNS.getId(), activities.get(lastIndex)
+                .getType());;
     }
 
     @Test
@@ -87,9 +101,4 @@ public class ActivityServiceTest extends AbstractDbSetupTest {
         Assert.assertEquals(2, activities.size());
     }
 
-    @Test
-    public void checkCurrentData() {
-        final ITable table = this.query("select * from mandy.activity");
-        Assert.assertEquals(6, table.getRowCount());
-    }
 }

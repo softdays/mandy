@@ -1,18 +1,10 @@
 /* 
    Mandy stylesheet
 */
-
 @import "../frameworks/bootstrap/less/bootstrap";
-
 @import "../frameworks/bootstrap-toogle/css/bootstrap-toggle.min.css";
+@import url('//fonts.googleapis.com/css?family=Leckerli+One');
 
-@import url(//fonts.googleapis.com/css?family=Leckerli+One);
-
-/* 
-  Palette couleurs 
-  from http://paletton.com/#uid=73o0u0ka5X000++4u+deXRqjcIr
-  base: light-blue=A9E2F3
-*/
 @sides-padding: @grid-gutter-width / 2;
 @color-light-grey: #2E2E2E;
 @color-light-purple: #D8CEF6;
@@ -23,569 +15,480 @@
 @color-orange: #FF7F00;
 @color-blue-c1: #7CCCE2;
 @color-blue-c2: #54AEC7;
-/* palette sémantique */
 @color-month-current: @color-light-blue;
 @color-month-next: @color-grey;
 @color-table-row-hover: @color-blue-c1;
 @color-table-cell-hover: @color-blue-c2;
-@datagrid-border: 1px solid @color-light-grey; 
-
-@env2px: 0.1428571428571429em; /* 2:14 */
-@env3px: 0.2142857142857143em; /* 3:14 */
-@env5px: 0.3571428571428571em; /* 5:14 */
-@env20px: 1.428571428571429em; /* 20:14 */
-@env27px: 1.928571428571429em; /* 27:14 */
-
+@datagrid-border: 1px solid @color-light-grey;
+@env2px: 0.1428571428571429em;
+@env3px: 0.2142857142857143em;
+@env5px: 0.3571428571428571em;
+@env20px: 1.428571428571429em;
+@env27px: 1.928571428571429em;
 @btn-radio-quota-width: 100% / 6;
-
 @font-size-xs: 0.8em;
 @font-size-sm: 0.9em;
 @font-size-lg: 1.0em;
-
 @height-fixed-header: 111px;
 @height-fixed-datagrid-header: 146px;
 @height-fixed-datagrid-header-view-day: 82px;
-
 @width-column-activities: 100px;
-@header-cell-day-content-width: 2.357142857142857em; /* 33:14 */
+@header-cell-day-content-width: 2.357142857142857em;
 
-/* Default font size fixed to 14px */
+
+
+
 body {
-	font-size: 14px;
+  font-size: 14px;
 }
 
-/* Gérer l'attribut pour les liens */
 a[disabled] {
-   pointer-events: none;
-   cursor: default;
+  pointer-events: none;
+  cursor: default;
 }
 
-/* Bootstrap overrides */
 @icon-font-path: "../frameworks/bootstrap/fonts/";
-
-.noSelect() {
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+.noSelect () {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none !important;
+  display: none ! important;
 }
 
 .row {
-	margin-left: 0;
-    margin-right: 0;
+  margin-left: 0;
+  margin-right: 0;
 }
 
-/* header global application (titre + user + menu) */
 .container-fluid > .row:first-child {
-	position: fixed !important;
-	position: static;
-    height: @height-fixed-header;
-    width: 100%;
-    top: 0;
-    left: 0;
-    z-index: 2;
-    padding: 0 @sides-padding;
-    background-color: white;
+  position: fixed ! important;
+  position: static;
+  height: @height-fixed-header;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  padding: 0 @sides-padding;
+  background-color: white;
 }
 
 .container-fluid > .row:last-child {
-    margin-top: @height-fixed-header;
-    z-index: 1;
+  margin-top: @height-fixed-header;
+  z-index: 1;
 }
 
 .header {
-	.header-title {
-	   float: left;
-	
-	    h1 {
-	       font-family: 'Leckerli One', cursive;
-	       
-	       span {
-	           color:@gray;
-	           font-style: italic;
-	           font-size: 0.4em;
-	           margin-left: 0.7142857142857143em;/* ~10px - 10:14 */
-	           font-family: @font-family-base;
-	        }
-	    }	
-	}
-	
-	.header-user  {
-	   float: right;
-	   margin-right: 5px;
-    
-	    & > * {
-	       display: inline-block;
-	    }   
-	    
-	    .label {
-	        position: relative;
-	        top: -0.0714285714285714em;/* 1:14 */
-	    }
-	}
+  .header-title {
+    float: left;
+    h1 {
+      font-family: 'Leckerli One', cursive;
+      span {
+        color: @gray;
+        font-style: italic;
+        font-size: 0.4em;
+        margin-left: 0.7142857142857143em;
+        font-family: @font-family-base;
+      }
+    }
+  }
+
+  .header-user {
+    float: right;
+    margin-right: 5px;
+
+    & > * {
+      display: inline-block;
+    }
+
+    .label {
+      position: relative;
+      top: -0.0714285714285714em;
+    }
+  }
 }
 
 .nav {
-	li.disabled {
-	   cursor: not-allowed;
-	   a {
-	   
-		   pointer-events: none;
-		   cursor: not-allowed;
-		}
+  li.disabled {
+    cursor: not-allowed;
+    a {
+      pointer-events: none;
+      cursor: not-allowed;
     }
+  }
 }
 
-
 #datagrid {
-	line-height:normal;
-	
-	.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-	  background-color: @color-table-row-hover;
-	}
+  line-height: normal;
+  .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+    background-color: @color-table-row-hover;
+  }
 
+  .datagrid-table {
+    .datagrid-table-header {
+      position: fixed ! important;
+      top: @height-fixed-header;
+      height: @height-fixed-datagrid-header;
+      left: 0;
+      z-index: 2;
+      background-color: white;
+      padding: 20px @sides-padding 0;
+      thead {
+        th:first-child {
+          border: 1px solid white;
+          border-right: 1px solid @table-border-color;
+        }
 
-    .datagrid-table {
-	        
-        .datagrid-table-header {
-            position: fixed !important;
-		    top: @height-fixed-header;
-		    height: @height-fixed-datagrid-header;
-		    left: 0;
-		    z-index: 2;
-		    background-color: white;  
-            padding: 20px @sides-padding 0;
-            
-            thead {
-               th:first-child {
-                   border: 1px solid white;
-                   border-right: 1px solid @table-border-color;
-               }
-               
-               /* Rétablir la bordure bas de la cellule d'entête des activités */
-               tr:last-child {
-	               th:first-child {
-	                   border-bottom: 1px solid @table-border-color;           
-	               }
-               }
-               
-               /* Gestion de la première cellule vide en haut à gauche du tableau de données */
-               tr:first-child {
-                   > th:first-child {
-                       width: @width-column-activities;
-                       border-right: 1px solid white;
-                   }
-                   
-                   > th:last-child {
-                        padding: 0 0 7px 0;
-                        border : 1px solid white;
-                        border-bottom: 1px solid @table-border-color;
-                   }
-               }
-               
-               .datagrid-toolbar {
-			        width:100%; 
-			        /*    
-			        position: fixed !important;
-			        height: @height-fixed-datagrid-navbar;
-			        top: @height-fixed-header;
-			        left: 0;
-			        z-index: 2;
-			        padding: 10px 30px;
-			        background-color: white;
-			        */
-			                
-			        .btn-toolbar {          
-			          /*max-width: 728px;*/  
-			          margin: 0;
-			
-			          
-			          > div.btn-group-justified {
-			            margin: 0;
-			          }
-			          
-			          #datagrid-current-month {  
-			              background-color: @color-month-current;
-			              text-transform: uppercase;
-			          }
-			        }
-			    }
-               
-               tr.weeks {
-                   /* Toutes les cellules correspondants aux semaines, il faut 
-                      donc exclure la première colonne des activités */
-                   > th:nth-child(n+2) {
-                      background-color: @table-bg-accent;
-                   }
-               }
-               
-               th.day {
-                   text-align: center;
-                   background-color: @color-month-next;
-                   
-                   &.current-month {
-                        background-color:@color-month-current;
-                   }
-                   
-                   > div {
-                       margin: auto auto;
-                       width: 34px; /* pour éviter les différences de largeur entre cellule en fonction de l'empattement des caractères de la police */
-                       height: 100%;
-                   
-                       > .day-value {
-                           display: inline-block;
-                           width: 17px;
-                           margin-right:2px;
-                       }
-                       
-                       > .completeness {
-                           margin-left:2px;
-                       }
-                   }
-               }/* \th.day */
-            }/* \thead */
-            
-            table {
-                margin-bottom: 0;
+        tr:last-child {
+          th:first-child {
+            border-bottom: 1px solid @table-border-color;
+          }
+        }
+
+        tr:first-child {
+          > th:first-child {
+            width: @width-column-activities;
+            border-right: 1px solid white;
+          }
+
+          > th:last-child {
+            padding: 0 0 7px 0;
+            border: 1px solid white;
+            border-bottom: 1px solid @table-border-color;
+          }
+        }
+
+        .datagrid-toolbar {
+          width: 100%;
+          .btn-toolbar {
+            margin: 0;
+            > div.btn-group-justified {
+              margin: 0;
             }
-        }
-        
-        .datagrid-body {
-            margin-top: @height-fixed-datagrid-header;
-            z-index: 1;
-        }
-        
-        table {
-	       table-layout: fixed;
 
-	       tbody {
-	       
-	           tr:first-child > td:first-child {
-	               width: @width-column-activities;
-	           }
-	           
-	           tr {
-	               height: 20px;
-	           }
-	           
-	            td {
-	                padding: @env2px @env3px;
-	                overflow: hidden;
-	                text-overflow: ellipsis;
-	                white-space: nowrap;  
-	                text-align: center; 	                
-	                padding: 0;
-	                height: 100%;
-	                .noSelect(); 
-	                
-	                &.activity {
-	                   text-align:left;
-	                   padding-left: 3px;
-	                   vertical-align: middle;
-	                }
-	                
-	                &.selected {
-	                   font-weight: bold;
-	                   
-	                   div {
-	                       border: 2px solid black;
-	                       border-radius: 4px;
-	                   }
-	                }
-	                
-	                &.imputation:hover {
-	                 background-color: @color-table-cell-hover;
-	                }
-	                
-	                div {
-	                   width: 100%;
-	                   height: 100%;
-	                   position: relative;
-	                   border: 2px solid transparent;
-	                }
-	            } 
-	            
-	            
-	            /* 
-	            td[data-quota="0"] {
-	                background-color: inherit;
-	            } 
-	            
-	            td[data-quota="0.25"] {
-	                background-color: inherit;
-	            } 
-	            
-	            td[data-quota="0.5"] {
-	                background-color: inherit;
-	            } 
-	            
-	            td[data-quota="0.75"] {
-	                background-color: inherit;
-	            } 
-	            
-	            td[data-quota="1"] {
-	                background-color: inherit;
-	            } 
-	            */
-	       }/*close tbody*/
-	       
-	       tfoot {
-	           tr {
-	               td {
-	                   font-style: italic;
-	                   padding-right: @env2px;
-	                   font-size: @font-size-xs;
-	                   text-align: right;
-	                   padding-right: @env5px;
-	                }
-	           }
-	        }/*close tfoot*/          
-	    }/*close table*/
-    }/*close .datagrid-table*/
-    
+            #datagrid-current-month {
+              background-color: @color-month-current;
+              text-transform: uppercase;
+            }
+          }
+        }
 
-    .datagrid-table-view-day {
-        .datagrid-table-header-view-day {
-            position: fixed !important;
-            top: @height-fixed-header;
-            height: @height-fixed-datagrid-header-view-day;
+        tr.weeks {
+          > th:nth-child(n + 2) {
+            background-color: @table-bg-accent;
+          }
+        }
+
+        th.day {
+          text-align: center;
+          background-color: @color-month-next;
+          &.current-month {
+            background-color: @color-month-current;
+          }
+
+          > div {
+            margin: auto auto;
+            width: 34px;
+            height: 100%;
+            > .day-value {
+              display: inline-block;
+              width: 17px;
+              margin-right: 2px;
+            }
+
+            > .completeness {
+              margin-left: 2px;
+            }
+          }
+        }
+      }
+
+      table {
+        margin-bottom: 0;
+      }
+    }
+
+    .datagrid-body {
+      margin-top: @height-fixed-datagrid-header;
+      z-index: 1;
+    }
+
+    table {
+      table-layout: fixed;
+      tbody {
+        tr:first-child > td:first-child {
+          width: @width-column-activities;
+        }
+
+        tr {
+          height: 20px;
+        }
+
+        td {
+          padding: @env2px @env3px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          text-align: center;
+          padding: 0;
+          height: 100%;
+          .noSelect ();
+          &.activity {
+            text-align: left;
+            padding-left: 3px;
+            vertical-align: middle;
+          }
+
+          &.selected {
+            font-weight: bold;
+            div {
+              border: 2px solid black;
+              border-radius: 4px;
+            }
+          }
+
+          &.imputation:hover {
+            background-color: @color-table-cell-hover;
+          }
+
+          div {
             width: 100%;
-            left: 0;
-            z-index: 2;
-            background-color: white; 
-            padding: 5px @sides-padding 0; 
-        
-            thead {
-            
-                tr:first-child > th {              
-                    border: 1px solid white;
-                    border-bottom: 1px solid @table-border-color;
-                    
-                    .btn-toolbar {                        
-                        margin-left:-10px;
-                    }
-                }
-                
-                tr:last-child > th {
-                    font-weight: bold;
-                    background-color: @color-month-current;
-                    text-align: center;
-                }
-            }
+            height: 100%;
+            position: relative;
+            border: 2px solid transparent;
+          }
         }
-        
-        table.datagrid-body-view-day {
-           table-layout: fixed;
-           margin-top: @height-fixed-datagrid-header-view-day;
+      }
 
-           tbody {
-           
-               tr:first-child > td:first-child {
-                   width: @width-column-activities;
-               }
-               
-               td:first-child {
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    padding: 0 3px;
-                    height: 50px;
-               }
-               
-               td {
-                    height: 100%;
-                    padding: 0 8px;
-                    vertical-align: middle;
-                     
-                    > div.btn-group {
-                        margin-left: auto;
-                        margin-right: auto;
-                        max-width: 250px;
-                    }
-               }
-               
-               .imputation-toolbar {               
-                    width: 100%;
-                    padding: 0 @env5px;
-                    
-                    
-                    .slider-container {
-                        margin-right: 45px;
-                    }
-                    
-                    .btn-group {
-                        float: right;
-                    }
-               }
-            }
+      tfoot {
+        tr {
+          td {
+            font-style: italic;
+            padding-right: @env2px;
+            font-size: @font-size-xs;
+            text-align: right;
+            padding-right: @env5px;
+          }
         }
-        
-        /* le bloc permettant de désactiver la saisie */
-        .blockUI.blockMsg {
-        
-            h1 {
-                font-size: 1.3em;
-                font-weight: bold;
-            }
-            
-            span.glyphicon {
-                font-size: 24px;
-            }
-            
-            h2 {
-                font-size: 0.9em;
-                font-style: italic;
-            }
+      }
+    }
+  }
+
+  .datagrid-table-view-day {
+    .datagrid-table-header-view-day {
+      position: fixed ! important;
+      top: @height-fixed-header;
+      height: @height-fixed-datagrid-header-view-day;
+      width: 100%;
+      left: 0;
+      z-index: 2;
+      background-color: white;
+      padding: 5px @sides-padding 0;
+      thead {
+        tr:first-child > th {
+          border: 1px solid white;
+          border-bottom: 1px solid @table-border-color;
+          .btn-toolbar {
+            margin-left: -10px;
+          }
         }
+
+        tr:last-child > th {
+          font-weight: bold;
+          background-color: @color-month-current;
+          text-align: center;
+        }
+      }
+    }
+
+    table.datagrid-body-view-day {
+      table-layout: fixed;
+      margin-top: @height-fixed-datagrid-header-view-day;
+      tbody {
+        tr:first-child > td:first-child {
+          width: @width-column-activities;
+        }
+
+        td:first-child {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          padding: 0 3px;
+          height: 50px;
+        }
+
+        td {
+          height: 100%;
+          padding: 0 8px;
+          vertical-align: middle;
+          > div.btn-group {
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 250px;
+          }
+        }
+
+        .imputation-toolbar {
+          width: 100%;
+          padding: 0 @env5px;
+          .slider-container {
+            margin-right: 45px;
+          }
+
+          .btn-group {
+            float: right;
+          }
+        }
+      }
+    }
     
-    }/* close .datagrid-table-view-day */
-    
-}/*close #datagrid*/
+    .datagrid-body-view-day-detailed {
+    	margin-top: @height-fixed-datagrid-header-view-day;
+    }
+
+    .blockUI.blockMsg {
+      h1 {
+        font-size: 1.3em;
+        font-weight: bold;
+      }
+
+      span.glyphicon {
+        font-size: 24px;
+      }
+
+      h2 {
+        font-size: 0.9em;
+        font-style: italic;
+      }
+    }
+  }
+}
 
 #error {
-	margin-top: 25px;
-	
-	.alert {
-       
-       #stack {  
-       
-          h1, p, h3, hr {
-            display:none;
-          } 
-       }       
-      
-	}
-	
-	#stack-expander {
-	   button:focus {
-	       outline: 0;
-	   }
-	   
-	   button {
-	       padding-left: 0;
-	   }
-	   
-	   .btn-link:hover, .btn-link:focus {
-	       text-decoration: none;
-	   }
-	}
+  margin-top: 25px;
+  .alert {
+    #stack {
+      h1, p, h3, hr {
+        display: none;
+      }
+    }
+  }
+
+  #stack-expander {
+    button:focus {
+      outline: 0;
+    }
+
+    button {
+      padding-left: 0;
+    }
+
+    .btn-link:hover, .btn-link:focus {
+      text-decoration: none;
+    }
+  }
 }
 
 #view-loading {
-	margin: 25px;
+  margin: 25px;
 }
 
 md-datagrid-slider {
-	width: 100%;
-	display: block;
-	
-	.progress {
-	   position: relative;
-	   top: 4px; /* fix vertical center */
-       height: 25px;
-       margin: 0 45px;
-       
-       .progress-bar {
-           line-height: 27px;
-           font-size: @env20px; /* 20:14 */
-           font-weight: bold;
-           padding-left: @env5px;
-           min-width: 3em;
-       }
+  width: 100%;
+  display: block;
+  .progress {
+    position: relative;
+    top: 4px;
+    height: 25px;
+    margin: 0 45px;
+    .progress-bar {
+      line-height: 27px;
+      font-size: @env20px;
+      font-weight: bold;
+      padding-left: @env5px;
+      min-width: 3em;
     }
-    
-    .btn {
-        display: block; 
-    }
-    
-    .btn.minus {
-        float: left;
-    }
-    
-    .btn.plus {
-        float: right;
-    }
-    
-    
+  }
+
+  .btn {
+    display: block;
+  }
+
+  .btn.minus {
+    float: left;
+  }
+
+  .btn.plus {
+    float: right;
+  }
 }
 
 #imputation-details {
-	
-	.modal-body {
-	   .row {
-	       text-align: center;
-	       margin-bottom: 10px; 
-	   }
-	   
-	   textarea {
-           resize: none;
-	   }
-	}
+  .modal-body {
+    .row {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      resize: none;
+    }
+  }
 }
 
 #preferences {
-	padding-top: 20px;
-	
-	input[type='email'] {
-	   width: 400px;
-	}
-	
-	.pref-toggle {
-	   .alert {
-	       margin-top: 10px;
-	       margin-bottom: 0;
-	   }	
-	}
-	
-	.disabled {	
-	   cursor: not-allowed;
-	}
-	
-	.pref-notif-freq {
-	   div.btn-group > button:first-child {
-	       width: 132px;
-	   }
-	}
-	
-	.pref-activity > label.disabled, div.toggle[disabled='disabled '] * {
-	   cursor: not-allowed;
-	}
-	
-	.pref-activity {
-	
-	   line-height: @env27px;
-	   margin-top: 2px;
-	   margin-bottom: 2px;
-	   
-	   & > * {
-	       vertical-align: middle;
-	   }
-	   
-	   & > label {
-	       font-weight: normal;
-	       
-	       .pref-activity-label {
-	           margin-left: 3px;
-	           
-	           &.strike {
-	               text-decoration : line-through;
-	           }
-	       }
-	   }
-	   
-	}
+  padding-top: 20px;
+  input[type='email'] {
+    width: 400px;
+  }
+
+  .pref-toggle {
+    .alert {
+      margin-top: 10px;
+      margin-bottom: 0;
+    }
+  }
+
+  .disabled {
+    cursor: not-allowed;
+  }
+
+  .pref-notif-freq {
+    div.btn-group > button:first-child {
+      width: 132px;
+    }
+  }
+
+  .pref-activity > label.disabled, div.toggle[disabled='disabled '] * {
+    cursor: not-allowed;
+  }
+
+  .pref-activity {
+    line-height: @env27px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    & > * {
+      vertical-align: middle;
+    }
+
+    & > label {
+      font-weight: normal;
+      .pref-activity-label {
+        margin-left: 3px;
+        &.strike {
+          text-decoration: line-through;
+        }
+      }
+    }
+  }
 }
 
-/* RWD */
 @import "xxs.less";
 @import "xs.less";
 @import "md.less";
 @import "xl.less";
-
-

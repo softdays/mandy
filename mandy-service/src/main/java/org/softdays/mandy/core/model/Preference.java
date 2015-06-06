@@ -62,6 +62,12 @@ public class Preference extends BaseEqualable {
     private Resource resource;
 
     /**
+     * Indicates if the user wants to use detailed or standard input mode.
+     */
+    @Column(columnDefinition = "BIT NOT NULL DEFAULT 0")
+    private boolean enableSubActivities = false;
+
+    /**
      * The user preference for imputation granularity. Must be multiple of 1.
      */
     @Column(columnDefinition = "float NOT NULL default '0.5'")
@@ -88,12 +94,10 @@ public class Preference extends BaseEqualable {
             // uniqueConstraints = @UniqueConstraint(
             // name = "UQ__PREFERENCE_ACTIVITY__PREFERENCE_ID__ACTIVITY_ID",
             // columnNames = { "PREFERENCE_ID", "ACTIVITY_ID" }),
-            joinColumns = { @JoinColumn(
-                    name = "PREFERENCE_ID",
+            joinColumns = { @JoinColumn(name = "PREFERENCE_ID",
                     foreignKey = @ForeignKey(
                             name = "FK__PREFERENCE_ACTIVITY__PREFERENCE_ID")) },
-            inverseJoinColumns = { @JoinColumn(
-                    name = "ACTIVITY_ID",
+            inverseJoinColumns = { @JoinColumn(name = "ACTIVITY_ID",
                     foreignKey = @ForeignKey(
                             name = "FK__PREFERENCE_ACTIVITY__ACTIVITY_ID")) })
     @org.hibernate.annotations.ForeignKey(
@@ -138,6 +142,14 @@ public class Preference extends BaseEqualable {
         this.granularity = granularity;
     }
 
+    public boolean isEnableSubActivities() {
+        return enableSubActivities;
+    }
+
+    public void setEnableSubActivities(final boolean status) {
+        this.enableSubActivities = status;
+    }
+
     public List<Activity> getFilteredActivities() {
         return this.filteredActivities;
     }
@@ -149,6 +161,8 @@ public class Preference extends BaseEqualable {
     @Override
     public int hashCode() {
         return new HashCodeBuilder().appendSuper(super.hashCode())
+                .append(this.getResource())
+                .append(this.isEnableSubActivities())
                 .append(this.getResource()).append(this.getGranularity())
                 .append(this.getFilteredActivities()).toHashCode();
     }
@@ -158,14 +172,14 @@ public class Preference extends BaseEqualable {
         Boolean status = this.equalsConsideringTechnicalLogic(obj);
         if (status == null) {
             final Preference pref = (Preference) obj;
-            status =
-                    new EqualsBuilder()
-                            .appendSuper(this.equals(obj))
-                            .append(this.getResource(), pref.getResource())
-                            .append(this.getGranularity(),
-                                    pref.getGranularity())
-                            .append(this.getFilteredActivities(),
-                                    pref.getFilteredActivities()).isEquals();
+            status = new EqualsBuilder()
+                    .appendSuper(this.equals(obj))
+                    .append(this.getResource(), pref.getResource())
+                    .append(this.isEnableSubActivities(),
+                            pref.isEnableSubActivities())
+                    .append(this.getGranularity(), pref.getGranularity())
+                    .append(this.getFilteredActivities(),
+                            pref.getFilteredActivities()).isEquals();
         }
         return status;
     }

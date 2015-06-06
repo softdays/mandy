@@ -8,42 +8,42 @@
  * @since 1.0
  * @author rpatriarche
  */
-define([ 'angular', 'angular-route', 'angular-resource', 'angular-cookies',
-    'mandy-common' ], function(angular) {
-  'use strict';
+define(
+    [ 'angular', 'angular-route', 'angular-resource', 'angular-cookies', 'mandy-common' ],
+    function(angular) {
+        'use strict';
 
-  var module = angular.module('mdUser', [ 'ngRoute', 'ngResource', 'ngCookies',
-      'mdCommon' ]);
+        var module = angular.module('mdUser', [ 'ngRoute', 'ngResource', 'ngCookies', 'mdCommon' ]);
 
-  module.service('UserService', [
-      '$resource',
-      '$cookieStore',
-      '$log',
-      'CONTEXT_ROOT',
-      'ErrorService',
-      function($resource, $cookieStore, $log, CONTEXT_ROOT, errorService) {
+        module.service('UserService', [
+            '$resource',
+            '$cookieStore',
+            '$log',
+            'CONTEXT_ROOT',
+            'ErrorService',
+            function($resource, $cookieStore, $log, CONTEXT_ROOT, errorService) {
 
-        var UserResource = $resource(CONTEXT_ROOT + "/api/user");
+                var UserResource = $resource(CONTEXT_ROOT + "/api/user");
 
-        /**
-         * @alias mandy/user/service
-         */
-        return {
-          /**
-           * Returns the current user data.
-           */
-          getUserData : function() {
-            return UserResource.get({}, function(data) {
-              $cookieStore.put('user', data);
-              $log.debug("user id retrieved from cookie: "
-                  + $cookieStore.get('user').resourceId);
-            }, function(httpResponse) {
-              errorService.errorHandler(httpResponse,
-                  "Erreur technique récupération infos utilisateur");
-            });
-          }
-        };
-      } ]);
+                /**
+                 * @alias mandy/user/service
+                 */
+                return {
+                    /**
+                     * Returns the current user data.
+                     */
+                    getUserData : function() {
+                        return UserResource.get({}, function(data) {
+                            $cookieStore.put('user', data);
+                            $log.debug("user id retrieved from cookie: "
+                                + $cookieStore.get('user').resourceId);
+                        }, function(httpResponse) {
+                            errorService.errorHandler(httpResponse,
+                                "Erreur technique récupération infos utilisateur");
+                        });
+                    }
+                };
+            } ]);
 
-  return module;
-});
+        return module;
+    });

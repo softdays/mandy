@@ -12,6 +12,11 @@
 			<a>id</a>
 			<b>resourceId</b>
 		</field>
+		
+		<field>
+			<a>enableSubActivities</a>
+			<b>enableSubActivities</b>
+		</field>
 
 		<field>
 			<a>granularity</a>

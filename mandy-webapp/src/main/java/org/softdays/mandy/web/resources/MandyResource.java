@@ -125,10 +125,27 @@ public class MandyResource {
     @Path(MandyConstants.URI_ACTIVITIES)
     @Produces(MandyConstants.JSON_UTF8)
     @Secured("ROLE_USER")
-    public List<ActivityDto> activities(@QueryParam("filter") final String filter) {
+    public List<ActivityDto> getUserActivities(
+            @QueryParam("filter") final String filter) {
         final Long currentUserId = this.authService.getCurrentUserId();
 
         return this.activityService.getActivities(currentUserId);
+    }
+
+    /**
+     * Creates sub activity.
+     * 
+     * @param newImputation
+     *            the new imputation
+     * @return the imputation dto
+     */
+    @POST
+    @Path(MandyConstants.URI_ACTIVITIES)
+    @Consumes(MandyConstants.JSON_UTF8)
+    @Produces(MandyConstants.JSON_UTF8)
+    @Secured("ROLE_USER")
+    public ActivityDto createSubActivity(final ActivityDto activityDto) {
+        return this.activityService.createSubActivity(activityDto);
     }
 
     /**
@@ -145,9 +162,9 @@ public class MandyResource {
     @Produces(MandyConstants.JSON_UTF8)
     @Secured("ROLE_USER")
     public DataGridDto datagrid(@PathParam("year") final String year,
-                                @PathParam("month") final String month) {
-        final DateTime date =
-                this.calendarService.getFirstDayOfTheMonth(year, month);
+            @PathParam("month") final String month) {
+        final DateTime date = this.calendarService.getFirstDayOfTheMonth(year,
+                month);
 
         return this.calendarService.getDataGridOfTheMonth(date);
     }
@@ -165,17 +182,18 @@ public class MandyResource {
     @Path(MandyConstants.URI_IMPUTATIONS_GET)
     @Produces(MandyConstants.JSON_UTF8)
     @Secured("ROLE_USER")
-    public Map<Long, List<ImputationDto>> getImputations(@PathParam("year") final String year,
-                                                         @PathParam("month") final String month) {
-        final Long resourceId =
-                this.authService.getCurrentToken().getResourceId();
+    public Map<Long, List<ImputationDto>> getImputations(
+            @PathParam("year") final String year,
+            @PathParam("month") final String month) {
+        final Long resourceId = this.authService.getCurrentToken()
+                .getResourceId();
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("resourceId: " + resourceId);
             LOGGER.debug("year: " + year);
             LOGGER.debug("month: " + month);
         }
-        final DateTime date =
-                this.calendarService.getFirstDayOfTheMonth(year, month);
+        final DateTime date = this.calendarService.getFirstDayOfTheMonth(year,
+                month);
 
         return this.imputationService.findImputations(resourceId, date);
     }

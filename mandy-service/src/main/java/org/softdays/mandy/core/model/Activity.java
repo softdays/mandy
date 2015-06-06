@@ -24,9 +24,10 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -37,7 +38,26 @@ import org.softdays.mandy.core.BaseIdentifiable;
 import org.softdays.mandy.core.CoreConstants;
 
 /**
- * Une activité est l'objet de l'imputation d'une charge.
+ * Represents the object of the imputation.
+ * 
+ * <p>
+ * Business rules:
+ * <ul>
+ * <li>a typed activity MUST have a not null parent activity</li>
+ * <li>an untyped (unspecified) activity remains imputable</li>
+ * <li>si un utilisateur saisit une imputation sur une activité parent avec des sous-activités alors
+ * il ne peut plus saisir d'imputation sur les sous-activités de cette activité parente. S'il veut
+ * finalelment ventiler ses imputations sur les sous-activités de l'activité parente, il doit
+ * d'abord supprimer l'imputation sur l'activité parente ou passer par la fonction de ventilation
+ * d'une imputation de l'activité parente sur ces sous-activités</li>
+ * <li>si un utilisateur saisit une imputation sur une sous-activité il ne lui est plus possible
+ * d'imputer au niveau de l'activité parente sauf s'il supprime toutes les imputations existantes
+ * sur les sous-activités de cette activité parente ou qu'il utilise la fonction de réagrégation des
+ * imputations des sous-activités sur leur activité parente.</li>
+ * <li></li>
+ * <li></li>
+ * </ul>
+ * </p>
  * 
  * @author rpatriarche
  * @since 1.0.0
@@ -56,11 +76,18 @@ public class Activity extends BaseIdentifiable {
     @Column(nullable = false, length = CoreConstants.DB_LONG_LABEL_LENGTH)
     private String longLabel;
 
-    @Column(columnDefinition = "char(1) not null default 'P'")
-    @Enumerated(EnumType.STRING)
     /**
-     * @see org.softdays.mandy.model.ActivityType
+     * @see org.softdays.mandy.ActivityCategory
      */
+    @NaturalId(mutable = true)
+    @Column(columnDefinition = "char(1) not null default 'P'")
+    private ActivityCategory category;
+
+    /**
+     * @see org.softdays.mandy.ActivityType
+     */
+    @NaturalId(mutable = true)
+    @Column(columnDefinition = "char(1) not null default 'U'")
     private ActivityType type;
 
     @NaturalId(mutable = true)
@@ -73,6 +100,12 @@ public class Activity extends BaseIdentifiable {
     @OneToMany(mappedBy = "activity")
     private Set<Imputation> imputations;
 
+    @ManyToOne
+    @JoinColumn(name = "PARENT_ID", updatable = false, nullable = true, foreignKey = @ForeignKey(
+            name = "FK__ACTIVITY__PARENT_ID"))
+    @org.hibernate.annotations.ForeignKey(name = "FK__ACTIVITY__PARENT_ID")
+    private Activity parentActivity;
+
     /**
      * Instantiates a new activity.
      */
@@ -80,9 +113,14 @@ public class Activity extends BaseIdentifiable {
         super();
     }
 
-    public Activity(Long source) {
+    public Activity(final Long id) {
         this();
-        this.setId(source);
+        this.setId(id);
+    }
+
+    public Activity(final Activity parent) {
+        super();
+        this.parentActivity = parent;
     }
 
     /**
@@ -90,16 +128,18 @@ public class Activity extends BaseIdentifiable {
      * 
      * @return the type
      */
-    public ActivityType getType() {
-        return this.type;
+    public ActivityCategory getCategory() {
+        return this.category;
     }
 
-    /**
-     * Sets the type.
-     * 
-     * @param type
-     *            the new type
-     */
+    public void setCategory(final ActivityCategory category) {
+        this.category = category;
+    }
+
+    public ActivityType getType() {
+        return type;
+    }
+
     public void setType(final ActivityType type) {
         this.type = type;
     }
@@ -199,11 +239,19 @@ public class Activity extends BaseIdentifiable {
         this.teams = teams;
     }
 
+    public Activity getParentActivity() {
+        return parentActivity;
+    }
+
+    public void setParentActivity(final Activity parent) {
+        this.parentActivity = parent;
+    }
+
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().appendSuper(super.hashCode())
-                .append(this.getLongLabel()).append(this.getShortLabel())
-                .append(this.getPosition()).append(this.getType()).toHashCode();
+        return new HashCodeBuilder().appendSuper(super.hashCode()).append(this.getLongLabel())
+                .append(this.getShortLabel()).append(this.getPosition()).append(this.getCategory())
+                .append(this.getType()).append(this.getParentActivity()).toHashCode();
     }
 
     @Override
@@ -211,12 +259,12 @@ public class Activity extends BaseIdentifiable {
         Boolean status = this.equalsConsideringTechnicalLogic(obj);
         if (status == null) {
             final Activity rhs = (Activity) obj;
-            status =
-                    new EqualsBuilder().appendSuper(this.equals(obj))
-                            .append(this.getShortLabel(), rhs.getShortLabel())
-                            .append(this.getLongLabel(), rhs.getLongLabel())
-                            .append(this.getPosition(), rhs.getPosition())
-                            .append(this.getType(), rhs.getType()).isEquals();
+            status = new EqualsBuilder().appendSuper(this.equals(obj))
+                    .append(this.getShortLabel(), rhs.getShortLabel())
+                    .append(this.getLongLabel(), rhs.getLongLabel())
+                    .append(this.getPosition(), rhs.getPosition())
+                    .append(this.getCategory(), rhs.getCategory())
+                    .append(this.getType(), rhs.getType()).isEquals();
         }
         return status;
     }

@@ -6,14 +6,14 @@
         http://www.springframework.org/schema/context 
         http://www.springframework.org/schema/context/spring-context-4.0.xsd
         http://www.springframework.org/schema/security 
-        http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+        http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
 	<!-- URLs accessibles sans authentification -->
 	<s:http pattern="/api/application.wadl" security="none" />
 
-	<s:http>
-		<s:intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
-		<s:intercept-url pattern="/**" access="IS_AUTHENTICATED_REMEMBERED" />
+	<s:http use-expressions="true">
+		<s:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
+		<s:intercept-url pattern="/**" access="isAuthenticated()" />
 		
 		<!-- Manage 302 to 401 if no session on Ajax request -->
         <s:custom-filter before="FORM_LOGIN_FILTER" ref="anonymousAjaxRequestFilter" />
@@ -27,6 +27,9 @@
 			si celle-ci avait déjà été chargé par le browser -->
 		<!-- See: http://spring.io/blog/2013/08/23/spring-security-3-2-0-rc1-highlights-security-headers/#cache-control -->
 		<s:headers />
+		
+		<!-- Since Spring Sec 4.x, CSRF is enabled by default, this causes HTTP 403 on PUT request -->
+		<s:csrf disabled="true"/>
 	</s:http>
 
 	<s:authentication-manager>

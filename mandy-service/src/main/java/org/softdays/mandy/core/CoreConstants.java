@@ -29,10 +29,10 @@ package org.softdays.mandy.core;
 public final class CoreConstants {
 
     /** The Constant DB_SHORT_LABEL_LENGTH. */
-    public static final int DB_SHORT_LABEL_LENGTH = 10;
+    public static final int DB_SHORT_LABEL_LENGTH = 20;
 
     /** The Constant DB_NAME_LENGTH. */
-    public static final int DB_NAME_LENGTH = 50;
+    public static final int DB_NAME_LENGTH = 100;
 
     /** The Constant DB_UID_FIELD_LENGTH. */
     public static final int DB_UID_LENGTH = 25;
@@ -43,7 +43,6 @@ public final class CoreConstants {
     /** The Constant DB_DESCRIPTION_LENGTH. */
     public static final int DB_DESCRIPTION_LENGTH = 255;
 
-    private CoreConstants() {
-    }
+    private CoreConstants() {}
 
 }

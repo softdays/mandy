@@ -1,34 +1,40 @@
-/*
- * MANDY is a simple webapp to track man-day consumption on activities.
- * 
- * Copyright 2014, rpatriarche
- *
- * This file is part of MANDY software.
- *
- * MANDY is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of
- * the License, or (at your option) any later version.
- *
- * MANDY is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package org.softdays.mandy.core.model;
 
-/**
- * The Enum ActivityType.
- * 
- * @author rpatriarche
- * @since 1.0.0
- */
-public enum ActivityType {
+import org.softdays.mandy.core.PersistentEnum;
 
-    P("Projet"), A("Absence"), Z("Autre activité");
+/**
+ * Describes activity types.
+ * 
+ * This enum has been redesigned in version 1.3 to allow finer granularity of
+ * imputation.
+ * 
+ * The new {@link ActivityCategory} enum replaces the previous role of
+ * ActivityType.
+ * 
+ * @author repatriarche
+ * 
+ * @since 1.0.0
+ * 
+ * @version 1.3.0
+ *
+ */
+public enum ActivityType implements PersistentEnum {
+
+    ANA('A', "Analysis/Design"),
+
+    MOD('M', "Modeling"),
+
+    FIX('F', "Fix/Defect"),
+
+    EVO('E', "Evolution"),
+
+    INT('I', "Configuration/Integration"),
+
+    REU('C', "Coordination/Meeting"),
+
+    UNS('U', "Unspecified");
+
+    private Character id;
 
     private String description;
 
@@ -38,11 +44,13 @@ public enum ActivityType {
      * @param desc
      *            the desc
      */
-    ActivityType(final String desc) {
+    ActivityType(final Character id, final String desc) {
+        this.id = id;
         this.description = desc;
     }
 
     /**
+     * /**
      * Gets the name.
      * 
      * @return the name
@@ -58,6 +66,11 @@ public enum ActivityType {
      */
     public String getDescription() {
         return this.description;
+    }
+
+    @Override
+    public Character getId() {
+        return id;
     }
 
 }

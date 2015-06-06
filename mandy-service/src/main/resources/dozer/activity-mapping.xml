@@ -19,8 +19,14 @@
             <a>longLabel</a>
             <b>longLabel</b>
         </field>
-        <field>
-            <a>type.name</a>
+        <field custom-converter="org.softdays.mandy.dto.converter.PersistentEnumToCharConverter"
+               custom-converter-param="org.softdays.mandy.core.model.ActivityCategory">
+            <a>category</a>
+            <b>category</b>
+        </field>
+        <field custom-converter="org.softdays.mandy.dto.converter.PersistentEnumToCharConverter"
+               custom-converter-param="org.softdays.mandy.core.model.ActivityType">
+            <a>type</a>
             <b>type</b>
         </field>
     </mapping>

@@ -2,3 +2,8 @@
 *.project
 *.classpath
 target
+/mandy-webapp/*.iml
+*.launch
+pom.xml.releaseBackup
+release.properties
+*.iml

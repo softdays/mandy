@@ -35,6 +35,8 @@ public class PreferencesDto {
 
     private List<Long> activitiesFilter = new ArrayList<>();
 
+    private boolean enableSubActivities = false;
+
     public PreferencesDto() {
         super();
     }
@@ -58,6 +60,14 @@ public class PreferencesDto {
 
     public void setGranularity(final Float granularity) {
         this.granularity = granularity;
+    }
+
+    public boolean isEnableSubActivities() {
+        return enableSubActivities;
+    }
+
+    public void setEnableSubActivities(final boolean enableSubActivities) {
+        this.enableSubActivities = enableSubActivities;
     }
 
     public List<Long> getActivitiesFilter() {

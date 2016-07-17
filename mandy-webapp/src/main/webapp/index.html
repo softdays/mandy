@@ -26,7 +26,11 @@
 	   <div class="row">
 			<div class="row header">
 			    <div class="header-user">
-	                <h6><span class="glyphicon glyphicon-user"></span>&nbsp;{{user.firstName}}&nbsp;{{user.lastName}}&nbsp;<span class="label label-default">{{role}}</span>&nbsp;</h6>
+	                <h6>
+	                   <span class="glyphicon glyphicon-user">&nbsp;</span><!-- 
+	                   --><span class="username">{{user.firstName}}&nbsp;{{user.lastName}}&nbsp;</span><!-- 
+	                   --><span class="label label-default">{{role}}</span>
+	                </h6>
 	                <a ng-href="{{contextRoot}}/j_spring_security_logout">
 	                  <button type="button" class="btn btn-default btn-xs glyphicon glyphicon-log-out" title="Se déconnecter"></button>
 	                </a>

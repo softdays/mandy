@@ -23,10 +23,11 @@ package org.softdays.mandy.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.softdays.mandy.core.model.Quota;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+/**
+ * DTO des préférences utilisateur.
+ */
 public class PreferencesDto {
 
     private Long resourceId;

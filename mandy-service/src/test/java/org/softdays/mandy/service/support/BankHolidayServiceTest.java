@@ -21,7 +21,8 @@
 
 package org.softdays.mandy.service.support;
 
-import org.joda.time.DateTime;
+import java.time.LocalDate;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,9 +41,8 @@ public class BankHolidayServiceTest {
 
     @Test
     public void isBankHolidaySouldReturnTrue() {
-        final DateTime givenDate = new DateTime(2014, 7, 14, 0, 0);
-        final String desc = this.bankHolidayService
-                .getBankHolidaySummary(givenDate);
+        final LocalDate givenDate = LocalDate.of(2014, 7, 14);
+        final String desc = this.bankHolidayService.getBankHolidaySummary(givenDate);
         Assert.assertEquals("Bastille Day", desc);
     }
 }

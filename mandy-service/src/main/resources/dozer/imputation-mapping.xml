@@ -19,7 +19,7 @@
             <a>resource.id</a>
             <b>resourceId</b>
         </field>
-        <field>
+        <field copy-by-reference="true">
             <a>date</a>
             <b>date</b>
         </field>

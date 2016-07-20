@@ -22,10 +22,9 @@ package org.softdays.mandy.service.support;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.dozer.Mapper;
 import org.softdays.mandy.core.model.Activity;
+import org.softdays.mandy.core.model.ActivityCategory;
 import org.softdays.mandy.core.model.Resource;
 import org.softdays.mandy.dao.ActivityDao;
 import org.softdays.mandy.dto.ActivityDto;
@@ -33,6 +32,7 @@ import org.softdays.mandy.service.ActivityService;
 import org.softdays.mandy.service.MapperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The Class ActivityServiceImpl.
@@ -63,7 +63,8 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public List<ActivityDto> getActivities(final Long userId) {
 
-        return this.utilService.map(this.activityDao.findByResource(new Resource(userId)),
+        return this.utilService.map(
+                this.activityDao.findByResource(new Resource(userId), ActivityCategory.PROJECT),
                 ActivityDto.class);
     }
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	     
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.softdays.mandy</groupId>
@@ -56,8 +57,10 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.1</version>
 					<configuration>
-						<source>1.7</source>
-						<target>1.7</target>
+						<encoding>UTF-8</encoding>
+						<source>1.8</source>
+						<target>1.8</target>
+						<compilerVersion>1.8</compilerVersion>
 					</configuration>
 				</plugin>
 			</plugins>
@@ -69,34 +72,24 @@
 				<version>2.5</version>
 				<configuration>
 					<tagNameFormat>@{project.version}</tagNameFormat>
-					<!--username>softdays</username-->
+					<!--username>softdays</username -->
 					<!--password>xxxxxxxx</password -->
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 					<preparationGoals>clean package</preparationGoals>
 					<arguments>-DskipTests</arguments>
-					<!--
-					<providerImplementations>
-					  <git>jgit</git>
-				    </providerImplementations>
-				    -->
+					<!-- <providerImplementations> <git>jgit</git> </providerImplementations> -->
 				</configuration>
-				<!--
-				<dependencies>
-				  <dependency>
-					  <groupId>org.apache.maven.scm</groupId>
-					  <artifactId>maven-scm-provider-jgit</artifactId>
-							<version>1.9.1</version>
-				  </dependency>
-				 </dependencies>
-				 -->
+				<!-- <dependencies> <dependency> <groupId>org.apache.maven.scm</groupId> 
+					<artifactId>maven-scm-provider-jgit</artifactId> <version>1.9.1</version> 
+					</dependency> </dependencies> -->
 			</plugin>
 			<plugin>
-			  <groupId>org.codehaus.mojo</groupId>
-			  <artifactId>versions-maven-plugin</artifactId>
-			  <version>2.1</version>
-			  <configuration>
-				<generateBackupPoms>false</generateBackupPoms>
-			  </configuration>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<generateBackupPoms>false</generateBackupPoms>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -147,6 +140,11 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-aop</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-expression</artifactId>
 				<version>${org.springframework.version}</version>
 			</dependency>
 			<dependency>
@@ -213,27 +211,101 @@
 				<version>${hibernate.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.sun.jersey</groupId>
-				<artifactId>jersey-servlet</artifactId>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-annotations</artifactId>
+				<version>${hibernate.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-java8</artifactId>
+				<version>${hibernate.version}</version>
+			</dependency>
+
+			<!-- JAX-RS with Jersey -->
+			<dependency>
+				<groupId>org.glassfish.jersey</groupId>
+				<artifactId>jersey-bom</artifactId>
+				<version>${jersey.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.glassfish.jersey.ext</groupId>
+				<artifactId>jersey-spring3</artifactId>
+				<version>${jersey.version}</version>
+				<exclusions>
+					<exclusion>
+						<!-- Conflit avec jboss.logging & Hibernate 5 car ces porcs embarquent 
+							une version de jboss-logging -->
+						<artifactId>bean-validator</artifactId>
+						<groupId>org.glassfish.hk2.external</groupId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+
+			<!-- Jackson -->
+			<dependency>
+				<groupId>org.glassfish.jersey.media</groupId>
+				<artifactId>jersey-media-json-jackson</artifactId>
 				<version>${jersey.version}</version>
 			</dependency>
+
+			<!-- JSON with Jackson -->
+
+			<!-- the core, which includes Streaming API, shared low-level abstractions 
+				(but NOT data-binding) -->
 			<dependency>
-				<groupId>com.sun.jersey</groupId>
-				<artifactId>jersey-json</artifactId>
-				<version>${jersey.version}</version>
-			</dependency>
-			<!-- Pour disposer des annotations @JsonManagedReference, @JsonIgnore -->
-			<dependency>
-				<groupId>org.codehaus.jackson</groupId>
-				<artifactId>jackson-core-asl</artifactId>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
 				<version>${jackson.version}</version>
 			</dependency>
-			<!-- Pour disposer de l'annotation @JsonSerialize -->
+
+			<!-- Just the annotations; use this dependency if you want to attach annotations 
+				to classes without connecting them to the code. -->
 			<dependency>
-				<groupId>org.codehaus.jackson</groupId>
-				<artifactId>jackson-mapper-asl</artifactId>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
 				<version>${jackson.version}</version>
 			</dependency>
+
+			<!-- databinding; ObjectMapper, JsonNode and related classes are here -->
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+
+			<!-- JAX-RS provider -->
+			<dependency>
+				<groupId>com.fasterxml.jackson.jaxrs</groupId>
+				<artifactId>jackson-jaxrs-json-provider</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+
+			<!-- Serialisation des date Java 8 -->
+			<dependency>
+				<groupId>com.fasterxml.jackson.datatype</groupId>
+				<artifactId>jackson-datatype-jsr310</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+
+			<!-- <dependency> <groupId>com.fasterxml.jackson.datatype</groupId> <artifactId>jackson-datatype-jsr353</artifactId> 
+				<version>${jackson.version}</version> </dependency> <dependency> <groupId>org.glassfish</groupId> 
+				<artifactId>javax.json</artifactId> <version>1.0.4</version> </dependency> -->
+
+			<dependency>
+				<groupId>com.fasterxml.jackson.jaxrs</groupId>
+				<artifactId>jackson-jaxrs-base</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+
+			<!-- Object Mapping -->
 			<dependency>
 				<groupId>net.sf.dozer</groupId>
 				<artifactId>dozer</artifactId>
@@ -244,17 +316,8 @@
 				<artifactId>dozer-spring</artifactId>
 				<version>${dozer.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>com.sun.jersey.contribs</groupId>
-				<artifactId>jersey-spring</artifactId>
-				<version>${jersey.version}</version>
-			</dependency>
+
 			<!-- MISC -->
-			<dependency>
-				<groupId>joda-time</groupId>
-				<artifactId>joda-time</artifactId>
-				<version>2.3</version>
-			</dependency>
 			<dependency>
 				<groupId>org.mnode.ical4j</groupId>
 				<artifactId>ical4j</artifactId>
@@ -267,6 +330,14 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+
+			<!-- Lombok -->
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>${lombok.version}</version>
+			</dependency>
+
 			<!-- LOGGING -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -323,17 +394,18 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- frameworks versions -->
 		<servlet.version>3.0.1</servlet.version>
-		<org.springframework.version>4.1.6.RELEASE</org.springframework.version>
-		<org.springframework.security.version>4.0.1.RELEASE</org.springframework.security.version>
-		<org.springframework.data.version>1.8.0.RELEASE</org.springframework.data.version>
+		<org.springframework.version>4.3.1.RELEASE</org.springframework.version>
+		<org.springframework.security.version>4.1.1.RELEASE</org.springframework.security.version>
+		<org.springframework.data.version>1.10.2.RELEASE</org.springframework.data.version>
 		<!-- Hibernate 4.3.9 or > see https://hibernate.atlassian.net/browse/HHH-8866 -->
-		<hibernate.version>4.3.10.Final</hibernate.version>
+		<hibernate.version>5.2.1.Final</hibernate.version>
 		<dozer.version>5.5.1</dozer.version>
-		<jersey.version>1.18.1</jersey.version>
-		<jackson.version>1.9.2</jackson.version>
-		<junit.version>4.11</junit.version>
+		<jersey.version>2.23.1</jersey.version>
+		<jackson.version>2.8.1</jackson.version>
+		<junit.version>4.12</junit.version>
 		<glassfish.version>3.1.1</glassfish.version>
 		<slf4j.version>1.7.7</slf4j.version>
 		<log4j.version>1.2.17</log4j.version>
+		<lombok.version>1.16.8</lombok.version>
 	</properties>
 </project>

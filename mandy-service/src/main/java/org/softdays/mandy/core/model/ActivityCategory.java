@@ -20,7 +20,7 @@
  */
 package org.softdays.mandy.core.model;
 
-import org.softdays.mandy.core.PersistentEnum;
+import org.softdays.commons.jpa.converter.GenericPersistentEnum;
 
 /**
  * Activity categories.
@@ -29,7 +29,7 @@ import org.softdays.mandy.core.PersistentEnum;
  * 
  * @since 1.3.0
  */
-public enum ActivityCategory implements PersistentEnum {
+public enum ActivityCategory implements GenericPersistentEnum<Character> {
 
     PROJECT('P', "Project"),
 
@@ -37,7 +37,7 @@ public enum ActivityCategory implements PersistentEnum {
 
     OTHER('O', "Other");
 
-    private Character id;
+    private Character pk;
 
     private String description;
 
@@ -47,8 +47,8 @@ public enum ActivityCategory implements PersistentEnum {
      * @param desc
      *            the desc
      */
-    ActivityCategory(final Character id, final String desc) {
-        this.id = id;
+    ActivityCategory(final Character pk, final String desc) {
+        this.pk = pk;
         this.description = desc;
     }
 
@@ -72,8 +72,27 @@ public enum ActivityCategory implements PersistentEnum {
     }
 
     @Override
-    public Character getId() {
-        return this.id;
+    public Character getPk() {
+        return this.pk;
+    }
+
+    public static ActivityCategory fromCode(final Character code) {
+        if (code == null) {
+            return null;
+        }
+        switch (code) {
+            case 'P':
+                return PROJECT;
+
+            case 'A':
+                return ABSENCE;
+
+            case 'O':
+                return OTHER;
+
+            default:
+                throw new IllegalArgumentException("value not supported");
+        }
     }
 
 }

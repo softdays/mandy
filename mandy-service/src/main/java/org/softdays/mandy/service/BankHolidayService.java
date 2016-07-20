@@ -21,7 +21,7 @@
 
 package org.softdays.mandy.service;
 
-import org.joda.time.DateTime;
+import java.time.LocalDate;
 
 /**
  * The Interface BankHolidayService.
@@ -39,6 +39,6 @@ public interface BankHolidayService {
      *            the given date
      * @return the bank holiday summary
      */
-    String getBankHolidaySummary(DateTime givenDate);
+    String getBankHolidaySummary(LocalDate givenDate);
 
 }

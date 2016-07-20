@@ -1,6 +1,6 @@
 package org.softdays.mandy.core.model;
 
-import org.softdays.mandy.core.PersistentEnum;
+import org.softdays.commons.jpa.converter.GenericPersistentEnum;
 
 /**
  * Describes activity types.
@@ -18,7 +18,7 @@ import org.softdays.mandy.core.PersistentEnum;
  * @version 1.3.0
  *
  */
-public enum ActivityType implements PersistentEnum {
+public enum ActivityType implements GenericPersistentEnum<Character> {
 
     ANA('A', "Analysis/Design"),
 
@@ -34,7 +34,7 @@ public enum ActivityType implements PersistentEnum {
 
     UNS('U', "Unspecified");
 
-    private Character id;
+    private Character pk;
 
     private String description;
 
@@ -44,8 +44,8 @@ public enum ActivityType implements PersistentEnum {
      * @param desc
      *            the desc
      */
-    ActivityType(final Character id, final String desc) {
-        this.id = id;
+    ActivityType(final Character pk, final String desc) {
+        this.pk = pk;
         this.description = desc;
     }
 
@@ -69,8 +69,39 @@ public enum ActivityType implements PersistentEnum {
     }
 
     @Override
-    public Character getId() {
-        return id;
+    public Character getPk() {
+        return this.pk;
+    }
+
+    public static ActivityType fromCode(final Character code) {
+        if (code == null) {
+            return null;
+        }
+        switch (code) {
+            case 'A':
+                return ActivityType.ANA;
+
+            case 'M':
+                return ActivityType.MOD;
+
+            case 'F':
+                return ActivityType.FIX;
+
+            case 'E':
+                return ActivityType.EVO;
+
+            case 'I':
+                return ActivityType.INT;
+
+            case 'C':
+                return ActivityType.REU;
+
+            case 'U':
+                return ActivityType.UNS;
+
+            default:
+                throw new IllegalArgumentException("value not supported");
+        }
     }
 
 }

@@ -58,19 +58,18 @@ public class Preference extends BaseEqualable {
 
     @OneToOne
     @PrimaryKeyJoinColumn(name = "RESOURCE_ID")
-    @org.hibernate.annotations.ForeignKey(name = "FK__PREFERENCES__RESOURCE")
     private Resource resource;
 
     /**
      * Indicates if the user wants to use detailed or standard input mode.
      */
-    @Column(columnDefinition = "BIT NOT NULL DEFAULT 0")
+    @Column(name = "ENABLE_SUB_ACTIVITIES", columnDefinition = "BIT NOT NULL DEFAULT 0")
     private boolean enableSubActivities = false;
 
     /**
      * The user preference for imputation granularity. Must be multiple of 1.
      */
-    @Column(columnDefinition = "float NOT NULL default '0.5'")
+    @Column(name = "GRANULARITY", columnDefinition = "float NOT NULL default '0.5'")
     private Float granularity = Quota.HALF.floatValue();
 
     /**
@@ -89,20 +88,14 @@ public class Preference extends BaseEqualable {
      * @see https://forum.hibernate.org/viewtopic.php?f=1&t=924496
      */
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "PREFERENCE_ACTIVITY",
+    @JoinTable(name = "PREFERENCE_ACTIVITY",
             // uniqueConstraints = @UniqueConstraint(
             // name = "UQ__PREFERENCE_ACTIVITY__PREFERENCE_ID__ACTIVITY_ID",
             // columnNames = { "PREFERENCE_ID", "ACTIVITY_ID" }),
             joinColumns = { @JoinColumn(name = "PREFERENCE_ID",
-                    foreignKey = @ForeignKey(
-                            name = "FK__PREFERENCE_ACTIVITY__PREFERENCE_ID")) },
+                    foreignKey = @ForeignKey(name = "FK__PREFERENCE_ACTIVITY__PREFERENCE_ID")) },
             inverseJoinColumns = { @JoinColumn(name = "ACTIVITY_ID",
-                    foreignKey = @ForeignKey(
-                            name = "FK__PREFERENCE_ACTIVITY__ACTIVITY_ID")) })
-    @org.hibernate.annotations.ForeignKey(
-            name = "FK__PREFERENCE_ACTIVITY__PREFERENCE",
-            inverseName = "FK__PREFERENCE_ACTIVITY__ACTIVITY")
+                    foreignKey = @ForeignKey(name = "FK__PREFERENCE_ACTIVITY__ACTIVITY_ID")) })
     @OrderColumn(name = "ACTIVITY_ORDER")
     private List<Activity> filteredActivities;
 
@@ -160,11 +153,9 @@ public class Preference extends BaseEqualable {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().appendSuper(super.hashCode())
-                .append(this.getResource())
-                .append(this.isEnableSubActivities())
-                .append(this.getResource()).append(this.getGranularity())
-                .append(this.getFilteredActivities()).toHashCode();
+        return new HashCodeBuilder().appendSuper(super.hashCode()).append(this.getResource())
+                .append(this.isEnableSubActivities()).append(this.getResource())
+                .append(this.getGranularity()).append(this.getFilteredActivities()).toHashCode();
     }
 
     @Override
@@ -172,14 +163,11 @@ public class Preference extends BaseEqualable {
         Boolean status = this.equalsConsideringTechnicalLogic(obj);
         if (status == null) {
             final Preference pref = (Preference) obj;
-            status = new EqualsBuilder()
-                    .appendSuper(this.equals(obj))
+            status = new EqualsBuilder().appendSuper(this.equals(obj))
                     .append(this.getResource(), pref.getResource())
-                    .append(this.isEnableSubActivities(),
-                            pref.isEnableSubActivities())
+                    .append(this.isEnableSubActivities(), pref.isEnableSubActivities())
                     .append(this.getGranularity(), pref.getGranularity())
-                    .append(this.getFilteredActivities(),
-                            pref.getFilteredActivities()).isEquals();
+                    .append(this.getFilteredActivities(), pref.getFilteredActivities()).isEquals();
         }
         return status;
     }

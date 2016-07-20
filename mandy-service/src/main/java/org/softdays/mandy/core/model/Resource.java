@@ -26,6 +26,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -71,16 +72,16 @@ public class Resource extends BaseIdentifiable {
     /**
      * Identifiant LDAP.
      */
-    @Column(nullable = false, length = CoreConstants.DB_UID_LENGTH)
+    @Column(name = "UID", nullable = false, length = CoreConstants.DB_UID_LENGTH)
     private String uid;
 
-    @Column(nullable = false, length = CoreConstants.DB_NAME_LENGTH)
+    @Column(name = "LAST_NAME", nullable = false, length = CoreConstants.DB_NAME_LENGTH)
     private String lastName;
 
-    @Column(nullable = false, length = CoreConstants.DB_NAME_LENGTH)
+    @Column(name = "FIRST_NAME", nullable = false, length = CoreConstants.DB_NAME_LENGTH)
     private String firstName;
 
-    @Column(columnDefinition = "varchar(25) not null default 'ROLE_USER'")
+    @Column(name = "ROLE", columnDefinition = "varchar(25) not null default 'ROLE_USER'")
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -88,13 +89,10 @@ public class Resource extends BaseIdentifiable {
     private Set<Imputation> imputations;
 
     @ManyToMany
-    @JoinTable(name = "TEAM_RESOURCE", joinColumns = { @JoinColumn(
-            name = "RESOURCE_ID") }, inverseJoinColumns = { @JoinColumn(
-            name = "TEAM_ID") })
-    @org.hibernate.annotations.ForeignKey(
-            name = "FK__TEAM_RESOURCE__RESOURCE",
-            inverseName = "FK__TEAM_RESOURCE__TEAM")
-    // for hbm2ddl
+    @JoinTable(name = "TEAM_RESOURCE", joinColumns = { @JoinColumn(name = "RESOURCE_ID") },
+            inverseJoinColumns = { @JoinColumn(name = "TEAM_ID") },
+            foreignKey = @ForeignKey(name = "FK__TEAM_RESOURCE__RESOURCE"),
+            inverseForeignKey = @ForeignKey(name = "FK__TEAM_RESOURCE__TEAM"))
     private Set<Team> teams;
 
     /**
@@ -114,8 +112,7 @@ public class Resource extends BaseIdentifiable {
      * @param firstname
      *            the firstname
      */
-    public Resource(final String uid, final String lastname,
-            final String firstname) {
+    public Resource(final String uid, final String lastname, final String firstname) {
         this();
         this.uid = uid;
         this.lastName = lastname;
@@ -243,9 +240,8 @@ public class Resource extends BaseIdentifiable {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().appendSuper(super.hashCode())
-                .append(this.getUid()).append(this.getLastName())
-                .append(this.getFirstName()).append(this.getRole())
+        return new HashCodeBuilder().appendSuper(super.hashCode()).append(this.getUid())
+                .append(this.getLastName()).append(this.getFirstName()).append(this.getRole())
                 .toHashCode();
     }
 
@@ -255,12 +251,11 @@ public class Resource extends BaseIdentifiable {
         if (status == null) {
             final Resource rhs = (Resource) obj;
 
-            status =
-                    new EqualsBuilder().appendSuper(this.equals(obj))
-                            .append(this.getUid(), rhs.getUid())
-                            .append(this.getLastName(), rhs.getLastName())
-                            .append(this.getFirstName(), rhs.getFirstName())
-                            .append(this.getRole(), rhs.getRole()).isEquals();
+            status = new EqualsBuilder().appendSuper(this.equals(obj))
+                    .append(this.getUid(), rhs.getUid())
+                    .append(this.getLastName(), rhs.getLastName())
+                    .append(this.getFirstName(), rhs.getFirstName())
+                    .append(this.getRole(), rhs.getRole()).isEquals();
         }
         return status;
     }

@@ -20,7 +20,9 @@
  */
 package org.softdays.mandy.core;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
@@ -40,7 +42,8 @@ public class BaseIdentifiable extends BaseEqualable implements Identifiable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
     /**
@@ -72,8 +75,8 @@ public class BaseIdentifiable extends BaseEqualable implements Identifiable {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().appendSuper(super.hashCode())
-                .append(this.getId()).toHashCode();
+        return new HashCodeBuilder().appendSuper(super.hashCode()).append(this.getId())
+                .toHashCode();
     }
 
     @Override
@@ -81,9 +84,7 @@ public class BaseIdentifiable extends BaseEqualable implements Identifiable {
         Boolean status = this.equalsConsideringTechnicalLogic(obj);
         if (status == null) {
             final Identifiable other = (Identifiable) obj;
-            status =
-                    new EqualsBuilder().append(this.getId(), other.getId())
-                            .isEquals();
+            status = new EqualsBuilder().append(this.getId(), other.getId()).isEquals();
         }
         return status;
     }

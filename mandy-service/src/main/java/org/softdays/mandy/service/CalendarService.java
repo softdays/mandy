@@ -21,7 +21,8 @@
 
 package org.softdays.mandy.service;
 
-import org.joda.time.DateTime;
+import java.time.LocalDate;
+
 import org.softdays.mandy.dto.calendar.DataGridDto;
 
 /**
@@ -39,7 +40,7 @@ public interface CalendarService {
      *            the given date
      * @return the data grid of the month
      */
-    DataGridDto getDataGridOfTheMonth(DateTime givenDate);
+    DataGridDto getDataGridOfTheMonth(LocalDate givenDate);
 
     /**
      * Returns the first monday of the month to which belongs the given date.
@@ -48,7 +49,7 @@ public interface CalendarService {
      *            the given date
      * @return the first monday of month
      */
-    DateTime getFirstMondayOfMonth(DateTime givenDate);
+    LocalDate getFirstMondayOfMonth(LocalDate givenDate);
 
     /**
      * Returns the first sunday after the end of the month to which belongs the
@@ -58,7 +59,7 @@ public interface CalendarService {
      *            the given date
      * @return the first sunday after end of month
      */
-    DateTime getFirstSundayAfterEndOfMonth(DateTime givenDate);
+    LocalDate getFirstSundayAfterEndOfMonth(LocalDate givenDate);
 
     /**
      * Returns the first day of the given month of the given year.
@@ -69,6 +70,6 @@ public interface CalendarService {
      *            A string denoting a month (format = MM)
      * @return A Date.
      */
-    DateTime getFirstDayOfTheMonth(String year, String month);
+    LocalDate getFirstDayOfTheMonth(String year, String month);
 
 }

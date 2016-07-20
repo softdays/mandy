@@ -22,6 +22,8 @@ package org.softdays.mandy.service.support;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -30,9 +32,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.softdays.mandy.core.exception.UnrecoverableException;
 import org.softdays.mandy.service.SchoolHolidayService;
 import org.springframework.stereotype.Service;
@@ -62,10 +61,9 @@ public class SchoolHolidayServiceImpl implements SchoolHolidayService {
 
     private static final String ATTR_LIBELLE = "libelle";
 
-    private Collection<DateTime> schoolHolidays;
+    private Collection<LocalDate> schoolHolidays;
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormat
-            .forPattern("yyyy/MM/dd");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
     /**
      * Instantiates a new school holiday service impl.
@@ -74,8 +72,8 @@ public class SchoolHolidayServiceImpl implements SchoolHolidayService {
         super();
         try {
             this.init();
-        } catch (FactoryConfigurationError | ParserConfigurationException
-                | SAXException | IOException e) {
+        } catch (FactoryConfigurationError | ParserConfigurationException | SAXException
+                | IOException e) {
             throw new UnrecoverableException(e);
         }
     }
@@ -91,9 +89,9 @@ public class SchoolHolidayServiceImpl implements SchoolHolidayService {
      * @throws Exception
      *             the exception
      */
-    private void init() throws FactoryConfigurationError,
-            ParserConfigurationException, SAXException, IOException {
-        this.schoolHolidays = new HashSet<DateTime>();
+    private void init() throws FactoryConfigurationError, ParserConfigurationException,
+            SAXException, IOException {
+        this.schoolHolidays = new HashSet<>();
         final Document doc = this.createDocument();
 
         // optional, but recommended
@@ -105,14 +103,13 @@ public class SchoolHolidayServiceImpl implements SchoolHolidayService {
         for (int i = 0; i < zones.getLength(); ++i) {
             final Element zone = (Element) zones.item(i);
             if ("A".equals(zone.getAttribute(ATTR_LIBELLE))) {
-                final NodeList vacances = zone
-                        .getElementsByTagName(TAG_VACANCES);
+                final NodeList vacances = zone.getElementsByTagName(TAG_VACANCES);
                 for (int j = 0; j < vacances.getLength(); ++j) {
                     final Element vacance = (Element) vacances.item(j);
                     final String debut = vacance.getAttribute(ATTR_DEBUT);
                     final String fin = vacance.getAttribute(ATTR_FIN);
-                    final DateTime start = FORMATTER.parseDateTime(debut);
-                    final DateTime end = FORMATTER.parseDateTime(fin);
+                    final LocalDate start = LocalDate.parse(debut, FORMATTER);
+                    final LocalDate end = LocalDate.parse(fin, FORMATTER);
                     this.addRange(start, end);
                 }
             }
@@ -122,12 +119,9 @@ public class SchoolHolidayServiceImpl implements SchoolHolidayService {
 
     private Document createDocument() throws FactoryConfigurationError,
             ParserConfigurationException, SAXException, IOException {
-        final ClassLoader classLoader = Thread.currentThread()
-                .getContextClassLoader();
-        final InputStream input = classLoader
-                .getResourceAsStream(XML_DATASOURCE);
-        final DocumentBuilderFactory dbFactory = DocumentBuilderFactory
-                .newInstance();
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        final InputStream input = classLoader.getResourceAsStream(XML_DATASOURCE);
+        final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
         return dBuilder.parse(input);
@@ -136,8 +130,8 @@ public class SchoolHolidayServiceImpl implements SchoolHolidayService {
     /**
      * Il ne faut pas inclure les bornes.
      */
-    private void addRange(final DateTime start, final DateTime end) {
-        DateTime date = start.plusDays(1); // J+1
+    private void addRange(final LocalDate start, final LocalDate end) {
+        LocalDate date = start.plusDays(1); // J+1
         while (!date.equals(end)) {
             this.schoolHolidays.add(date);
             date = date.plusDays(1);
@@ -152,7 +146,7 @@ public class SchoolHolidayServiceImpl implements SchoolHolidayService {
      * util.Date)
      */
     @Override
-    public boolean isSchoolHoliday(final DateTime givenDate) {
+    public boolean isSchoolHoliday(final LocalDate givenDate) {
 
         return this.schoolHolidays.contains(givenDate);
     }

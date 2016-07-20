@@ -24,14 +24,15 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.hibernate.annotations.NaturalId;
 import org.softdays.mandy.core.BaseIdentifiable;
 import org.softdays.mandy.core.CoreConstants;
 
@@ -42,26 +43,23 @@ import org.softdays.mandy.core.CoreConstants;
  * @since 1.0.0
  */
 @Entity
-@Table(name = "TEAM")
+@Table(name = "TEAM",
+        uniqueConstraints = @UniqueConstraint(columnNames = { "CODE", "LABEL" }, name = "UK__TEAM"))
 public class Team extends BaseIdentifiable {
 
     private static final long serialVersionUID = 1L;
 
-    @NaturalId(mutable = true)
-    @Column(nullable = false, length = CoreConstants.DB_SHORT_LABEL_LENGTH)
+    @Column(name = "CODE", nullable = false, length = CoreConstants.DB_SHORT_LABEL_LENGTH)
     private String code;
 
-    @NaturalId(mutable = true)
-    @Column(nullable = false, length = CoreConstants.DB_LONG_LABEL_LENGTH)
+    @Column(name = "LABEL", nullable = false, length = CoreConstants.DB_LONG_LABEL_LENGTH)
     private String label;
 
     @ManyToMany
-    @JoinTable(name = "ACTIVITY_TEAM", joinColumns = { @JoinColumn(
-            name = "TEAM_ID") }, inverseJoinColumns = { @JoinColumn(
-            name = "ACTIVITY_ID") })
-    @org.hibernate.annotations.ForeignKey(
-            name = "FK__ACTIVITY_TEAM__TEAM",
-            inverseName = "FK__ACTIVITY_TEAM__ACTIVITY")
+    @JoinTable(name = "ACTIVITY_TEAM", joinColumns = { @JoinColumn(name = "TEAM_ID") },
+            inverseJoinColumns = { @JoinColumn(name = "ACTIVITY_ID") },
+            foreignKey = @ForeignKey(name = "FK__ACTIVITY_TEAM__TEAM"),
+            inverseForeignKey = @ForeignKey(name = "FK__ACTIVITY_TEAM__ACTIVITY"))
     private Set<Activity> activities;
 
     @ManyToMany(mappedBy = "teams")
@@ -152,8 +150,8 @@ public class Team extends BaseIdentifiable {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().appendSuper(super.hashCode())
-                .append(this.getCode()).append(this.getLabel()).toHashCode();
+        return new HashCodeBuilder().appendSuper(super.hashCode()).append(this.getCode())
+                .append(this.getLabel()).toHashCode();
     }
 
     @Override
@@ -162,10 +160,9 @@ public class Team extends BaseIdentifiable {
         if (status == null) {
             final Team rhs = (Team) obj;
 
-            status =
-                    new EqualsBuilder().appendSuper(this.equals(obj))
-                            .append(this.getCode(), rhs.getCode())
-                            .append(this.getLabel(), rhs.getLabel()).isEquals();
+            status = new EqualsBuilder().appendSuper(this.equals(obj))
+                    .append(this.getCode(), rhs.getCode()).append(this.getLabel(), rhs.getLabel())
+                    .isEquals();
         }
         return status;
     }

@@ -22,9 +22,17 @@ package org.softdays.mandy.service.support;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.softdays.mandy.core.exception.UnrecoverableException;
+import org.softdays.mandy.service.BankHolidayService;
+import org.springframework.stereotype.Service;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
@@ -32,15 +40,6 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Property;
-
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.softdays.mandy.core.exception.UnrecoverableException;
-import org.softdays.mandy.service.BankHolidayService;
-import org.springframework.stereotype.Service;
 
 /**
  * The Class BankHolidayServiceImpl.
@@ -51,14 +50,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class BankHolidayServiceImpl implements BankHolidayService {
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(BankHolidayServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BankHolidayServiceImpl.class);
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormat
-            .forPattern("yyyyMMdd");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-    private final Map<DateTime, String> bankHolidays =
-            new ConcurrentHashMap<>();
+    private final Map<LocalDate, String> bankHolidays = new ConcurrentHashMap<>();
 
     /**
      * Instantiates a new bank holiday service impl.
@@ -82,10 +78,8 @@ public class BankHolidayServiceImpl implements BankHolidayService {
      */
     private void init() throws IOException, ParserException {
         final long start = System.currentTimeMillis();
-        final ClassLoader classLoader =
-                Thread.currentThread().getContextClassLoader();
-        final InputStream ics =
-                classLoader.getResourceAsStream("holidays/basic.ics");
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        final InputStream ics = classLoader.getResourceAsStream("holidays/basic.ics");
         final CalendarBuilder builder = new CalendarBuilder();
         final Calendar calendar = builder.build(ics);
 
@@ -96,7 +90,7 @@ public class BankHolidayServiceImpl implements BankHolidayService {
             final Component component = (Component) iterator.next();
             final Property dstart = component.getProperty("DTSTART");
             final Property summary = component.getProperty("SUMMARY");
-            final DateTime date = FORMATTER.parseDateTime(dstart.getValue());
+            final LocalDate date = LocalDate.parse(dstart.getValue(), FORMATTER);
             this.bankHolidays.put(date, summary.getValue());
         }
         if (LOGGER.isTraceEnabled()) {
@@ -113,7 +107,7 @@ public class BankHolidayServiceImpl implements BankHolidayService {
      * .util.Date)
      */
     @Override
-    public String getBankHolidaySummary(final DateTime givenDate) {
+    public String getBankHolidaySummary(final LocalDate givenDate) {
         return this.bankHolidays.get(givenDate);
     }
 

@@ -20,18 +20,19 @@
  */
 package org.softdays.mandy.core.converter;
 
-import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
+import org.softdays.commons.jpa.converter.BaseEnumConverter;
 import org.softdays.mandy.core.model.ActivityType;
 
 /**
- * This converter will be automatically scanned by JPA
+ * This converter will be automatically scanned by JPA.
  * 
  * @author repatriarche
  * 
  * @since 1.3.0
  */
 @Converter(autoApply = true)
-public class ActivityTypeConverter extends BaseEnumConverter<ActivityType> implements
-        AttributeConverter<ActivityType, Character> {}
+public class ActivityTypeConverter extends BaseEnumConverter<ActivityType, Character> {
+
+}

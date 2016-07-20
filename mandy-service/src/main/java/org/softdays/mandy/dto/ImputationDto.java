@@ -20,10 +20,7 @@
  */
 package org.softdays.mandy.dto;
 
-import java.util.Date;
-
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.softdays.mandy.web.serializer.JsonDateSerializer;
+import java.time.LocalDate;
 
 /**
  * Created by rpatriarche on 02/03/14.
@@ -39,8 +36,7 @@ public class ImputationDto {
 
     private Long resourceId;
 
-    @JsonSerialize(using = JsonDateSerializer.class)
-    private Date date;
+    private LocalDate date;
 
     private Float quota;
 
@@ -67,12 +63,12 @@ public class ImputationDto {
      * @param comment
      *            the comment
      */
-    public ImputationDto(final Long activityId, final Long resourceId,
-            final Date date, final Float quota, final String comment) {
+    public ImputationDto(final Long activityId, final Long resourceId, final LocalDate date,
+                         final Float quota, final String comment) {
         super();
         this.activityId = activityId;
         this.resourceId = resourceId;
-        this.date = (Date) date.clone();
+        this.date = date;
         this.quota = quota;
         this.comment = comment;
     }
@@ -139,8 +135,8 @@ public class ImputationDto {
      * 
      * @return the date
      */
-    public Date getDate() {
-        return (Date) this.date.clone();
+    public LocalDate getDate() {
+        return date;
     }
 
     /**
@@ -149,8 +145,8 @@ public class ImputationDto {
      * @param date
      *            the new date
      */
-    public void setDate(final Date date) {
-        this.date = (Date) date.clone();
+    public void setDate(final LocalDate date) {
+        this.date = date;
     }
 
     /**

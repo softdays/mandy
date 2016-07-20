@@ -20,16 +20,19 @@
  */
 package org.softdays.mandy.dto.calendar;
 
+import java.time.LocalDate;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
-import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonManagedReference;
-import org.codehaus.jackson.annotate.JsonPropertyOrder;
-import org.joda.time.DateTime;
 import org.softdays.mandy.dto.calendar.DayDto.Status;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * The Class WeekDto.
@@ -53,7 +56,7 @@ public class WeekDto {
      */
     public WeekDto() {
         super();
-        this.days = new ArrayList<DayDto>();
+        this.days = new ArrayList<>();
     }
 
     /**
@@ -73,7 +76,8 @@ public class WeekDto {
      * @return the num
      */
     public int getNum() {
-        return new DateTime(this.days.get(0).getDate()).getWeekOfWeekyear();
+        WeekFields weekFields = WeekFields.of(Locale.FRENCH);
+        return this.days.get(0).getDate().get(weekFields.weekOfWeekBasedYear());
     }
 
     /**
@@ -113,11 +117,11 @@ public class WeekDto {
      *            the status
      * @return the day dto
      */
-    public DayDto createDay(final DateTime date, final Status status) {
+    public DayDto createDay(final LocalDate date, final Status status) {
         if (this.isCompleted()) {
             throw new IllegalStateException("This week is already completed.");
         }
-        final DayDto day = new DayDto(this, date.toDate(), status);
+        final DayDto day = new DayDto(this, date, status);
         this.days.add(day);
 
         return day;

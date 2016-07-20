@@ -1,27 +1,29 @@
 package org.softdays.mandy.dto.converter;
 
 import org.dozer.DozerConverter;
-import org.softdays.mandy.core.PersistentEnum;
-import org.softdays.mandy.core.converter.EnumConverterUtil;
+import org.softdays.commons.jpa.converter.EnumConverterUtil;
+import org.softdays.commons.jpa.converter.GenericPersistentEnum;
 
-public class PersistentEnumToCharConverter extends DozerConverter<PersistentEnum, Character> {
+@SuppressWarnings("rawtypes")
+public class PersistentEnumToCharConverter
+        extends DozerConverter<GenericPersistentEnum, Character> {
 
     public PersistentEnumToCharConverter() {
-        super(PersistentEnum.class, Character.class);
+        super(GenericPersistentEnum.class, Character.class);
     }
 
     @Override
-    public Character convertTo(final PersistentEnum source, final Character destination) {
-        return source.getId();
+    public Character convertTo(final GenericPersistentEnum source, final Character destination) {
+        return (Character) source.getPk();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public PersistentEnum convertFrom(final Character source, final PersistentEnum destination) {
-        return EnumConverterUtil.valueOf(determineClass(), source);
+    public GenericPersistentEnum convertFrom(final Character source,
+            final GenericPersistentEnum destination) {
+        return (GenericPersistentEnum) EnumConverterUtil.valueOf(determineClass(), source);
     }
 
-    @SuppressWarnings("rawtypes")
     private Class determineClass() {
         try {
             return Class.forName(this.getParameter());

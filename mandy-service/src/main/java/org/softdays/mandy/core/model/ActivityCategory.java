@@ -22,6 +22,8 @@ package org.softdays.mandy.core.model;
 
 import org.softdays.commons.jpa.converter.GenericPersistentEnum;
 
+import lombok.Getter;
+
 /**
  * Activity categories.
  * 
@@ -29,6 +31,7 @@ import org.softdays.commons.jpa.converter.GenericPersistentEnum;
  * 
  * @since 1.3.0
  */
+@Getter
 public enum ActivityCategory implements GenericPersistentEnum<Character> {
 
     PROJECT('P', "Project"),
@@ -50,30 +53,6 @@ public enum ActivityCategory implements GenericPersistentEnum<Character> {
     ActivityCategory(final Character pk, final String desc) {
         this.pk = pk;
         this.description = desc;
-    }
-
-    /**
-     * /**
-     * Gets the name.
-     * 
-     * @return the name
-     */
-    public String getName() {
-        return this.name();
-    }
-
-    /**
-     * Gets the description.
-     * 
-     * @return the description
-     */
-    public String getDescription() {
-        return this.description;
-    }
-
-    @Override
-    public Character getPk() {
-        return this.pk;
     }
 
     public static ActivityCategory fromCode(final Character code) {

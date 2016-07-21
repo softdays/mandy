@@ -36,6 +36,10 @@ import org.hibernate.annotations.Type;
 import org.softdays.mandy.core.BaseIdentifiable;
 import org.softdays.mandy.core.CoreConstants;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * Une imputation permet de tracer la charge des ressources sur les activités.
  * Contrainte unique : une seule imputation possible pour une activité, une
@@ -44,6 +48,9 @@ import org.softdays.mandy.core.CoreConstants;
  * @author rpatriarche
  * @since 1.0.0
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "IMPUTATION", uniqueConstraints = @UniqueConstraint(
         columnNames = { "ACTIVITY_ID", "RESOURCE_ID", "DATE" }, name = "UK__IMPUTATION"))
@@ -74,13 +81,6 @@ public class Imputation extends BaseIdentifiable {
 
     /**
      * Instantiates a new imputation.
-     */
-    public Imputation() {
-        super();
-    }
-
-    /**
-     * Instantiates a new imputation.
      * 
      * @param imputationId
      *            the imputation id
@@ -88,101 +88,6 @@ public class Imputation extends BaseIdentifiable {
     public Imputation(final Long imputationId) {
         this();
         this.setId(imputationId);
-    }
-
-    /**
-     * Gets the activity.
-     * 
-     * @return the activity
-     */
-    public Activity getActivity() {
-        return this.activity;
-    }
-
-    /**
-     * Sets the activity.
-     * 
-     * @param activity
-     *            the new activity
-     */
-    public void setActivity(final Activity activity) {
-        this.activity = activity;
-    }
-
-    /**
-     * Gets the date.
-     * 
-     * @return the date
-     */
-    public LocalDate getDate() {
-        return this.date;
-    }
-
-    /**
-     * Sets the date.
-     * 
-     * @param date
-     *            the new date
-     */
-    public void setDate(final LocalDate date) {
-        this.date = date;
-    }
-
-    /**
-     * Gets the resource.
-     * 
-     * @return the resource
-     */
-    public Resource getResource() {
-        return this.resource;
-    }
-
-    /**
-     * Sets the resource.
-     * 
-     * @param resource
-     *            the new resource
-     */
-    public void setResource(final Resource resource) {
-        this.resource = resource;
-    }
-
-    /**
-     * Gets the quota.
-     * 
-     * @return the quota
-     */
-    public Float getQuota() {
-        return this.quota;
-    }
-
-    /**
-     * Sets the quota.
-     * 
-     * @param quota
-     *            the new quota
-     */
-    public void setQuota(final Float quota) {
-        this.quota = quota;
-    }
-
-    /**
-     * Gets the comment.
-     * 
-     * @return the comment
-     */
-    public String getComment() {
-        return this.comment;
-    }
-
-    /**
-     * Sets the comment.
-     * 
-     * @param comment
-     *            the new comment
-     */
-    public void setComment(final String comment) {
-        this.comment = comment;
     }
 
     @Override

@@ -22,12 +22,19 @@ package org.softdays.mandy.dto;
 
 import java.time.LocalDate;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * Created by rpatriarche on 02/03/14.
  * 
  * @author rpatriarche
  * @since 1.0.0
  */
+@Getter
+@Setter
+@NoArgsConstructor
 public class ImputationDto {
 
     private Long imputationId;
@@ -41,13 +48,6 @@ public class ImputationDto {
     private Float quota;
 
     private String comment;
-
-    /**
-     * Instantiates a new imputation dto.
-     */
-    public ImputationDto() {
-        super();
-    }
 
     /**
      * Instantiates a new imputation dto.
@@ -70,120 +70,6 @@ public class ImputationDto {
         this.resourceId = resourceId;
         this.date = date;
         this.quota = quota;
-        this.comment = comment;
-    }
-
-    /**
-     * Gets the imputation id.
-     * 
-     * @return the imputation id
-     */
-    public Long getImputationId() {
-        return this.imputationId;
-    }
-
-    /**
-     * Sets the imputation id.
-     * 
-     * @param imputationId
-     *            the new imputation id
-     */
-    public void setImputationId(final Long imputationId) {
-        this.imputationId = imputationId;
-    }
-
-    /**
-     * Gets the activity id.
-     * 
-     * @return the activity id
-     */
-    public Long getActivityId() {
-        return this.activityId;
-    }
-
-    /**
-     * Sets the activity id.
-     * 
-     * @param activityId
-     *            the new activity id
-     */
-    public void setActivityId(final Long activityId) {
-        this.activityId = activityId;
-    }
-
-    /**
-     * Gets the resource id.
-     * 
-     * @return the resource id
-     */
-    public Long getResourceId() {
-        return this.resourceId;
-    }
-
-    /**
-     * Sets the resource id.
-     * 
-     * @param resourceId
-     *            the new resource id
-     */
-    public void setResourceId(final Long resourceId) {
-        this.resourceId = resourceId;
-    }
-
-    /**
-     * Gets the date.
-     * 
-     * @return the date
-     */
-    public LocalDate getDate() {
-        return date;
-    }
-
-    /**
-     * Sets the date.
-     * 
-     * @param date
-     *            the new date
-     */
-    public void setDate(final LocalDate date) {
-        this.date = date;
-    }
-
-    /**
-     * Gets the quota.
-     * 
-     * @return the quota
-     */
-    public Float getQuota() {
-        return this.quota;
-    }
-
-    /**
-     * Sets the quota.
-     * 
-     * @param quota
-     *            the new quota
-     */
-    public void setQuota(final Float quota) {
-        this.quota = quota;
-    }
-
-    /**
-     * Gets the comment.
-     * 
-     * @return the comment
-     */
-    public String getComment() {
-        return this.comment;
-    }
-
-    /**
-     * Sets the comment.
-     * 
-     * @param comment
-     *            the new comment
-     */
-    public void setComment(final String comment) {
         this.comment = comment;
     }
 }

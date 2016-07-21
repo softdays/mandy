@@ -40,6 +40,10 @@ import org.softdays.mandy.core.CoreConstants;
 import org.softdays.mandy.core.converter.ActivityCategoryConverter;
 import org.softdays.mandy.core.converter.ActivityTypeConverter;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * Represents the object of the imputation.
  * 
@@ -70,6 +74,9 @@ import org.softdays.mandy.core.converter.ActivityTypeConverter;
         uniqueConstraints = @UniqueConstraint(
                 columnNames = { "SHORT_LABEL", "LONG_LABEL", "CATEGORY", "TYPE", "POSITION" },
                 name = "UK__ACTIVITY"))
+@Getter
+@Setter
+@NoArgsConstructor
 public class Activity extends BaseIdentifiable {
 
     private static final long serialVersionUID = 1L;
@@ -108,13 +115,6 @@ public class Activity extends BaseIdentifiable {
             foreignKey = @ForeignKey(name = "FK__ACTIVITY__PARENT_ID"))
     private Activity parentActivity;
 
-    /**
-     * Instantiates a new activity.
-     */
-    public Activity() {
-        super();
-    }
-
     public Activity(final Long id) {
         this();
         this.setId(id);
@@ -122,130 +122,6 @@ public class Activity extends BaseIdentifiable {
 
     public Activity(final Activity parent) {
         super();
-        this.parentActivity = parent;
-    }
-
-    /**
-     * Gets the type.
-     * 
-     * @return the type
-     */
-    public ActivityCategory getCategory() {
-        return this.category;
-    }
-
-    public void setCategory(final ActivityCategory category) {
-        this.category = category;
-    }
-
-    public ActivityType getType() {
-        return type;
-    }
-
-    public void setType(final ActivityType type) {
-        this.type = type;
-    }
-
-    /**
-     * Gets the short label.
-     * 
-     * @return the short label
-     */
-    public String getShortLabel() {
-        return this.shortLabel;
-    }
-
-    /**
-     * Sets the short label.
-     * 
-     * @param shortLabel
-     *            the new short label
-     */
-    public void setShortLabel(final String shortLabel) {
-        this.shortLabel = shortLabel;
-    }
-
-    /**
-     * Gets the long label.
-     * 
-     * @return the long label
-     */
-    public String getLongLabel() {
-        return this.longLabel;
-    }
-
-    /**
-     * Sets the long label.
-     * 
-     * @param longLabel
-     *            the new long label
-     */
-    public void setLongLabel(final String longLabel) {
-        this.longLabel = longLabel;
-    }
-
-    /**
-     * Gets the position.
-     * 
-     * @return the position
-     */
-    public Integer getPosition() {
-        return this.position;
-    }
-
-    /**
-     * Sets the position.
-     * 
-     * @param position
-     *            the new position
-     */
-    public void setPosition(final Integer position) {
-        this.position = position;
-    }
-
-    /**
-     * Gets the imputations.
-     * 
-     * @return the imputations
-     */
-    public Set<Imputation> getImputations() {
-        return this.imputations;
-    }
-
-    /**
-     * Sets the imputations.
-     * 
-     * @param imputations
-     *            the new imputations
-     */
-    public void setImputations(final Set<Imputation> imputations) {
-        this.imputations = imputations;
-    }
-
-    /**
-     * Gets the teams.
-     * 
-     * @return the teams
-     */
-    public Set<Team> getTeams() {
-        return this.teams;
-    }
-
-    /**
-     * Sets the teams.
-     * 
-     * @param teams
-     *            the new teams
-     */
-    public void setTeams(final Set<Team> teams) {
-        this.teams = teams;
-    }
-
-    public Activity getParentActivity() {
-        return parentActivity;
-    }
-
-    public void setParentActivity(final Activity parent) {
         this.parentActivity = parent;
     }
 

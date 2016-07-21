@@ -2,6 +2,8 @@ package org.softdays.mandy.core.model;
 
 import org.softdays.commons.jpa.converter.GenericPersistentEnum;
 
+import lombok.Getter;
+
 /**
  * Describes activity types.
  * 
@@ -18,6 +20,7 @@ import org.softdays.commons.jpa.converter.GenericPersistentEnum;
  * @version 1.3.0
  *
  */
+@Getter
 public enum ActivityType implements GenericPersistentEnum<Character> {
 
     ANA('A', "Analysis/Design"),
@@ -47,30 +50,6 @@ public enum ActivityType implements GenericPersistentEnum<Character> {
     ActivityType(final Character pk, final String desc) {
         this.pk = pk;
         this.description = desc;
-    }
-
-    /**
-     * /**
-     * Gets the name.
-     * 
-     * @return the name
-     */
-    public String getName() {
-        return this.name();
-    }
-
-    /**
-     * Gets the description.
-     * 
-     * @return the description
-     */
-    public String getDescription() {
-        return this.description;
-    }
-
-    @Override
-    public Character getPk() {
-        return this.pk;
     }
 
     public static ActivityType fromCode(final Character code) {

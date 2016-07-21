@@ -38,12 +38,19 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.softdays.mandy.core.BaseIdentifiable;
 import org.softdays.mandy.core.CoreConstants;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * Représente une personne en capacité d'imputer sur des activités.
  * 
  * @author rpatriarche
  * @since 1.0.0
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "RESOURCE")
 public class Resource extends BaseIdentifiable {
@@ -97,13 +104,6 @@ public class Resource extends BaseIdentifiable {
 
     /**
      * Instantiates a new resource.
-     */
-    public Resource() {
-        super();
-    }
-
-    /**
-     * Instantiates a new resource.
      * 
      * @param uid
      *            the uid
@@ -122,120 +122,6 @@ public class Resource extends BaseIdentifiable {
 
     public Resource(final Long id) {
         this.setId(id);
-    }
-
-    /**
-     * Gets the uid.
-     * 
-     * @return the uid
-     */
-    public String getUid() {
-        return this.uid;
-    }
-
-    /**
-     * Sets the uid.
-     * 
-     * @param uid
-     *            the new uid
-     */
-    public void setUid(final String uid) {
-        this.uid = uid;
-    }
-
-    /**
-     * Gets the last name.
-     * 
-     * @return the last name
-     */
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    /**
-     * Sets the last name.
-     * 
-     * @param lastName
-     *            the new last name
-     */
-    public void setLastName(final String lastName) {
-        this.lastName = lastName;
-    }
-
-    /**
-     * Gets the first name.
-     * 
-     * @return the first name
-     */
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    /**
-     * Sets the first name.
-     * 
-     * @param firstName
-     *            the new first name
-     */
-    public void setFirstName(final String firstName) {
-        this.firstName = firstName;
-    }
-
-    /**
-     * Gets the role.
-     * 
-     * @return the role
-     */
-    public Role getRole() {
-        return this.role;
-    }
-
-    /**
-     * Sets the role.
-     * 
-     * @param role
-     *            the new role
-     */
-    public void setRole(final Role role) {
-        this.role = role;
-    }
-
-    /**
-     * Gets the teams.
-     * 
-     * @return the teams
-     */
-    public Set<Team> getTeams() {
-        return this.teams;
-    }
-
-    /**
-     * Sets the teams.
-     * 
-     * @param teams
-     *            the new teams
-     */
-    public void setTeams(final Set<Team> teams) {
-        this.teams = teams;
-    }
-
-    /**
-     * Gets the imputations.
-     * 
-     * @return the imputations
-     */
-    public Set<Imputation> getImputations() {
-        return this.imputations;
-    }
-
-    /**
-     * Sets the imputations.
-     * 
-     * @param imputations
-     *            the new imputations
-     */
-    public void setImputations(final Set<Imputation> imputations) {
-        this.imputations = imputations;
     }
 
     @Override

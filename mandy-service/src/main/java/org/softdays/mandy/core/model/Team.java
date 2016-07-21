@@ -36,12 +36,19 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.softdays.mandy.core.BaseIdentifiable;
 import org.softdays.mandy.core.CoreConstants;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * The Class Team.
  * 
  * @author rpatriarche
  * @since 1.0.0
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "TEAM",
         uniqueConstraints = @UniqueConstraint(columnNames = { "CODE", "LABEL" }, name = "UK__TEAM"))
@@ -64,89 +71,6 @@ public class Team extends BaseIdentifiable {
 
     @ManyToMany(mappedBy = "teams")
     private Set<Resource> resources;
-
-    /**
-     * Instantiates a new team.
-     */
-    public Team() {
-        super();
-    }
-
-    /**
-     * Gets the code.
-     * 
-     * @return the code
-     */
-    public String getCode() {
-        return this.code;
-    }
-
-    /**
-     * Sets the code.
-     * 
-     * @param code
-     *            the new code
-     */
-    public void setCode(final String code) {
-        this.code = code;
-    }
-
-    /**
-     * Gets the label.
-     * 
-     * @return the label
-     */
-    public String getLabel() {
-        return this.label;
-    }
-
-    /**
-     * Sets the label.
-     * 
-     * @param label
-     *            the new label
-     */
-    public void setLabel(final String label) {
-        this.label = label;
-    }
-
-    /**
-     * Gets the activities.
-     * 
-     * @return the activities
-     */
-    public Set<Activity> getActivities() {
-        return this.activities;
-    }
-
-    /**
-     * Sets the activities.
-     * 
-     * @param activities
-     *            the new activities
-     */
-    public void setActivities(final Set<Activity> activities) {
-        this.activities = activities;
-    }
-
-    /**
-     * Gets the resources.
-     * 
-     * @return the resources
-     */
-    public Set<Resource> getResources() {
-        return this.resources;
-    }
-
-    /**
-     * Sets the resources.
-     * 
-     * @param resources
-     *            the new resources
-     */
-    public void setResources(final Set<Resource> resources) {
-        this.resources = resources;
-    }
 
     @Override
     public int hashCode() {

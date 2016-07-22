@@ -3,6 +3,7 @@ package org.softdays.mandy.core.model;
 import org.softdays.commons.jpa.converter.GenericPersistentEnum;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Describes activity types.
@@ -37,8 +38,10 @@ public enum ActivityType implements GenericPersistentEnum<Character> {
 
     UNS('U', "Unspecified");
 
+    @Setter
     private Character pk;
 
+    @Setter
     private String description;
 
     /**

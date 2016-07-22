@@ -21,15 +21,15 @@
 package org.softdays.mandy.service.support;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.dozer.Mapper;
 import org.softdays.mandy.core.model.Activity;
 import org.softdays.mandy.core.model.ActivityCategory;
 import org.softdays.mandy.core.model.Resource;
 import org.softdays.mandy.dao.ActivityDao;
 import org.softdays.mandy.dto.ActivityDto;
+import org.softdays.mandy.dto.mapping.ActivityMapper;
 import org.softdays.mandy.service.ActivityService;
-import org.softdays.mandy.service.MapperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,10 +48,7 @@ public class ActivityServiceImpl implements ActivityService {
     private ActivityDao activityDao;
 
     @Autowired
-    private MapperService utilService;
-
-    @Autowired
-    private Mapper mapper;
+    private ActivityMapper activityMapper;
 
     /**
      * Instantiates a new activity service impl.
@@ -63,18 +60,20 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public List<ActivityDto> getActivities(final Long userId) {
 
-        return this.utilService.map(
-                this.activityDao.findByResource(new Resource(userId), ActivityCategory.PROJECT),
-                ActivityDto.class);
+        List<Activity> activities = this.activityDao.findByResource(new Resource(userId),
+                ActivityCategory.PROJECT);
+
+        return activities.stream().map(a -> this.activityMapper.map(a))
+                .collect(Collectors.toList());
     }
 
     @Override
     public ActivityDto createSubActivity(final ActivityDto activityDto) {
-        Activity newActivity = mapper.map(activityDto, Activity.class);
+        Activity newActivity = this.activityMapper.map(activityDto);
 
-        Integer maxPos = activityDao.findMaxPosition(activityDto.getParentActivityId());
+        Integer maxPos = this.activityDao.findMaxPosition(activityDto.getParentActivityId());
         newActivity.setPosition(++maxPos);
 
-        return mapper.map(activityDao.save(newActivity), ActivityDto.class);
+        return this.activityMapper.map(this.activityDao.save(newActivity));
     }
 }

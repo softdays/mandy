@@ -39,6 +39,10 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.softdays.mandy.core.BaseEqualable;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * The user preferences entity.
  * 
@@ -46,6 +50,9 @@ import org.softdays.mandy.core.BaseEqualable;
  * @since 1.1.0
  * 
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "PREFERENCE")
 public class Preference extends BaseEqualable {
@@ -99,56 +106,10 @@ public class Preference extends BaseEqualable {
     @OrderColumn(name = "ACTIVITY_ORDER")
     private List<Activity> filteredActivities;
 
-    public Preference() {
-        super();
-    }
-
     public Preference(final Resource resource) {
         this();
         this.setId(resource.getId());
         this.resource = resource;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(final Long id) {
-        this.id = id;
-        this.resource = id == null ? null : new Resource(id);
-    }
-
-    public Resource getResource() {
-        return this.resource;
-    }
-
-    public void setResource(final Resource resource) {
-        this.resource = resource;
-        this.id = resource == null ? null : resource.getId();
-    }
-
-    public Float getGranularity() {
-        return this.granularity;
-    }
-
-    public void setGranularity(final Float granularity) {
-        this.granularity = granularity;
-    }
-
-    public boolean isEnableSubActivities() {
-        return enableSubActivities;
-    }
-
-    public void setEnableSubActivities(final boolean status) {
-        this.enableSubActivities = status;
-    }
-
-    public List<Activity> getFilteredActivities() {
-        return this.filteredActivities;
-    }
-
-    public void setFilteredActivities(final List<Activity> filteredActivities) {
-        this.filteredActivities = filteredActivities;
     }
 
     @Override

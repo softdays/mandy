@@ -23,6 +23,7 @@ package org.softdays.mandy.core.model;
 import org.softdays.commons.jpa.converter.GenericPersistentEnum;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Activity categories.
@@ -40,8 +41,10 @@ public enum ActivityCategory implements GenericPersistentEnum<Character> {
 
     OTHER('O', "Other");
 
+    @Setter
     private Character pk;
 
+    @Setter
     private String description;
 
     /**

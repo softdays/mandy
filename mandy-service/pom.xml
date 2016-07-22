@@ -45,14 +45,6 @@
 			<artifactId>spring-data-jpa</artifactId>
 		</dependency>
 		<!-- Object mapping -->
-		<dependency>
-			<groupId>net.sf.dozer</groupId>
-			<artifactId>dozer</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.dozer</groupId>
-			<artifactId>dozer-spring</artifactId>
-		</dependency>
 		<!-- scope provided because the processor is only needed for the compiler -->
 		<dependency>
 			<groupId>fr.xebia.extras</groupId>
@@ -166,6 +158,7 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+
 		</plugins>
 	</build>
 </project>

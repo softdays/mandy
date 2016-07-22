@@ -20,13 +20,14 @@
  */
 package org.softdays.mandy.service.support;
 
-import org.dozer.Mapper;
 import org.softdays.mandy.core.model.Preference;
 import org.softdays.mandy.core.model.Resource;
 import org.softdays.mandy.dao.PreferencesDao;
 import org.softdays.mandy.dao.ResourceDao;
 import org.softdays.mandy.dto.PreferencesDto;
 import org.softdays.mandy.dto.ResourceDto;
+import org.softdays.mandy.dto.mapping.PreferenceMapper;
+import org.softdays.mandy.dto.mapping.ResourceMapper;
 import org.softdays.mandy.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,10 @@ public class ResourceServiceImpl implements ResourceService {
     private PreferencesDao preferencesDao;
 
     @Autowired
-    private Mapper mapper;
+    private ResourceMapper resourceMapper;
+
+    @Autowired
+    private PreferenceMapper preferenceMapper;
 
     /**
      * Instantiates a new resource service impl.
@@ -67,7 +71,7 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public ResourceDto findByUid(final String uid) {
         final Resource res = this.resourceDao.findOneByUid(uid);
-        return res == null ? null : this.mapper.map(res, ResourceDto.class);
+        return res == null ? null : this.resourceMapper.map(res);
     }
 
     /*
@@ -77,14 +81,12 @@ public class ResourceServiceImpl implements ResourceService {
      * java.lang.String, java.lang.String)
      */
     @Override
-    public ResourceDto create(final String uid, final String lastname,
-                              final String firstname) {
-        final Resource res =
-                this.resourceDao.save(new Resource(uid, lastname, firstname));
+    public ResourceDto create(final String uid, final String lastname, final String firstname) {
+        final Resource res = this.resourceDao.save(new Resource(uid, lastname, firstname));
 
         this.preferencesDao.save(new Preference(res));
 
-        return this.mapper.map(res, ResourceDto.class);
+        return this.resourceMapper.map(res);
     }
 
     /*
@@ -103,7 +105,7 @@ public class ResourceServiceImpl implements ResourceService {
             // initialize with default business values
             dto = new PreferencesDto();
         } else {
-            dto = this.mapper.map(preferences, PreferencesDto.class);
+            dto = this.preferenceMapper.asDto(preferences);
         }
 
         return dto;
@@ -111,10 +113,8 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public PreferencesDto updateResourcePreferences(final PreferencesDto preferencesDto) {
-        final Preference preferences =
-                this.mapper.map(preferencesDto, Preference.class);
-        return this.mapper.map(this.preferencesDao.save(preferences),
-                PreferencesDto.class);
+        final Preference preferences = this.preferenceMapper.asEntity(preferencesDto);
+        return this.preferenceMapper.asDto(this.preferencesDao.save(preferences));
     }
 
 }

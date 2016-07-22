@@ -26,10 +26,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.dozer.Mapper;
 import org.softdays.mandy.core.model.Imputation;
 import org.softdays.mandy.dao.ImputationDao;
 import org.softdays.mandy.dto.ImputationDto;
+import org.softdays.mandy.dto.mapping.ImputationMapper;
 import org.softdays.mandy.service.CalendarService;
 import org.softdays.mandy.service.ImputationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,7 @@ public class ImputationServiceImpl implements ImputationService {
     private CalendarService calendarService;
 
     @Autowired
-    private Mapper mapper;
+    private ImputationMapper imputationMapper;
 
     /**
      * Instantiates a new imputation service impl.
@@ -83,7 +83,7 @@ public class ImputationServiceImpl implements ImputationService {
         // ventiler les imputations pour obtenir des lignes
         for (final Imputation imputation : imputations) {
             final Long activityId = imputation.getActivity().getId();
-            final ImputationDto imputationDto = this.mapper.map(imputation, ImputationDto.class);
+            final ImputationDto imputationDto = this.imputationMapper.map(imputation);
             if (!results.containsKey(activityId)) {
                 results.put(activityId, new ArrayList<ImputationDto>());
             }
@@ -104,9 +104,9 @@ public class ImputationServiceImpl implements ImputationService {
      */
     @Override
     public ImputationDto createImputation(final ImputationDto newImputation) {
-        final Imputation entity = this.mapper.map(newImputation, Imputation.class);
+        final Imputation entity = this.imputationMapper.map(newImputation);
         final Imputation imputation = this.imputationDao.save(entity);
-        return this.mapper.map(imputation, ImputationDto.class);
+        return this.imputationMapper.map(imputation);
     }
 
     /*
@@ -127,7 +127,7 @@ public class ImputationServiceImpl implements ImputationService {
         imputation.setQuota(imputationDto.getQuota());
         imputation.setComment(imputationDto.getComment());
         // dirty checking will do the trick
-        return this.mapper.map(imputation, ImputationDto.class);
+        return this.imputationMapper.map(imputation);
     }
 
     /*

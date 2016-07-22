@@ -55,17 +55,28 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.1</version>
+					<version>3.5.1</version>
 					<configuration>
 						<encoding>UTF-8</encoding>
 						<source>1.8</source>
 						<target>1.8</target>
 						<compilerVersion>1.8</compilerVersion>
+						<showWarnings>true</showWarnings>
+						<optimize>true</optimize>
+						<showDeprecation>true</showDeprecation>
 					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<!-- <annotationProcessors> <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor</annotationProcessor> 
+						</annotationProcessors> -->
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
@@ -91,6 +102,63 @@
 					<generateBackupPoms>false</generateBackupPoms>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok-maven-plugin</artifactId>
+				<executions>
+					<!-- Eclipse: add m2eConnector 'Maven Integration for Eclipse JDT APT' -->
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>delombok</goal>
+						</goals>
+						<configuration>
+							<sourceDirectory>src/main/java</sourceDirectory>
+							<addOutputDirectory>false</addOutputDirectory>
+							<outputDirectory>${project.build.directory}/delombok</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>com.sun</groupId>
+						<artifactId>tools</artifactId>
+						<version>1.8.0</version>
+						<scope>system</scope>
+						<systemPath>${env.JAVA_HOME}/lib/tools.jar</systemPath>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+			<plugin>
+				<groupId>org.bsc.maven</groupId>
+				<artifactId>maven-processor-plugin</artifactId>
+				<version>2.2.4</version>
+				<configuration>
+					<processors>
+						<processor>fr.xebia.extras.selma.codegen.MapperProcessor</processor>
+					</processors>
+					<sourceDirectory>${project.build.directory}/delombok</sourceDirectory>
+					<defaultOutputDirectory>${project.build.directory}/generated-sources/annotations</defaultOutputDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>process</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>process</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>fr.xebia.extras</groupId>
+						<artifactId>selma-processor</artifactId>
+						<version>${selma.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
 		</plugins>
 	</build>
 

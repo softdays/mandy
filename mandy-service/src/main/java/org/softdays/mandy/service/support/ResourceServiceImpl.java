@@ -105,7 +105,7 @@ public class ResourceServiceImpl implements ResourceService {
             // initialize with default business values
             dto = new PreferencesDto();
         } else {
-            dto = this.preferenceMapper.asDto(preferences);
+            dto = this.preferenceMapper.map(preferences);
         }
 
         return dto;
@@ -113,8 +113,8 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public PreferencesDto updateResourcePreferences(final PreferencesDto preferencesDto) {
-        final Preference preferences = this.preferenceMapper.asEntity(preferencesDto);
-        return this.preferenceMapper.asDto(this.preferencesDao.save(preferences));
+        final Preference preferences = this.preferenceMapper.map(preferencesDto);
+        return this.preferenceMapper.map(this.preferencesDao.save(preferences));
     }
 
 }

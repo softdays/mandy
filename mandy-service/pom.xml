@@ -44,17 +44,10 @@
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
 		</dependency>
-		<!-- Object mapping -->
-		<!-- scope provided because the processor is only needed for the compiler -->
+		<!-- Object mapping with Mapstruct -->
 		<dependency>
-			<groupId>fr.xebia.extras</groupId>
-			<artifactId>selma-processor</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- This is the only real dependency you will have in your binaries -->
-		<dependency>
-			<groupId>fr.xebia.extras</groupId>
-			<artifactId>selma</artifactId>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-jdk8</artifactId>
 		</dependency>
 		<!-- Pour disposer des annotations @JsonManagedReference, @JsonIgnore -->
 		<dependency>
@@ -158,7 +151,6 @@
 					</dependency>
 				</dependencies>
 			</plugin>
-
 		</plugins>
 	</build>
 </project>

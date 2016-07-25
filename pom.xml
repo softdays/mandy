@@ -42,6 +42,28 @@
 		<module>mandy-webapp</module>
 	</modules>
 
+	<properties>
+		<!-- build properties -->
+		<context.root>mandy</context.root>
+		<log.output.file>./logs/mandy.log</log.output.file>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- frameworks versions -->
+		<servlet.version>3.0.1</servlet.version>
+		<org.springframework.version>4.3.1.RELEASE</org.springframework.version>
+		<org.springframework.security.version>4.1.1.RELEASE</org.springframework.security.version>
+		<org.springframework.data.version>1.10.2.RELEASE</org.springframework.data.version>
+		<!-- Hibernate 4.3.9 or > see https://hibernate.atlassian.net/browse/HHH-8866 -->
+		<hibernate.version>5.2.1.Final</hibernate.version>
+		<mapstruct.version>1.1.0.Beta2</mapstruct.version>
+		<jersey.version>2.23.1</jersey.version>
+		<jackson.version>2.8.1</jackson.version>
+		<junit.version>4.12</junit.version>
+		<glassfish.version>3.1.1</glassfish.version>
+		<slf4j.version>1.7.7</slf4j.version>
+		<log4j.version>1.2.17</log4j.version>
+		<lombok.version>1.16.8</lombok.version>
+	</properties>
+
 	<scm>
 		<connection>scm:git:ssh://git@github.com/softdays/mandy.git</connection>
 		<url>https://github.com/softdays/mandy</url>
@@ -64,19 +86,30 @@
 						<showWarnings>true</showWarnings>
 						<optimize>true</optimize>
 						<showDeprecation>true</showDeprecation>
+						<!-- <annotationProcessorPaths> <path> <groupId>org.mapstruct</groupId> 
+							<artifactId>mapstruct-processor</artifactId> <version>${mapstruct.version}</version> 
+							</path> </annotationProcessorPaths> -->
+						<compilerArgs>
+							<compilerArg>
+								-Amapstruct.suppressGeneratorTimestamp=true
+							</compilerArg>
+							<compilerArg>
+								-Amapstruct.defaultComponentModel=spring
+							</compilerArg>
+						</compilerArgs>
+						<annotationProcessors>
+							<!-- See: https://github.com/mapstruct/mapstruct/issues/510 The lombok.launch.AnnotationProcessorHider$AnnotationProcessor 
+								is the lombok processor that is usually auto-discovered. But as I don't want 
+								the Mapstruct processor to run again, I have to specify the Lombok processor 
+								manually (specifying the processors manually will disable autodetection of 
+								annotation processors). -->
+							<annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor</annotationProcessor>
+						</annotationProcessors>
 					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<!-- <annotationProcessors> <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor</annotationProcessor> 
-						</annotationProcessors> -->
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
@@ -95,18 +128,9 @@
 					</dependency> </dependencies> -->
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>versions-maven-plugin</artifactId>
-				<version>2.1</version>
-				<configuration>
-					<generateBackupPoms>false</generateBackupPoms>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok-maven-plugin</artifactId>
 				<executions>
-					<!-- Eclipse: add m2eConnector 'Maven Integration for Eclipse JDT APT' -->
 					<execution>
 						<phase>generate-sources</phase>
 						<goals>
@@ -129,15 +153,18 @@
 					</dependency>
 				</dependencies>
 			</plugin>
-
 			<plugin>
 				<groupId>org.bsc.maven</groupId>
 				<artifactId>maven-processor-plugin</artifactId>
-				<version>2.2.4</version>
+				<version>3.1.0</version>
 				<configuration>
 					<processors>
-						<processor>fr.xebia.extras.selma.codegen.MapperProcessor</processor>
+						<processor>org.mapstruct.ap.MappingProcessor</processor>
 					</processors>
+					<options>
+						<mapstruct.suppressGeneratorTimestamp>true</mapstruct.suppressGeneratorTimestamp>
+						<mapstruct.defaultComponentModel>spring</mapstruct.defaultComponentModel>
+					</options>
 					<sourceDirectory>${project.build.directory}/delombok</sourceDirectory>
 					<defaultOutputDirectory>${project.build.directory}/generated-sources/annotations</defaultOutputDirectory>
 				</configuration>
@@ -152,13 +179,16 @@
 				</executions>
 				<dependencies>
 					<dependency>
-						<groupId>fr.xebia.extras</groupId>
-						<artifactId>selma-processor</artifactId>
-						<version>${selma.version}</version>
+						<groupId>org.mapstruct</groupId>
+						<artifactId>mapstruct-processor</artifactId>
+						<version>${mapstruct.version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -374,30 +404,12 @@
 			</dependency>
 
 			<!-- Object Mapping -->
-			<dependency>
-				<groupId>net.sf.dozer</groupId>
-				<artifactId>dozer</artifactId>
-				<version>${dozer.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.sf.dozer</groupId>
-				<artifactId>dozer-spring</artifactId>
-				<version>${dozer.version}</version>
-			</dependency>
 
-			<!-- scope provided because the processor is only needed for the compiler -->
+			<!-- Mapstruct core for Java 8 -->
 			<dependency>
-				<groupId>fr.xebia.extras</groupId>
-				<artifactId>selma-processor</artifactId>
-				<version>${selma.version}</version>
-				<scope>provided</scope>
-			</dependency>
-
-			<!-- This is the only real dependency you will have in your binaries -->
-			<dependency>
-				<groupId>fr.xebia.extras</groupId>
-				<artifactId>selma</artifactId>
-				<version>${selma.version}</version>
+				<groupId>org.mapstruct</groupId>
+				<artifactId>mapstruct-jdk8</artifactId>
+				<version>${mapstruct.version}</version>
 			</dependency>
 
 			<!-- MISC -->
@@ -470,26 +482,4 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<properties>
-		<!-- build properties -->
-		<context.root>mandy</context.root>
-		<log.output.file>./logs/mandy.log</log.output.file>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!-- frameworks versions -->
-		<servlet.version>3.0.1</servlet.version>
-		<org.springframework.version>4.3.1.RELEASE</org.springframework.version>
-		<org.springframework.security.version>4.1.1.RELEASE</org.springframework.security.version>
-		<org.springframework.data.version>1.10.2.RELEASE</org.springframework.data.version>
-		<!-- Hibernate 4.3.9 or > see https://hibernate.atlassian.net/browse/HHH-8866 -->
-		<hibernate.version>5.2.1.Final</hibernate.version>
-		<dozer.version>5.5.1</dozer.version>
-		<selma.version>0.14</selma.version>
-		<jersey.version>2.23.1</jersey.version>
-		<jackson.version>2.8.1</jackson.version>
-		<junit.version>4.12</junit.version>
-		<glassfish.version>3.1.1</glassfish.version>
-		<slf4j.version>1.7.7</slf4j.version>
-		<log4j.version>1.2.17</log4j.version>
-		<lombok.version>1.16.8</lombok.version>
-	</properties>
 </project>

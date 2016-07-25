@@ -1,29 +1,21 @@
 package org.softdays.mandy.dto.mapping;
 
+import org.mapstruct.InheritInverseConfiguration;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.softdays.mandy.core.model.Resource;
-import org.softdays.mandy.core.model.Resource.Role;
 import org.softdays.mandy.dto.ResourceDto;
 
-import fr.xebia.extras.selma.Field;
-import fr.xebia.extras.selma.IoC;
-import fr.xebia.extras.selma.Mapper;
+@Mapper
+public interface ResourceMapper {
 
-@Mapper(withIoC = IoC.SPRING,
-        withCustomFields = { @Field({ "Resource.id", "resourceId" }),
-                @Field({ "Resource.uid", "login" }) },
-        withIgnoreFields = { "imputations", "teams" })
-public abstract class ResourceMapper {
+    @Mapping(source = "id", target = "resourceId")
+    @Mapping(source = "uid", target = "login")
+    ResourceDto map(Resource source);
 
-    public abstract ResourceDto map(Resource source);
-
-    public abstract Resource map(ResourceDto source);
-
-    public String map(final Role source) {
-        return source.name();
-    }
-
-    public Role map(final String source) {
-        return Role.valueOf(source);
-    }
+    @InheritInverseConfiguration
+    @Mapping(target = "imputations", ignore = true)
+    @Mapping(target = "teams", ignore = true)
+    Resource map(ResourceDto source);
 
 }

@@ -69,14 +69,14 @@ import lombok.Setter;
  * @author rpatriarche
  * @since 1.0.0
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "ACTIVITY",
         uniqueConstraints = @UniqueConstraint(
                 columnNames = { "SHORT_LABEL", "LONG_LABEL", "CATEGORY", "TYPE", "POSITION" },
                 name = "UK__ACTIVITY"))
-@Getter
-@Setter
-@NoArgsConstructor
 public class Activity extends BaseIdentifiable {
 
     private static final long serialVersionUID = 1L;

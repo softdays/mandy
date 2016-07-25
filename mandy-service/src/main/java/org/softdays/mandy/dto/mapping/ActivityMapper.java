@@ -1,34 +1,31 @@
 package org.softdays.mandy.dto.mapping;
 
+import org.mapstruct.InheritInverseConfiguration;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.softdays.mandy.core.model.Activity;
-import org.softdays.mandy.core.model.ActivityCategory;
-import org.softdays.mandy.core.model.ActivityType;
 import org.softdays.mandy.dto.ActivityDto;
 
-import fr.xebia.extras.selma.IgnoreMissing;
-import fr.xebia.extras.selma.IoC;
-import fr.xebia.extras.selma.Mapper;
+@Mapper
+public interface ActivityMapper {
 
-@Mapper(withIgnoreMissing = IgnoreMissing.ALL, withIoC = IoC.SPRING)
-public abstract class ActivityMapper {
+    // @Mapping(source = "category.pk", target = "category")
+    // @Mapping(source = "type.pk", target = "type")
+    // the code above works for this signature but not for the inverse signature because MapStruct
+    // tries to instanciate enum
+    @Mapping(target = "category", expression = "java( src.getCategory().getPk() )")
+    @Mapping(target = "type", expression = "java( src.getType().getPk() )")
+    @Mapping(source = "parentActivity.id", target = "parentActivityId")
+    ActivityDto map(Activity src);
 
-    public abstract ActivityDto map(Activity source);
+    @InheritInverseConfiguration
+    @Mapping(target = "imputations", ignore = true)
+    @Mapping(target = "position", ignore = true)
+    @Mapping(target = "teams", ignore = true)
+    @Mapping(target = "type",
+            expression = "java( org.softdays.mandy.core.model.ActivityType.fromCode(src.getType()) )")
+    @Mapping(target = "category",
+            expression = "java( org.softdays.mandy.core.model.ActivityCategory.fromCode(src.getCategory()) )")
+    Activity map(ActivityDto src);
 
-    public abstract Activity map(ActivityDto source);
-
-    public ActivityCategory asActivityCategory(final Character code) {
-        return ActivityCategory.fromCode(code);
-    }
-
-    public ActivityType asActivityType(final Character code) {
-        return ActivityType.fromCode(code);
-    }
-
-    public Character asActivityCode(final ActivityCategory category) {
-        return category.getPk();
-    }
-
-    public Character asActivityCode(final ActivityType type) {
-        return type.getPk();
-    }
 }

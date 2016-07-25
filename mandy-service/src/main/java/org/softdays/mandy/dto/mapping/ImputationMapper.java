@@ -1,20 +1,19 @@
 package org.softdays.mandy.dto.mapping;
 
+import org.mapstruct.InheritInverseConfiguration;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.softdays.mandy.core.model.Imputation;
 import org.softdays.mandy.dto.ImputationDto;
 
-import fr.xebia.extras.selma.Field;
-import fr.xebia.extras.selma.IgnoreMissing;
-import fr.xebia.extras.selma.IoC;
-import fr.xebia.extras.selma.Mapper;
-
-@Mapper(withIgnoreMissing = IgnoreMissing.ALL, withIoC = IoC.SPRING,
-        withCustomFields = { @Field({ "Imputation.id", "imputationId" }),
-                @Field({ "Imputation.activity.id", "activityId" }),
-                @Field({ "Imputation.resource.id", "resourceId" }) })
+@Mapper
 public interface ImputationMapper {
 
+    @Mapping(source = "id", target = "imputationId")
+    @Mapping(source = "activity.id", target = "activityId")
+    @Mapping(source = "resource.id", target = "resourceId")
     ImputationDto map(Imputation source);
 
+    @InheritInverseConfiguration
     Imputation map(ImputationDto source);
 }

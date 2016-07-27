@@ -24,6 +24,7 @@ package org.softdays.mandy.dao;
 import java.util.List;
 
 import org.softdays.mandy.core.model.Activity;
+import org.softdays.mandy.core.model.ActivityCategory;
 import org.softdays.mandy.core.model.Resource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -50,9 +51,10 @@ public interface ActivityDao extends JpaRepository<Activity, Long> {
      * @see https://hibernate.atlassian.net/browse/HHH-8866
      */
     @Query("select distinct a from #{#entityName} a left join fetch a.teams t"
-            + " where :resource in elements(t.resources)" + " or a.category <> 'P'"
+            + " where :resource in elements(t.resources)" + " or a.category <> :activityCategory"
             + " order by a.category asc, a.type asc, a.position asc")
-    List<Activity> findByResource(@Param("resource") final Resource resource);
+    List<Activity> findByResource(@Param("resource") final Resource resource,
+            @Param("activityCategory") final ActivityCategory activityCategory);
 
     @Query("select max(a.position) from #{#entityName} a"
             + " where a.parentActivity.id=:parentActivityId")

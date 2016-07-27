@@ -8,3 +8,9 @@ pom.xml.releaseBackup
 release.properties
 *.iml
 **/bin/
+*.factorypath
+**/dist
+**/tmp
+**/node
+**/node_modules
+**/typings

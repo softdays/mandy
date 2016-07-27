@@ -14,8 +14,6 @@
 
 	<context:component-scan base-package="org.softdays.mandy" />
 
-	<import resource="classpath:dozer-context.xml" />
-
 	<context:property-placeholder location="classpath:datasource.properties" />
 
 	<bean id="dataSource"

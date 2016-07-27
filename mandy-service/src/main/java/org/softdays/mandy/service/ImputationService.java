@@ -21,10 +21,10 @@
 
 package org.softdays.mandy.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-import org.joda.time.DateTime;
 import org.softdays.mandy.dto.ImputationDto;
 
 /**
@@ -46,8 +46,7 @@ public interface ImputationService {
      *            search.
      * @return imputations indexed by activity.id
      */
-    Map<Long, List<ImputationDto>> findImputations(Long resourceId,
-            DateTime date);
+    Map<Long, List<ImputationDto>> findImputations(Long resourceId, LocalDate date);
 
     /**
      * Persists a new imputation.

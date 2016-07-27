@@ -1,6 +1,9 @@
 package org.softdays.mandy.core.model;
 
-import org.softdays.mandy.core.PersistentEnum;
+import org.softdays.commons.jpa.converter.GenericPersistentEnum;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Describes activity types.
@@ -18,7 +21,8 @@ import org.softdays.mandy.core.PersistentEnum;
  * @version 1.3.0
  *
  */
-public enum ActivityType implements PersistentEnum {
+@Getter
+public enum ActivityType implements GenericPersistentEnum<Character> {
 
     ANA('A', "Analysis/Design"),
 
@@ -34,8 +38,10 @@ public enum ActivityType implements PersistentEnum {
 
     UNS('U', "Unspecified");
 
-    private Character id;
+    @Setter
+    private Character pk;
 
+    @Setter
     private String description;
 
     /**
@@ -44,33 +50,40 @@ public enum ActivityType implements PersistentEnum {
      * @param desc
      *            the desc
      */
-    ActivityType(final Character id, final String desc) {
-        this.id = id;
+    ActivityType(final Character pk, final String desc) {
+        this.pk = pk;
         this.description = desc;
     }
 
-    /**
-     * /**
-     * Gets the name.
-     * 
-     * @return the name
-     */
-    public String getName() {
-        return this.name();
-    }
+    public static ActivityType fromCode(final Character code) {
+        if (code == null) {
+            return null;
+        }
+        switch (code) {
+            case 'A':
+                return ActivityType.ANA;
 
-    /**
-     * Gets the description.
-     * 
-     * @return the description
-     */
-    public String getDescription() {
-        return this.description;
-    }
+            case 'M':
+                return ActivityType.MOD;
 
-    @Override
-    public Character getId() {
-        return id;
+            case 'F':
+                return ActivityType.FIX;
+
+            case 'E':
+                return ActivityType.EVO;
+
+            case 'I':
+                return ActivityType.INT;
+
+            case 'C':
+                return ActivityType.REU;
+
+            case 'U':
+                return ActivityType.UNS;
+
+            default:
+                throw new IllegalArgumentException("value not supported");
+        }
     }
 
 }

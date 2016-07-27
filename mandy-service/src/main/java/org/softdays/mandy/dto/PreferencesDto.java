@@ -23,10 +23,18 @@ package org.softdays.mandy.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.softdays.mandy.core.model.Quota;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+/**
+ * DTO des préférences utilisateur.
+ */
+@Getter
+@Setter
+@NoArgsConstructor
 public class PreferencesDto {
 
     private Long resourceId;
@@ -37,45 +45,9 @@ public class PreferencesDto {
 
     private boolean enableSubActivities = false;
 
-    public PreferencesDto() {
-        super();
-    }
-
     public PreferencesDto(final Long resourceId) {
         this();
         this.resourceId = resourceId;
-    }
-
-    public Long getResourceId() {
-        return this.resourceId;
-    }
-
-    public void setResourceId(final Long resourceId) {
-        this.resourceId = resourceId;
-    }
-
-    public Float getGranularity() {
-        return this.granularity;
-    }
-
-    public void setGranularity(final Float granularity) {
-        this.granularity = granularity;
-    }
-
-    public boolean isEnableSubActivities() {
-        return enableSubActivities;
-    }
-
-    public void setEnableSubActivities(final boolean enableSubActivities) {
-        this.enableSubActivities = enableSubActivities;
-    }
-
-    public List<Long> getActivitiesFilter() {
-        return this.activitiesFilter;
-    }
-
-    public void setActivitiesFilter(final List<Long> activitiesFilter) {
-        this.activitiesFilter = activitiesFilter;
     }
 
 }

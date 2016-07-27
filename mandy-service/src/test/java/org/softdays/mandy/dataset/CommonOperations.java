@@ -63,60 +63,51 @@ public class CommonOperations {
     public static final String ACTIVITY_TS_LABEL = "Téléservices";
     public static final String ACTIVITY_LSUN_LABEL = "Livret Scolaire Unique Numérique";
 
-    public static final Operation DELETE_ALL = deleteAllFrom(
-            "MANDY.IMPUTATION", "MANDY.TEAM_RESOURCE", "MANDY.ACTIVITY_TEAM",
-            "MANDY.PREFERENCE_ACTIVITY", "MANDY.PREFERENCE", "MANDY.RESOURCE",
-            "MANDY.TEAM", "MANDY.ACTIVITY");
+    public static final Operation DELETE_ALL = deleteAllFrom("MANDY.IMPUTATION",
+            "MANDY.TEAM_RESOURCE", "MANDY.ACTIVITY_TEAM", "MANDY.PREFERENCE_ACTIVITY",
+            "MANDY.PREFERENCE", "MANDY.RESOURCE", "MANDY.TEAM", "MANDY.ACTIVITY");
 
     // les activités sur lesquels on peut imputer des charges
-    public static final Operation INSERT_REFERENCE_ACTIVITIES = sequenceOf(insertInto(
-            "MANDY.ACTIVITY")
-            // .withGeneratedValue("ID", ValueGenerators.sequence())
+    public static final Operation INSERT_REFERENCE_ACTIVITIES = sequenceOf(
+            insertInto("MANDY.ACTIVITY")
+                    // .withGeneratedValue("ID", ValueGenerators.sequence())
 
-            .columns("ID", "LONG_LABEL", "POSITION", "CATEGORY", "TYPE",
-                    "SHORT_LABEL", "PARENT_ID")
+                    .columns("ID", "LONG_LABEL", "POSITION", "CATEGORY", "TYPE", "SHORT_LABEL",
+                            "PARENT_ID")
 
-            .values(ACTIVITY_VIESCO_ID, ACTIVITY_VIESCO_LABEL, 400,
-                    ActivityCategory.PROJECT.getId(), ActivityType.UNS.getId(),
-                    "VIS", null)
+                    .values(ACTIVITY_VIESCO_ID, ACTIVITY_VIESCO_LABEL, 400,
+                            ActivityCategory.PROJECT.getPk(), ActivityType.UNS.getPk(), "VIS", null)
 
-            .values(ACTIVITY_CP_ID, ACTIVITY_CP_LABEL, 201,
-                    ActivityCategory.ABSENCE.getId(), ActivityType.UNS.getId(),
-                    "CP", null)
+                    .values(ACTIVITY_CP_ID, ACTIVITY_CP_LABEL, 201,
+                            ActivityCategory.ABSENCE.getPk(), ActivityType.UNS.getPk(), "CP", null)
 
-            .values(ACTIVITY_EM_ID, ACTIVITY_EM_LABEL, 202,
-                    ActivityCategory.ABSENCE.getId(), ActivityType.UNS.getId(),
-                    "EM", null)
+                    .values(ACTIVITY_EM_ID, ACTIVITY_EM_LABEL, 202,
+                            ActivityCategory.ABSENCE.getPk(), ActivityType.UNS.getPk(), "EM", null)
 
-            .values(ACTIVITY_TS_ID, ACTIVITY_TS_LABEL, 450,
-                    ActivityCategory.PROJECT.getId(), ActivityType.UNS.getId(),
-                    "TSS", null)
+                    .values(ACTIVITY_TS_ID, ACTIVITY_TS_LABEL, 450,
+                            ActivityCategory.PROJECT.getPk(), ActivityType.UNS.getPk(), "TSS", null)
 
-            .values(ACTIVITY_LSUN_ID, ACTIVITY_LSUN_LABEL, 460,
-                    ActivityCategory.PROJECT.getId(), ActivityType.UNS.getId(),
-                    "LSU", null)
+                    .values(ACTIVITY_LSUN_ID, ACTIVITY_LSUN_LABEL, 460,
+                            ActivityCategory.PROJECT.getPk(), ActivityType.UNS.getPk(), "LSU", null)
 
-            .values(ACTIVITY_LSL_ID, ACTIVITY_LSL_LABEL, 420,
-                    ActivityCategory.PROJECT.getId(), ActivityType.UNS.getId(),
-                    "LSL", null)
+                    .values(ACTIVITY_LSL_ID, ACTIVITY_LSL_LABEL, 420,
+                            ActivityCategory.PROJECT.getPk(), ActivityType.UNS.getPk(), "LSL", null)
 
-            .values(ACTIVITY_LSL_FIX_TEST_ID, "My long label for mantis 11111",
-                    430, ActivityCategory.PROJECT.getId(),
-                    ActivityType.FIX.getId(), "MANTIS#11111", ACTIVITY_LSL_ID)
+                    .values(ACTIVITY_LSL_FIX_TEST_ID, "My long label for mantis 11111", 430,
+                            ActivityCategory.PROJECT.getPk(), ActivityType.FIX.getPk(),
+                            "MANTIS#11111", ACTIVITY_LSL_ID)
 
-            .values(ACTIVITY_GFC_ID, "Gestion Financière et Comptable", 440,
-                    ActivityCategory.PROJECT.getId(), ActivityType.UNS.getId(),
-                    "GFC", null)
+                    .values(ACTIVITY_GFC_ID, "Gestion Financière et Comptable", 440,
+                            ActivityCategory.PROJECT.getPk(), ActivityType.UNS.getPk(), "GFC", null)
 
-            .values(ACTIVITY_NO_TEAM_ID, "Activity not yet related to a team",
-                    500, ActivityCategory.PROJECT.getId(),
-                    ActivityType.UNS.getId(), "NO_TEAM_ACTIVITY", null)
+                    .values(ACTIVITY_NO_TEAM_ID, "Activity not yet related to a team", 500,
+                            ActivityCategory.PROJECT.getPk(), ActivityType.UNS.getPk(),
+                            "NO_TEAM_ACTIVITY", null)
 
-            .build());
+                    .build());
 
     // les équipes sur lesquelles on peut affecter des ressources
-    public static final Operation INSERT_REFERENCE_TEAM = sequenceOf(insertInto(
-            "MANDY.TEAM")
+    public static final Operation INSERT_REFERENCE_TEAM = sequenceOf(insertInto("MANDY.TEAM")
             // .withGeneratedValue("ID", ValueGenerators.sequence())
 
             .columns("ID", "CODE", "LABEL")
@@ -127,84 +118,83 @@ public class CommonOperations {
             .build());
 
     // les personnes qui peuvent imputer
-    public static final Operation INSERT_REFERENCE_RESOURCES = sequenceOf(insertInto(
-            "MANDY.RESOURCE")
-            // .withGeneratedValue("ID", ValueGenerators.sequence())
+    public static final Operation INSERT_REFERENCE_RESOURCES = sequenceOf(
+            insertInto("MANDY.RESOURCE")
+                    // .withGeneratedValue("ID", ValueGenerators.sequence())
 
-            .columns("ID", "UID", "LAST_NAME", "FIRST_NAME", "ROLE")
+                    .columns("ID", "UID", "LAST_NAME", "FIRST_NAME", "ROLE")
 
-            .values(ID_RPA, UID_RPA, "Patriarche", "Rémi", "ROLE_ADMIN")
-            .values(ID_CHO, UID_CHO, "Onillon", "Christophe", "ROLE_USER")
-            .values(ID_FCH, UID_FCH, "Charbonnier", "François", "ROLE_MANAGER")
-            .values(ID_FPI, UID_FPI, "Picollet", "Fleur", "ROLE_USER")
-            .values(ID_LMO, UID_LMO, "Morales", "Ludovic", "ROLE_USER")
-            .values(ID_DEL, UID_DEL, "Eleveq", "David", "ROLE_USER")
+                    .values(ID_RPA, UID_RPA, "Patriarche", "Rémi", "ROLE_ADMIN")
+                    .values(ID_CHO, UID_CHO, "Onillon", "Christophe", "ROLE_USER")
+                    .values(ID_FCH, UID_FCH, "Charbonnier", "François", "ROLE_MANAGER")
+                    .values(ID_FPI, UID_FPI, "Picollet", "Fleur", "ROLE_USER")
+                    .values(ID_LMO, UID_LMO, "Morales", "Ludovic", "ROLE_USER")
+                    .values(ID_DEL, UID_DEL, "Eleveq", "David", "ROLE_USER")
 
-            .build());
+                    .build());
 
     // les préférences des personnes
-    public static final Operation INSERT_PREFERENCES = sequenceOf(insertInto(
-            "MANDY.PREFERENCE")
+    public static final Operation INSERT_PREFERENCES = sequenceOf(insertInto("MANDY.PREFERENCE")
 
-    .columns("RESOURCE_ID", "GRANULARITY")
+            .columns("RESOURCE_ID", "GRANULARITY")
 
-    .values(ID_CHO, Quota.HALF.floatValue())
-            .values(ID_LMO, Quota.QUARTER.floatValue()).build());
+            .values(ID_CHO, Quota.HALF.floatValue()).values(ID_LMO, Quota.QUARTER.floatValue())
+            .build());
 
     // association personne-équipe
-    public static final Operation INSERT_REFERENCE_TEAM_RESOURCE = sequenceOf(insertInto(
-            "MANDY.TEAM_RESOURCE")
-    // .withGeneratedValue("ID", ValueGenerators.sequence())
+    public static final Operation INSERT_REFERENCE_TEAM_RESOURCE = sequenceOf(
+            insertInto("MANDY.TEAM_RESOURCE")
+                    // .withGeneratedValue("ID", ValueGenerators.sequence())
 
-            .columns("RESOURCE_ID", "TEAM_ID")
+                    .columns("RESOURCE_ID", "TEAM_ID")
 
-            .values(ID_RPA, ID_TEAM_SCO)
+                    .values(ID_RPA, ID_TEAM_SCO)
 
-            .values(ID_RPA, ID_TEAM_GFC)
+                    .values(ID_RPA, ID_TEAM_GFC)
 
-            .values(ID_CHO, ID_TEAM_SCO)
+                    .values(ID_CHO, ID_TEAM_SCO)
 
-            .values(ID_FCH, ID_TEAM_SCO)
+                    .values(ID_FCH, ID_TEAM_SCO)
 
-            .values(ID_FPI, ID_TEAM_SCO)
+                    .values(ID_FPI, ID_TEAM_SCO)
 
-            .values(ID_LMO, ID_TEAM_SCO)
+                    .values(ID_LMO, ID_TEAM_SCO)
 
-            .values(ID_DEL, ID_TEAM_GFC)
+                    .values(ID_DEL, ID_TEAM_GFC)
 
-            .build());
+                    .build());
 
     // association équipe-activités
-    public static final Operation INSERT_REFERENCE_ACTIVITY_TEAM = sequenceOf(insertInto(
-            "MANDY.ACTIVITY_TEAM")
-    // columns
-            .columns("ACTIVITY_ID", "TEAM_ID")
-            // values
-            .values(ACTIVITY_LSL_ID, ID_TEAM_SCO)
+    public static final Operation INSERT_REFERENCE_ACTIVITY_TEAM = sequenceOf(
+            insertInto("MANDY.ACTIVITY_TEAM")
+                    // columns
+                    .columns("ACTIVITY_ID", "TEAM_ID")
+                    // values
+                    .values(ACTIVITY_LSL_ID, ID_TEAM_SCO)
 
-            .values(ACTIVITY_LSL_FIX_TEST_ID, ID_TEAM_SCO)
+                    .values(ACTIVITY_LSL_FIX_TEST_ID, ID_TEAM_SCO)
 
-            .values(ACTIVITY_LSUN_ID, ID_TEAM_SCO)
+                    .values(ACTIVITY_LSUN_ID, ID_TEAM_SCO)
 
-            .values(ACTIVITY_TS_ID, ID_TEAM_SCO)
+                    .values(ACTIVITY_TS_ID, ID_TEAM_SCO)
 
-            .values(ACTIVITY_VIESCO_ID, ID_TEAM_SCO)
+                    .values(ACTIVITY_VIESCO_ID, ID_TEAM_SCO)
 
-            .values(ACTIVITY_GFC_ID, ID_TEAM_GFC)
+                    .values(ACTIVITY_GFC_ID, ID_TEAM_GFC)
 
-            .build());
+                    .build());
 
-    public static final Operation INSERT_PREFERENCES_ACTIVITIES = sequenceOf(insertInto(
-            "MANDY.PREFERENCE_ACTIVITY")
-    // columns
-            .columns("PREFERENCE_ID", "ACTIVITY_ID", "ACTIVITY_ORDER")
-            // values
-            .values(ID_CHO, ACTIVITY_VIESCO_ID, 0)
+    public static final Operation INSERT_PREFERENCES_ACTIVITIES = sequenceOf(
+            insertInto("MANDY.PREFERENCE_ACTIVITY")
+                    // columns
+                    .columns("PREFERENCE_ID", "ACTIVITY_ID", "ACTIVITY_ORDER")
+                    // values
+                    .values(ID_CHO, ACTIVITY_VIESCO_ID, 0)
 
-            .values(ID_CHO, ACTIVITY_LSUN_ID, 1)
+                    .values(ID_CHO, ACTIVITY_LSUN_ID, 1)
 
-            .values(ID_LMO, ACTIVITY_LSL_ID, 0)
+                    .values(ID_LMO, ACTIVITY_LSL_ID, 0)
 
-            .build());
+                    .build());
 
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	     
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.softdays.mandy</groupId>
@@ -41,6 +42,28 @@
 		<module>mandy-webapp</module>
 	</modules>
 
+	<properties>
+		<!-- build properties -->
+		<context.root>mandy</context.root>
+		<log.output.file>./logs/mandy.log</log.output.file>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- frameworks versions -->
+		<servlet.version>3.0.1</servlet.version>
+		<org.springframework.version>4.3.1.RELEASE</org.springframework.version>
+		<org.springframework.security.version>4.1.1.RELEASE</org.springframework.security.version>
+		<org.springframework.data.version>1.10.2.RELEASE</org.springframework.data.version>
+		<!-- Hibernate 4.3.9 or > see https://hibernate.atlassian.net/browse/HHH-8866 -->
+		<hibernate.version>5.2.1.Final</hibernate.version>
+		<mapstruct.version>1.1.0.Beta2</mapstruct.version>
+		<jersey.version>2.23.1</jersey.version>
+		<jackson.version>2.8.1</jackson.version>
+		<junit.version>4.12</junit.version>
+		<glassfish.version>3.1.1</glassfish.version>
+		<slf4j.version>1.7.7</slf4j.version>
+		<log4j.version>1.2.17</log4j.version>
+		<lombok.version>1.16.8</lombok.version>
+	</properties>
+
 	<scm>
 		<connection>scm:git:ssh://git@github.com/softdays/mandy.git</connection>
 		<url>https://github.com/softdays/mandy</url>
@@ -54,10 +77,34 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.1</version>
+					<version>3.5.1</version>
 					<configuration>
-						<source>1.7</source>
-						<target>1.7</target>
+						<encoding>UTF-8</encoding>
+						<source>1.8</source>
+						<target>1.8</target>
+						<compilerVersion>1.8</compilerVersion>
+						<showWarnings>true</showWarnings>
+						<optimize>true</optimize>
+						<showDeprecation>true</showDeprecation>
+						<!-- <annotationProcessorPaths> <path> <groupId>org.mapstruct</groupId> 
+							<artifactId>mapstruct-processor</artifactId> <version>${mapstruct.version}</version> 
+							</path> </annotationProcessorPaths> -->
+						<compilerArgs>
+							<compilerArg>
+								-Amapstruct.suppressGeneratorTimestamp=true
+							</compilerArg>
+							<compilerArg>
+								-Amapstruct.defaultComponentModel=spring
+							</compilerArg>
+						</compilerArgs>
+						<annotationProcessors>
+							<!-- See: https://github.com/mapstruct/mapstruct/issues/510 The lombok.launch.AnnotationProcessorHider$AnnotationProcessor 
+								is the lombok processor that is usually auto-discovered. But as I don't want 
+								the Mapstruct processor to run again, I have to specify the Lombok processor 
+								manually (specifying the processors manually will disable autodetection of 
+								annotation processors). -->
+							<annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor</annotationProcessor>
+						</annotationProcessors>
 					</configuration>
 				</plugin>
 			</plugins>
@@ -69,47 +116,82 @@
 				<version>2.5</version>
 				<configuration>
 					<tagNameFormat>@{project.version}</tagNameFormat>
-					<!--username>softdays</username-->
+					<!--username>softdays</username -->
 					<!--password>xxxxxxxx</password -->
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 					<preparationGoals>clean package</preparationGoals>
 					<arguments>-DskipTests</arguments>
-					<!--
-					<providerImplementations>
-					  <git>jgit</git>
-				    </providerImplementations>
-				    -->
+					<!-- <providerImplementations> <git>jgit</git> </providerImplementations> -->
 				</configuration>
-				<!--
-				<dependencies>
-				  <dependency>
-					  <groupId>org.apache.maven.scm</groupId>
-					  <artifactId>maven-scm-provider-jgit</artifactId>
-							<version>1.9.1</version>
-				  </dependency>
-				 </dependencies>
-				 -->
+				<!-- <dependencies> <dependency> <groupId>org.apache.maven.scm</groupId> 
+					<artifactId>maven-scm-provider-jgit</artifactId> <version>1.9.1</version> 
+					</dependency> </dependencies> -->
 			</plugin>
 			<plugin>
-			  <groupId>org.codehaus.mojo</groupId>
-			  <artifactId>versions-maven-plugin</artifactId>
-			  <version>2.1</version>
-			  <configuration>
-				<generateBackupPoms>false</generateBackupPoms>
-			  </configuration>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>delombok</goal>
+						</goals>
+						<configuration>
+							<sourceDirectory>src/main/java</sourceDirectory>
+							<addOutputDirectory>false</addOutputDirectory>
+							<outputDirectory>${project.build.directory}/delombok</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.bsc.maven</groupId>
+				<artifactId>maven-processor-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<processors>
+						<processor>org.mapstruct.ap.MappingProcessor</processor>
+					</processors>
+					<options>
+						<mapstruct.suppressGeneratorTimestamp>true</mapstruct.suppressGeneratorTimestamp>
+						<mapstruct.defaultComponentModel>spring</mapstruct.defaultComponentModel>
+					</options>
+					<sourceDirectory>${project.build.directory}/delombok</sourceDirectory>
+					<defaultOutputDirectory>${project.build.directory}/generated-sources/annotations</defaultOutputDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>process</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>process</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.mapstruct</groupId>
+						<artifactId>mapstruct-processor</artifactId>
+						<version>${mapstruct.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
 
 	<dependencyManagement>
-
-		<dependencies>
+		<dependencies>		
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
 				<version>${servlet.version}</version>
 				<scope>provided</scope>
 			</dependency>
+			
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-core</artifactId>
@@ -151,6 +233,11 @@
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
+				<artifactId>spring-expression</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
 				<artifactId>spring-tx</artifactId>
 				<version>${org.springframework.version}</version>
 			</dependency>
@@ -169,6 +256,7 @@
 				<artifactId>spring-data-jpa</artifactId>
 				<version>${org.springframework.data.version}</version>
 			</dependency>
+			
 			<!-- spring security -->
 			<dependency>
 				<groupId>org.springframework.security</groupId>
@@ -196,6 +284,7 @@
 				<artifactId>spring-security-ldap</artifactId>
 				<version>${org.springframework.security.version}</version>
 			</dependency>
+			
 			<!-- Hibernate -->
 			<dependency>
 				<groupId>org.hibernate</groupId>
@@ -213,48 +302,105 @@
 				<version>${hibernate.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.sun.jersey</groupId>
-				<artifactId>jersey-servlet</artifactId>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-java8</artifactId>
+				<version>${hibernate.version}</version>
+			</dependency>
+
+			<!-- JAX-RS with Jersey -->
+			<dependency>
+				<groupId>org.glassfish.jersey</groupId>
+				<artifactId>jersey-bom</artifactId>
 				<version>${jersey.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
 			<dependency>
-				<groupId>com.sun.jersey</groupId>
-				<artifactId>jersey-json</artifactId>
+				<groupId>org.glassfish.jersey.ext</groupId>
+				<artifactId>jersey-spring3</artifactId>
+				<version>${jersey.version}</version>
+				<exclusions>
+					<exclusion>
+						<!-- Conflit avec jboss.logging & Hibernate 5 car ces porcs embarquent 
+							une version de jboss-logging -->
+						<artifactId>bean-validator</artifactId>
+						<groupId>org.glassfish.hk2.external</groupId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+
+			<!-- Jackson -->
+			<dependency>
+				<groupId>org.glassfish.jersey.media</groupId>
+				<artifactId>jersey-media-json-jackson</artifactId>
 				<version>${jersey.version}</version>
 			</dependency>
-			<!-- Pour disposer des annotations @JsonManagedReference, @JsonIgnore -->
+
+			<!-- JSON with Jackson -->
+
+			<!-- the core, which includes Streaming API, shared low-level abstractions 
+				(but NOT data-binding) -->
 			<dependency>
-				<groupId>org.codehaus.jackson</groupId>
-				<artifactId>jackson-core-asl</artifactId>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
 				<version>${jackson.version}</version>
 			</dependency>
-			<!-- Pour disposer de l'annotation @JsonSerialize -->
+
+			<!-- Just the annotations; use this dependency if you want to attach annotations 
+				to classes without connecting them to the code. -->
 			<dependency>
-				<groupId>org.codehaus.jackson</groupId>
-				<artifactId>jackson-mapper-asl</artifactId>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
 				<version>${jackson.version}</version>
 			</dependency>
+
+			<!-- databinding; ObjectMapper, JsonNode and related classes are here -->
 			<dependency>
-				<groupId>net.sf.dozer</groupId>
-				<artifactId>dozer</artifactId>
-				<version>${dozer.version}</version>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.version}</version>
 			</dependency>
+
+			<!-- JAX-RS provider -->
 			<dependency>
-				<groupId>net.sf.dozer</groupId>
-				<artifactId>dozer-spring</artifactId>
-				<version>${dozer.version}</version>
+				<groupId>com.fasterxml.jackson.jaxrs</groupId>
+				<artifactId>jackson-jaxrs-json-provider</artifactId>
+				<version>${jackson.version}</version>
 			</dependency>
+
 			<dependency>
-				<groupId>com.sun.jersey.contribs</groupId>
-				<artifactId>jersey-spring</artifactId>
-				<version>${jersey.version}</version>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.version}</version>
 			</dependency>
+
+			<!-- Serialisation des date Java 8 -->
+			<dependency>
+				<groupId>com.fasterxml.jackson.datatype</groupId>
+				<artifactId>jackson-datatype-jsr310</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+
+			<!-- <dependency> <groupId>com.fasterxml.jackson.datatype</groupId> <artifactId>jackson-datatype-jsr353</artifactId> 
+				<version>${jackson.version}</version> </dependency> <dependency> <groupId>org.glassfish</groupId> 
+				<artifactId>javax.json</artifactId> <version>1.0.4</version> </dependency> -->
+
+			<dependency>
+				<groupId>com.fasterxml.jackson.jaxrs</groupId>
+				<artifactId>jackson-jaxrs-base</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+
+			<!-- Object Mapping -->
+
+			<!-- Mapstruct core for Java 8 -->
+			<dependency>
+				<groupId>org.mapstruct</groupId>
+				<artifactId>mapstruct-jdk8</artifactId>
+				<version>${mapstruct.version}</version>
+			</dependency>
+
 			<!-- MISC -->
-			<dependency>
-				<groupId>joda-time</groupId>
-				<artifactId>joda-time</artifactId>
-				<version>2.3</version>
-			</dependency>
 			<dependency>
 				<groupId>org.mnode.ical4j</groupId>
 				<artifactId>ical4j</artifactId>
@@ -267,6 +413,14 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+
+			<!-- Lombok -->
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>${lombok.version}</version>
+			</dependency>
+
 			<!-- LOGGING -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -288,6 +442,7 @@
 				<artifactId>log4j</artifactId>
 				<version>${log4j.version}</version>
 			</dependency>
+			
 			<!-- TESTING DEPENDENCIES -->
 			<dependency>
 				<groupId>junit</groupId>
@@ -316,24 +471,4 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<properties>
-		<!-- build properties -->
-		<context.root>mandy</context.root>
-		<log.output.file>./logs/mandy.log</log.output.file>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!-- frameworks versions -->
-		<servlet.version>3.0.1</servlet.version>
-		<org.springframework.version>4.1.6.RELEASE</org.springframework.version>
-		<org.springframework.security.version>4.0.1.RELEASE</org.springframework.security.version>
-		<org.springframework.data.version>1.8.0.RELEASE</org.springframework.data.version>
-		<!-- Hibernate 4.3.9 or > see https://hibernate.atlassian.net/browse/HHH-8866 -->
-		<hibernate.version>4.3.10.Final</hibernate.version>
-		<dozer.version>5.5.1</dozer.version>
-		<jersey.version>1.18.1</jersey.version>
-		<jackson.version>1.9.2</jackson.version>
-		<junit.version>4.11</junit.version>
-		<glassfish.version>3.1.1</glassfish.version>
-		<slf4j.version>1.7.7</slf4j.version>
-		<log4j.version>1.2.17</log4j.version>
-	</properties>
 </project>

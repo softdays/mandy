@@ -23,6 +23,10 @@ package org.softdays.mandy.dto;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * The activity DTO.
  * 
@@ -30,6 +34,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * @since 1.0.0
  * @version 1.3.0 Rename type by category and add new type
  */
+@Getter
+@Setter
+@NoArgsConstructor
 public class ActivityDto {
 
     private Long id;
@@ -43,105 +50,6 @@ public class ActivityDto {
     private Character type;
 
     private Long parentActivityId;
-
-    /**
-     * Instantiates a new activity dto.
-     */
-    public ActivityDto() {
-        super();
-    }
-
-    /**
-     * Gets the id.
-     * 
-     * @return the id
-     */
-    public Long getId() {
-        return this.id;
-    }
-
-    /**
-     * Sets the id.
-     * 
-     * @param id
-     *            the new id
-     */
-    public void setId(final Long id) {
-        this.id = id;
-    }
-
-    public Character getCategory() {
-        return category;
-    }
-
-    public void setCategory(final Character category) {
-        this.category = category;
-    }
-
-    /**
-     * Gets the type.
-     * 
-     * @return the type
-     */
-    public Character getType() {
-        return this.type;
-    }
-
-    /**
-     * Sets the type.
-     * 
-     * @param type
-     *            the new type
-     */
-    public void setType(final Character type) {
-        this.type = type;
-    }
-
-    /**
-     * Gets the short label.
-     * 
-     * @return the short label
-     */
-    public String getShortLabel() {
-        return this.shortLabel;
-    }
-
-    /**
-     * Sets the short label.
-     * 
-     * @param shortLabel
-     *            the new short label
-     */
-    public void setShortLabel(final String shortLabel) {
-        this.shortLabel = shortLabel;
-    }
-
-    /**
-     * Gets the long label.
-     * 
-     * @return the long label
-     */
-    public String getLongLabel() {
-        return this.longLabel;
-    }
-
-    /**
-     * Sets the long label.
-     * 
-     * @param longLabel
-     *            the new long label
-     */
-    public void setLongLabel(final String longLabel) {
-        this.longLabel = longLabel;
-    }
-
-    public Long getParentActivityId() {
-        return parentActivityId;
-    }
-
-    public void setParentActivityId(final Long parentActivityId) {
-        this.parentActivityId = parentActivityId;
-    }
 
     /**
      * Doit être surchargée en cohérence avec la surcharge de equals().
@@ -165,14 +73,14 @@ public class ActivityDto {
         }
         final ActivityDto other = (ActivityDto) obj;
 
-        return new EqualsBuilder().appendSuper(this.equals(obj))
-                .append(this.getId(), other.getId()).isEquals();
+        return new EqualsBuilder().appendSuper(this.equals(obj)).append(this.getId(), other.getId())
+                .isEquals();
     }
 
     @Override
     public String toString() {
-        return "ActivityDto [id=" + id + ", shortLabel=" + shortLabel + ", longLabel=" + longLabel
-                + ", category=" + category + ", type=" + type + "]";
+        return "ActivityDto [id=" + this.id + ", shortLabel=" + this.shortLabel + ", longLabel="
+                + this.longLabel + ", category=" + this.category + ", type=" + this.type + "]";
     }
 
 }

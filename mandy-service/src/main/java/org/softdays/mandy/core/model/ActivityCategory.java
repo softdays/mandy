@@ -20,7 +20,10 @@
  */
 package org.softdays.mandy.core.model;
 
-import org.softdays.mandy.core.PersistentEnum;
+import org.softdays.commons.jpa.converter.GenericPersistentEnum;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Activity categories.
@@ -29,7 +32,8 @@ import org.softdays.mandy.core.PersistentEnum;
  * 
  * @since 1.3.0
  */
-public enum ActivityCategory implements PersistentEnum {
+@Getter
+public enum ActivityCategory implements GenericPersistentEnum<Character> {
 
     PROJECT('P', "Project"),
 
@@ -37,8 +41,10 @@ public enum ActivityCategory implements PersistentEnum {
 
     OTHER('O', "Other");
 
-    private Character id;
+    @Setter
+    private Character pk;
 
+    @Setter
     private String description;
 
     /**
@@ -47,33 +53,28 @@ public enum ActivityCategory implements PersistentEnum {
      * @param desc
      *            the desc
      */
-    ActivityCategory(final Character id, final String desc) {
-        this.id = id;
+    ActivityCategory(final Character pk, final String desc) {
+        this.pk = pk;
         this.description = desc;
     }
 
-    /**
-     * /**
-     * Gets the name.
-     * 
-     * @return the name
-     */
-    public String getName() {
-        return this.name();
-    }
+    public static ActivityCategory fromCode(final Character code) {
+        if (code == null) {
+            return null;
+        }
+        switch (code) {
+            case 'P':
+                return PROJECT;
 
-    /**
-     * Gets the description.
-     * 
-     * @return the description
-     */
-    public String getDescription() {
-        return this.description;
-    }
+            case 'A':
+                return ABSENCE;
 
-    @Override
-    public Character getId() {
-        return this.id;
+            case 'O':
+                return OTHER;
+
+            default:
+                throw new IllegalArgumentException("value not supported");
+        }
     }
 
 }

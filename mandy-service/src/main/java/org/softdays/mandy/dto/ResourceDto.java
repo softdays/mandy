@@ -22,12 +22,19 @@ package org.softdays.mandy.dto;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * The Class ResourceDto.
  * 
  * @author rpatriarche
  * @since 1.0.0
  */
+@Getter
+@Setter
+@NoArgsConstructor
 public class ResourceDto implements Serializable {
 
     private static final long serialVersionUID = -3871591683430897889L;
@@ -41,107 +48,5 @@ public class ResourceDto implements Serializable {
     private String firstName;
 
     private String role;
-
-    /**
-     * Instantiates a new resource dto.
-     */
-    public ResourceDto() {
-        super();
-    }
-
-    /**
-     * Gets the resource id.
-     * 
-     * @return the resource id
-     */
-    public Long getResourceId() {
-        return this.resourceId;
-    }
-
-    /**
-     * Sets the resource id.
-     * 
-     * @param resourceId
-     *            the new resource id
-     */
-    public void setResourceId(final Long resourceId) {
-        this.resourceId = resourceId;
-    }
-
-    /**
-     * Gets the login.
-     * 
-     * @return the login
-     */
-    public String getLogin() {
-        return this.login;
-    }
-
-    /**
-     * Sets the login.
-     * 
-     * @param login
-     *            the new login
-     */
-    public void setLogin(final String login) {
-        this.login = login;
-    }
-
-    /**
-     * Gets the last name.
-     * 
-     * @return the last name
-     */
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    /**
-     * Sets the last name.
-     * 
-     * @param lastName
-     *            the new last name
-     */
-    public void setLastName(final String lastName) {
-        this.lastName = lastName;
-    }
-
-    /**
-     * Gets the first name.
-     * 
-     * @return the first name
-     */
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    /**
-     * Sets the first name.
-     * 
-     * @param firstName
-     *            the new first name
-     */
-    public void setFirstName(final String firstName) {
-        this.firstName = firstName;
-    }
-
-    /**
-     * Gets the role.
-     * 
-     * @return the role
-     */
-    public String getRole() {
-        return this.role;
-    }
-
-    /**
-     * Sets the role.
-     * 
-     * @param role
-     *            the new role
-     */
-    public void setRole(final String role) {
-        this.role = role;
-    }
 
 }

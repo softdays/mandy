@@ -20,12 +20,9 @@
  */
 package org.softdays.mandy.dto.calendar;
 
-import java.util.Date;
+import java.time.LocalDate;
 
-import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.joda.time.DateTime;
-import org.softdays.mandy.web.serializer.JsonDateSerializer;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  * The Class DayDto.
@@ -60,8 +57,7 @@ public class DayDto {
         SH
     }
 
-    @JsonSerialize(using = JsonDateSerializer.class)
-    private Date date;
+    private LocalDate date;
 
     private Status status;
 
@@ -85,9 +81,9 @@ public class DayDto {
      * @param status
      *            the status
      */
-    public DayDto(final WeekDto week, final Date date, final Status status) {
+    public DayDto(final WeekDto week, final LocalDate date, final Status status) {
         super();
-        this.date = new DateTime(date).toDate();
+        this.date = date;
         this.week = week;
         this.status = status;
     }
@@ -97,8 +93,8 @@ public class DayDto {
      * 
      * @return the date
      */
-    public Date getDate() {
-        return (Date) this.date.clone();
+    public LocalDate getDate() {
+        return this.date;
     }
 
     /**
@@ -107,8 +103,8 @@ public class DayDto {
      * @param date
      *            the new date
      */
-    public void setDate(final Date date) {
-        this.date = new DateTime(date).toDate();
+    public void setDate(final LocalDate date) {
+        this.date = date;
     }
 
     /**

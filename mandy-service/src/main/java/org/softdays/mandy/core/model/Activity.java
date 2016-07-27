@@ -23,6 +23,7 @@ package org.softdays.mandy.core.model;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
@@ -30,12 +31,18 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.hibernate.annotations.NaturalId;
 import org.softdays.mandy.core.BaseIdentifiable;
 import org.softdays.mandy.core.CoreConstants;
+import org.softdays.mandy.core.converter.ActivityCategoryConverter;
+import org.softdays.mandy.core.converter.ActivityTypeConverter;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Represents the object of the imputation.
@@ -62,36 +69,39 @@ import org.softdays.mandy.core.CoreConstants;
  * @author rpatriarche
  * @since 1.0.0
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
-@Table(name = "ACTIVITY")
+@Table(name = "ACTIVITY",
+        uniqueConstraints = @UniqueConstraint(
+                columnNames = { "SHORT_LABEL", "LONG_LABEL", "CATEGORY", "TYPE", "POSITION" },
+                name = "UK__ACTIVITY"))
 public class Activity extends BaseIdentifiable {
 
     private static final long serialVersionUID = 1L;
 
-    @NaturalId(mutable = true)
-    @Column(nullable = false, length = CoreConstants.DB_SHORT_LABEL_LENGTH)
+    @Column(name = "SHORT_LABEL", nullable = false, length = CoreConstants.DB_SHORT_LABEL_LENGTH)
     private String shortLabel;
 
-    @NaturalId(mutable = true)
-    @Column(nullable = false, length = CoreConstants.DB_LONG_LABEL_LENGTH)
+    @Column(name = "LONG_LABEL", nullable = false, length = CoreConstants.DB_LONG_LABEL_LENGTH)
     private String longLabel;
 
     /**
      * @see org.softdays.mandy.ActivityCategory
      */
-    @NaturalId(mutable = true)
-    @Column(columnDefinition = "char(1) not null default 'P'")
+    @Column(name = "CATEGORY", columnDefinition = "char(1) not null default 'P'")
+    @Convert(converter = ActivityCategoryConverter.class)
     private ActivityCategory category;
 
     /**
      * @see org.softdays.mandy.ActivityType
      */
-    @NaturalId(mutable = true)
-    @Column(columnDefinition = "char(1) not null default 'U'")
+    @Column(name = "TYPE", columnDefinition = "char(1) not null default 'U'")
+    @Convert(converter = ActivityTypeConverter.class)
     private ActivityType type;
 
-    @NaturalId(mutable = true)
-    @Column(nullable = false)
+    @Column(name = "POSITION", nullable = false)
     private Integer position;
 
     @ManyToMany(mappedBy = "activities")
@@ -101,17 +111,9 @@ public class Activity extends BaseIdentifiable {
     private Set<Imputation> imputations;
 
     @ManyToOne
-    @JoinColumn(name = "PARENT_ID", updatable = false, nullable = true, foreignKey = @ForeignKey(
-            name = "FK__ACTIVITY__PARENT_ID"))
-    @org.hibernate.annotations.ForeignKey(name = "FK__ACTIVITY__PARENT_ID")
+    @JoinColumn(name = "PARENT_ID", updatable = false, nullable = true,
+            foreignKey = @ForeignKey(name = "FK__ACTIVITY__PARENT_ID"))
     private Activity parentActivity;
-
-    /**
-     * Instantiates a new activity.
-     */
-    public Activity() {
-        super();
-    }
 
     public Activity(final Long id) {
         this();
@@ -120,130 +122,6 @@ public class Activity extends BaseIdentifiable {
 
     public Activity(final Activity parent) {
         super();
-        this.parentActivity = parent;
-    }
-
-    /**
-     * Gets the type.
-     * 
-     * @return the type
-     */
-    public ActivityCategory getCategory() {
-        return this.category;
-    }
-
-    public void setCategory(final ActivityCategory category) {
-        this.category = category;
-    }
-
-    public ActivityType getType() {
-        return type;
-    }
-
-    public void setType(final ActivityType type) {
-        this.type = type;
-    }
-
-    /**
-     * Gets the short label.
-     * 
-     * @return the short label
-     */
-    public String getShortLabel() {
-        return this.shortLabel;
-    }
-
-    /**
-     * Sets the short label.
-     * 
-     * @param shortLabel
-     *            the new short label
-     */
-    public void setShortLabel(final String shortLabel) {
-        this.shortLabel = shortLabel;
-    }
-
-    /**
-     * Gets the long label.
-     * 
-     * @return the long label
-     */
-    public String getLongLabel() {
-        return this.longLabel;
-    }
-
-    /**
-     * Sets the long label.
-     * 
-     * @param longLabel
-     *            the new long label
-     */
-    public void setLongLabel(final String longLabel) {
-        this.longLabel = longLabel;
-    }
-
-    /**
-     * Gets the position.
-     * 
-     * @return the position
-     */
-    public Integer getPosition() {
-        return this.position;
-    }
-
-    /**
-     * Sets the position.
-     * 
-     * @param position
-     *            the new position
-     */
-    public void setPosition(final Integer position) {
-        this.position = position;
-    }
-
-    /**
-     * Gets the imputations.
-     * 
-     * @return the imputations
-     */
-    public Set<Imputation> getImputations() {
-        return this.imputations;
-    }
-
-    /**
-     * Sets the imputations.
-     * 
-     * @param imputations
-     *            the new imputations
-     */
-    public void setImputations(final Set<Imputation> imputations) {
-        this.imputations = imputations;
-    }
-
-    /**
-     * Gets the teams.
-     * 
-     * @return the teams
-     */
-    public Set<Team> getTeams() {
-        return this.teams;
-    }
-
-    /**
-     * Sets the teams.
-     * 
-     * @param teams
-     *            the new teams
-     */
-    public void setTeams(final Set<Team> teams) {
-        this.teams = teams;
-    }
-
-    public Activity getParentActivity() {
-        return parentActivity;
-    }
-
-    public void setParentActivity(final Activity parent) {
         this.parentActivity = parent;
     }
 

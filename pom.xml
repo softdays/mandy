@@ -143,15 +143,6 @@
 						</configuration>
 					</execution>
 				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>com.sun</groupId>
-						<artifactId>tools</artifactId>
-						<version>1.8.0</version>
-						<scope>system</scope>
-						<systemPath>${env.JAVA_HOME}/lib/tools.jar</systemPath>
-					</dependency>
-				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.bsc.maven</groupId>
@@ -193,14 +184,14 @@
 	</build>
 
 	<dependencyManagement>
-
-		<dependencies>
+		<dependencies>		
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
 				<version>${servlet.version}</version>
 				<scope>provided</scope>
 			</dependency>
+			
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-core</artifactId>
@@ -265,6 +256,7 @@
 				<artifactId>spring-data-jpa</artifactId>
 				<version>${org.springframework.data.version}</version>
 			</dependency>
+			
 			<!-- spring security -->
 			<dependency>
 				<groupId>org.springframework.security</groupId>
@@ -292,6 +284,7 @@
 				<artifactId>spring-security-ldap</artifactId>
 				<version>${org.springframework.security.version}</version>
 			</dependency>
+			
 			<!-- Hibernate -->
 			<dependency>
 				<groupId>org.hibernate</groupId>
@@ -301,11 +294,6 @@
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-entitymanager</artifactId>
-				<version>${hibernate.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-annotations</artifactId>
 				<version>${hibernate.version}</version>
 			</dependency>
 			<dependency>
@@ -454,6 +442,7 @@
 				<artifactId>log4j</artifactId>
 				<version>${log4j.version}</version>
 			</dependency>
+			
 			<!-- TESTING DEPENDENCIES -->
 			<dependency>
 				<groupId>junit</groupId>

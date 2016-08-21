@@ -33,7 +33,7 @@ import javax.persistence.UniqueConstraint;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Type;
-import org.softdays.mandy.core.BaseIdentifiable;
+import org.softdays.mandy.core.DefaultIdentifiable;
 import org.softdays.mandy.core.CoreConstants;
 
 import lombok.Getter;
@@ -54,7 +54,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "IMPUTATION", uniqueConstraints = @UniqueConstraint(
         columnNames = { "ACTIVITY_ID", "RESOURCE_ID", "DATE" }, name = "UK__IMPUTATION"))
-public class Imputation extends BaseIdentifiable {
+public class Imputation extends DefaultIdentifiable {
 
     private static final long serialVersionUID = 1L;
 
@@ -91,22 +91,17 @@ public class Imputation extends BaseIdentifiable {
     }
 
     @Override
-    public int hashCode() {
-        return new HashCodeBuilder().appendSuper(super.hashCode()).append(this.getActivity())
-                .append(this.getComment()).append(this.getDate()).append(this.getQuota())
-                .append(this.getResource()).toHashCode();
+    protected void businessHashCode(final HashCodeBuilder hashCodeBuilder) {
+        hashCodeBuilder.append(this.getActivity()).append(this.getComment()).append(this.getDate())
+                .append(this.getQuota()).append(this.getResource()).toHashCode();
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        Boolean status = this.equalsConsideringTechnicalLogic(obj);
-        if (status == null) {
-            final Imputation rhs = (Imputation) obj;
-            status = new EqualsBuilder().appendSuper(this.equals(obj))
-                    .append(this.getActivity(), rhs.getActivity())
-                    .append(this.getComment(), rhs.getComment())
-                    .append(this.getDate(), rhs.getDate()).isEquals();
-        }
-        return status;
+    protected void businessEquals(final Object obj, final EqualsBuilder equalsBuilder) {
+        final Imputation i = (Imputation) obj;
+        equalsBuilder.append(this.getActivity(), i.getActivity())
+                .append(this.getComment(), i.getComment()).append(this.getDate(), i.getDate());
+
     }
+
 }

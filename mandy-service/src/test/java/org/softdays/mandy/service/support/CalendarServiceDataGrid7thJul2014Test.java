@@ -28,7 +28,6 @@ import javax.annotation.PostConstruct;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.softdays.mandy.config.SpringConfiguration;
 import org.softdays.mandy.dto.calendar.DataGridDto;
 import org.softdays.mandy.dto.calendar.WeekDto;
 import org.softdays.mandy.service.CalendarService;
@@ -37,7 +36,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = SpringConfiguration.class)
+@ContextConfiguration("/test-context.xml")
 public class CalendarServiceDataGrid7thJul2014Test {
 
     @Autowired

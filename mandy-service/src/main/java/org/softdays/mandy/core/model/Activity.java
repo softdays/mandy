@@ -35,8 +35,8 @@ import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.softdays.mandy.core.BaseIdentifiable;
 import org.softdays.mandy.core.CoreConstants;
+import org.softdays.mandy.core.DefaultIdentifiable;
 import org.softdays.mandy.core.converter.ActivityCategoryConverter;
 import org.softdays.mandy.core.converter.ActivityTypeConverter;
 
@@ -77,7 +77,7 @@ import lombok.Setter;
         uniqueConstraints = @UniqueConstraint(
                 columnNames = { "SHORT_LABEL", "LONG_LABEL", "CATEGORY", "TYPE", "POSITION" },
                 name = "UK__ACTIVITY"))
-public class Activity extends BaseIdentifiable {
+public class Activity extends DefaultIdentifiable {
 
     private static final long serialVersionUID = 1L;
 
@@ -115,35 +115,42 @@ public class Activity extends BaseIdentifiable {
             foreignKey = @ForeignKey(name = "FK__ACTIVITY__PARENT_ID"))
     private Activity parentActivity;
 
+    /**
+     * Instantiates a new activity.
+     *
+     * @param id
+     *            the technical id
+     */
     public Activity(final Long id) {
         this();
         this.setId(id);
     }
 
+    /**
+     * Instantiates a new activity.
+     *
+     * @param parent
+     *            the activity parent
+     */
     public Activity(final Activity parent) {
         super();
         this.parentActivity = parent;
     }
 
     @Override
-    public int hashCode() {
-        return new HashCodeBuilder().appendSuper(super.hashCode()).append(this.getLongLabel())
-                .append(this.getShortLabel()).append(this.getPosition()).append(this.getCategory())
-                .append(this.getType()).append(this.getParentActivity()).toHashCode();
+    protected void businessHashCode(final HashCodeBuilder hashCodeBuilder) {
+        hashCodeBuilder.append(this.getLongLabel()).append(this.getShortLabel())
+                .append(this.getPosition()).append(this.getCategory()).append(this.getType())
+                .append(this.getParentActivity()).toHashCode();
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        Boolean status = this.equalsConsideringTechnicalLogic(obj);
-        if (status == null) {
-            final Activity rhs = (Activity) obj;
-            status = new EqualsBuilder().appendSuper(this.equals(obj))
-                    .append(this.getShortLabel(), rhs.getShortLabel())
-                    .append(this.getLongLabel(), rhs.getLongLabel())
-                    .append(this.getPosition(), rhs.getPosition())
-                    .append(this.getCategory(), rhs.getCategory())
-                    .append(this.getType(), rhs.getType()).isEquals();
-        }
-        return status;
+    protected void businessEquals(final Object obj, final EqualsBuilder equalsBuilder) {
+        final Activity other = (Activity) obj;
+        equalsBuilder.append(this.getShortLabel(), other.getShortLabel())
+                .append(this.getLongLabel(), other.getLongLabel())
+                .append(this.getPosition(), other.getPosition())
+                .append(this.getCategory(), other.getCategory())
+                .append(this.getType(), other.getType());
     }
 }

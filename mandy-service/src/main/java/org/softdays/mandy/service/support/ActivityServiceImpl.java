@@ -72,7 +72,7 @@ public class ActivityServiceImpl implements ActivityService {
         Activity newActivity = this.activityMapper.map(activityDto);
 
         Integer maxPos = this.activityDao.findMaxPosition(activityDto.getParentActivityId());
-        newActivity.setPosition(++maxPos);
+        newActivity.setPosition(maxPos == null ? 0 : ++maxPos);
 
         return this.activityMapper.map(this.activityDao.save(newActivity));
     }

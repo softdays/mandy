@@ -36,7 +36,7 @@ public enum Quota {
     private BigDecimal value;
 
     private Quota(final float value) {
-        this.value = new BigDecimal(value).setScale(PRECISION);
+        this.value = BigDecimal.valueOf(value).setScale(PRECISION);
     }
 
     /**
@@ -56,8 +56,7 @@ public enum Quota {
      * @return the quota
      */
     public static Quota valueOf(final float value) {
-        final BigDecimal convertedValue =
-                new BigDecimal(value).setScale(PRECISION);
+        final BigDecimal convertedValue = BigDecimal.valueOf(value).setScale(PRECISION);
         Quota result = null;
         for (final Quota quota : Quota.values()) {
             if (convertedValue.equals(quota.value)) {

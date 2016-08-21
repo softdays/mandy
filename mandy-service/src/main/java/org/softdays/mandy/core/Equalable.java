@@ -26,6 +26,7 @@ package org.softdays.mandy.core;
  * @author rpatriarche
  * @since 1.0.1
  */
+@FunctionalInterface
 public interface Equalable {
 
     /**
@@ -40,6 +41,15 @@ public interface Equalable {
      *         false if object is null or not same type and null if objet is
      *         same type.
      */
-    Boolean equalsConsideringTechnicalLogic(Object obj);
+    EqualStatus equalsConsideringTechnicalLogic(Object obj);
+
+    /**
+     * The status of the technical logic comparison.
+     */
+    enum EqualStatus {
+
+        EQUAL, NOT_EQUAL, UNKNOWN
+
+    }
 
 }

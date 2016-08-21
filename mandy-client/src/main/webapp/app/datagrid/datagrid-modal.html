@@ -1,0 +1,33 @@
+<div id="imputation-details" class="modal fade" tabindex="-1" role="dialog" 
+     aria-labelledby="myModalLabel" aria-hidden="true" 
+     ng-controller="DatagridModalController">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">{{imputationDate}}</h4>
+                <h3 class="modal-title">{{imputationActivity}}</h3>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <md-datagrid-slider quota="quota" />
+                </div>
+                <div class="row">
+                   <textarea class="form-control" 
+                             rows="3" 
+                             ng-model="imputationComment" 
+                             ng-disabled="quota === 0">{{imputationComment}}</textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="clearImputation()">Effacer</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" 
+                        ng-click="saveImputationFromDetails()" 
+                        ng-disabled="isButtonSaveDisabled()">Sauvegarder</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

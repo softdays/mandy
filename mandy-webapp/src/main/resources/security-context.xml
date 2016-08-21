@@ -21,7 +21,7 @@
 		<s:form-login />
 
 		<!-- Retour sur la page de login après déconnexion -->
-		<s:logout delete-cookies="JSESSIONID" logout-success-url="/" />
+		<s:logout delete-cookies="JSESSIONID" logout-success-url="/login" />
 
 		<!-- Permet de fixer le problème de mise en cache de la page de logout 
 			si celle-ci avait déjà été chargé par le browser -->

@@ -1,0 +1,5 @@
+<div id="datagrid">
+    <div ng-include src="'app/datagrid/datagrid-modal.html'" />
+    <div ng-include src="'app/datagrid/datagrid-month.html'" ng-if="datagridInputMode==='month'" />
+    <div ng-include src="'app/datagrid/datagrid-day.html'" ng-if="datagridInputMode==='day'" />
+</div>

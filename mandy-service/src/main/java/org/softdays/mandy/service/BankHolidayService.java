@@ -29,6 +29,7 @@ import java.time.LocalDate;
  * @author rpatriarche
  * @since 1.0.0
  */
+@FunctionalInterface
 public interface BankHolidayService {
 
     /**

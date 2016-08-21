@@ -35,7 +35,7 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.softdays.mandy.core.BaseIdentifiable;
+import org.softdays.mandy.core.DefaultIdentifiable;
 import org.softdays.mandy.core.CoreConstants;
 
 import lombok.Getter;
@@ -53,7 +53,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "RESOURCE")
-public class Resource extends BaseIdentifiable {
+public class Resource extends DefaultIdentifiable {
 
     private static final long serialVersionUID = 1L;
 
@@ -120,30 +120,31 @@ public class Resource extends BaseIdentifiable {
         this.role = Role.ROLE_USER;
     }
 
+    /**
+     * Instantiates a new resource.
+     *
+     * @param id
+     *            the technical id
+     */
     public Resource(final Long id) {
         this.setId(id);
     }
 
     @Override
-    public int hashCode() {
-        return new HashCodeBuilder().appendSuper(super.hashCode()).append(this.getUid())
-                .append(this.getLastName()).append(this.getFirstName()).append(this.getRole())
-                .toHashCode();
+    protected void businessHashCode(final HashCodeBuilder hashCodeBuilder) {
+        hashCodeBuilder.append(this.getUid()).append(this.getLastName()).append(this.getFirstName())
+                .append(this.getRole());
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        Boolean status = this.equalsConsideringTechnicalLogic(obj);
-        if (status == null) {
-            final Resource rhs = (Resource) obj;
+    protected void businessEquals(final Object obj, final EqualsBuilder equalsBuilder) {
+        final Resource res = (Resource) obj;
 
-            status = new EqualsBuilder().appendSuper(this.equals(obj))
-                    .append(this.getUid(), rhs.getUid())
-                    .append(this.getLastName(), rhs.getLastName())
-                    .append(this.getFirstName(), rhs.getFirstName())
-                    .append(this.getRole(), rhs.getRole()).isEquals();
-        }
-        return status;
+        equalsBuilder.appendSuper(this.equals(obj)).append(this.getUid(), res.getUid())
+                .append(this.getLastName(), res.getLastName())
+                .append(this.getFirstName(), res.getFirstName())
+                .append(this.getRole(), res.getRole());
+
     }
 
 }

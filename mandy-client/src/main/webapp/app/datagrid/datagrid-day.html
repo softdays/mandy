@@ -1,0 +1,51 @@
+<div class="row datagrid-table-view-day" ng-controller="DatagridViewDayController">
+    <div class="table-responsive">
+       <div class="datagrid-table-header-view-day">
+            <table class="table table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th colspan="2">
+                            <div class="row datagrid-toolbar-view-day">
+							    <div class="btn-toolbar">
+							        <div class="btn-group btn-group-justified">
+							            <div class="btn-group">
+							                <button type="button" class="btn btn-default"
+							                    title="Affiche le jour précédent"
+							                    ng-click="displayPreviousDay()">
+							                    <span class=" glyphicon glyphicon-chevron-left"></span>
+							                    <span class="hidden-xs">Précédent</span>
+							                </button>
+							            </div>
+							            <div class="btn-group">
+							                <button type="button"
+							                    class="btn btn-default"
+							                    title="Affiche le jour courant"
+							                    ng-click="displayToday()">
+							                    <span class="glyphicon glyphicon-stop visible-xxs-inline"></span>
+							                    <strong class="hidden-xxs">Aujourd'hui</strong>
+							                </button>
+							            </div>
+							            <div class="btn-group">
+							                <button type="button" class="btn btn-default"
+							                    title="Affiche le jour suivant"
+							                    ng-click="displayNextDay()">
+							                    <span class="hidden-xs">Suivant</span>
+							                    <span class=" glyphicon glyphicon-chevron-right"></span>
+							                </button>
+							            </div>
+							        </div>
+							    </div>
+							</div><!-- /.row .datagrid-toolbar -->
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan="2"><span>Activités du {{currentDay}}</span>&nbsp;<span ng-class="completenessCssClasses"></span></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <!--div ng-include src="'app/datagrid/datagrid-day-default.html'" /-->
+       	<div ng-include src="'app/datagrid/datagrid-day-default.html'" ng-if="!preferences.enableSubActivities" />
+       	<div ng-include src="'app/datagrid/datagrid-day-detailed.html'" ng-if="preferences.enableSubActivities" />
+    </div>
+</div>

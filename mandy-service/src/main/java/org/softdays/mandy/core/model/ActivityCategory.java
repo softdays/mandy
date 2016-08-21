@@ -58,6 +58,13 @@ public enum ActivityCategory implements GenericPersistentEnum<Character> {
         this.description = desc;
     }
 
+    /**
+     * Returns an {@link ActivityCategory} from code.
+     *
+     * @param code
+     *            the code of the activity category
+     * @return the {@link ActivityCategory} matching given code
+     */
     public static ActivityCategory fromCode(final Character code) {
         if (code == null) {
             return null;
@@ -73,7 +80,7 @@ public enum ActivityCategory implements GenericPersistentEnum<Character> {
                 return OTHER;
 
             default:
-                throw new IllegalArgumentException("value not supported");
+                throw new IllegalArgumentException("Code <" + code + "> not supported");
         }
     }
 

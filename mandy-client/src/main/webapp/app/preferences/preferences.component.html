@@ -1,0 +1,65 @@
+<div id="preferences">
+
+	<form class="form-horizontal" role="form">
+		<div class="form-group pref-detailed-way">
+			<label class="col-sm-3 control-label">Mode<span class="visible-xs-inline visible-lg-inline"> de saisie</span>&nbsp;:</label>
+			<div class="col-sm-9 pref-toggle">
+				<input type="checkbox" data-toggle="toggle" data-off="Grosse maille" data-on="Détaillé" data-width="147" ng-checked="useDetailedWay" />
+			</div>
+		</div>
+		<div class="form-group pref-granularity">
+			<label class="col-sm-3 control-label">Granularité<span class="visible-xs-inline visible-lg-inline"> des imputations</span>&nbsp;:</label>
+			<div class="col-sm-9 pref-toggle">
+				<input type="checkbox" data-toggle="toggle" data-off="Demi-journée" data-on="Quart de journée" data-width="147" ng-checked="useFineGranularity" />
+			</div>
+		</div>
+		<div class="form-group pref-notif" >
+            <label class="col-sm-3 control-label">Notification<span class="visible-xs-inline visible-lg-inline"> des saisies manquantes</span>&nbsp;:</label>
+            <div class="col-sm-9 pref-toggle">
+                <div class="disabled">
+                    <input type="checkbox" data-toggle="toggle" data-on="Activée" data-off="Désactivée" data-width="147" disabled="disabled" />
+                </div>
+            </div>
+        </div>
+        <div class="form-group pref-notif-freq">
+            <label class="col-sm-3 control-label">Fréquence<span class="visible-xs-inline visible-lg-inline"> des notifications</span>&nbsp;:</label>
+            <div class="col-sm-9">
+				<div class="btn-group disabled">
+				  <button type="button" class="btn btn-default disabled">-</button>
+				  <button type="button" class="btn btn-default dropdown-toggle disabled" data-toggle="dropdown" aria-expanded="false">
+				    <span class="caret"></span>
+				    <span class="sr-only">Toggle Dropdown</span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu">
+				    <li><a href="#">Mensuelle</a></li>
+				    <li><a href="#">Hebdomadaire</a></li>
+				    <li><a href="#">Journalière</a></li>
+				  </ul>
+				</div>
+            </div>
+        </div>
+		<div class="form-group pref-notif-email">
+			<label for="notif-email" class="col-sm-3 control-label">Email<span class="visible-xs-inline visible-lg-inline"> à utiliser pour les notifications</span>&nbsp;:</label>
+			<div class="col-sm-9">
+				<input type="email" class="form-control" id="notif-email" value="" disabled="disabled" />
+			</div>
+		</div>
+		<div class="form-group pref-activities">
+            <label for="inputEmail" class="col-sm-3 control-label">Activités<span class="visible-xs-inline visible-lg-inline">&nbsp;visibles</span>&nbsp;:</label>
+            <div class="col-sm-9">
+                <div class="pref-activity" data-activity-id="{{activity.id}}" ng-repeat="activity in activities">
+		            <label>
+		              <input id="activity-{{activity.id}}" 
+		                     data-activity-id="{{activity.id}}" 
+		                     type="checkbox" 
+		                     data-toggle="toggle" 
+		                     data-on="Oui" data-off="Non" 
+		                     data-size="small" 
+		                     ng-checked="isActivityVisible(activity.id)" />
+ 		              <span ng-class="getActivityLabelCssClasses(activity.id)">{{activity.longLabel}}&nbsp;({{activity.shortLabel}})</span>
+		            </label>
+                </div>
+            </div>
+        </div>
+	</form>
+</div>

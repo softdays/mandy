@@ -63,7 +63,7 @@ public class ImputationServiceTest extends AbstractDbSetupTest {
         final Operation operation = sequenceOf(CommonOperations.DELETE_ALL,
                 CommonOperations.INSERT_REFERENCE_ACTIVITIES,
                 CommonOperations.INSERT_REFERENCE_RESOURCES,
-                insertInto("MANDY.IMPUTATION")
+                insertInto(CommonOperations.DEFAULT_SCHEMA + "IMPUTATION")
                         // .withGeneratedValue("ID", ValueGenerators.sequence())
 
                         .columns("ID", "RESOURCE_ID", "ACTIVITY_ID", "DATE", "QUOTA", "COMMENT")
@@ -142,11 +142,12 @@ public class ImputationServiceTest extends AbstractDbSetupTest {
 
         Assert.assertNotNull(created.getImputationId());
 
-        final StringBuilder sql = new StringBuilder("select * from mandy.imputation")
-                .append(" where date='2014-07-15'").append(" and resource_id=")
-                .append(CommonOperations.ID_CHO).append(" and activity_id=")
-                .append(CommonOperations.ACTIVITY_LSL_ID).append(" and quota=1.0")
-                .append(" and comment='un commentaire'");
+        final StringBuilder sql = new StringBuilder(
+                "select * from " + CommonOperations.DEFAULT_SCHEMA + "imputation")
+                        .append(" where date='2014-07-15'").append(" and resource_id=")
+                        .append(CommonOperations.ID_CHO).append(" and activity_id=")
+                        .append(CommonOperations.ACTIVITY_LSL_ID).append(" and quota=1.0")
+                        .append(" and comment='un commentaire'");
 
         final ITable table = this.query(sql.toString());
 
@@ -166,10 +167,17 @@ public class ImputationServiceTest extends AbstractDbSetupTest {
 
         this.imputationService.updateImputation(merge);
 
-        final ITable table = this.query("select * from mandy.imputation where id=" + IMPUT_ID_1);
+        final ITable table = this.query("select * from " + CommonOperations.DEFAULT_SCHEMA
+                + "imputation where id=" + IMPUT_ID_1);
         try {
             // est-ce que la quota a bien été mis à jour ?
-            final Float quota = ((Double) table.getValue(0, "quota")).floatValue();
+            Object value = table.getValue(0, "quota");
+            final Float quota;
+            if (value instanceof Double) { // for H2
+                quota = ((Double) value).floatValue();
+            } else { // for MySQL
+                quota = (Float) value;
+            }
             Assert.assertEquals(Quota.QUARTER.floatValue(), quota);
             // est-ce que le commentaire à bien été mis à jour ?
             final String comment = (String) table.getValue(0, "comment");
@@ -189,21 +197,24 @@ public class ImputationServiceTest extends AbstractDbSetupTest {
 
     @Test
     public void deleteImputation() {
-        StringBuilder sql = new StringBuilder("insert into mandy.imputation")
-                .append(" (id, activity_id, resource_id, date, quota, comment)").append(" values(")
-                .append("1111,").append(CommonOperations.ACTIVITY_LSL_ID).append(",")
-                .append(CommonOperations.ID_CHO).append(",").append("'2014-07-15',").append("1.0,")
-                .append("'foo bar')");
+        StringBuilder sql = new StringBuilder(
+                "insert into " + CommonOperations.DEFAULT_SCHEMA + "imputation")
+                        .append(" (id, activity_id, resource_id, date, quota, comment)")
+                        .append(" values(").append("1111,").append(CommonOperations.ACTIVITY_LSL_ID)
+                        .append(",").append(CommonOperations.ID_CHO).append(",")
+                        .append("'2014-07-15',").append("1.0,").append("'foo bar')");
 
         this.execute(sql.toString());
 
-        sql = new StringBuilder("select * from mandy.imputation where id=1111");
+        sql = new StringBuilder(
+                "select * from " + CommonOperations.DEFAULT_SCHEMA + "imputation where id=1111");
         ITable table = this.query(sql.toString());
         Assert.assertEquals(1, table.getRowCount());
 
         this.imputationService.deleteImputation(1111L);
 
-        sql = new StringBuilder("select * from mandy.imputation where id=1111");
+        sql = new StringBuilder(
+                "select * from " + CommonOperations.DEFAULT_SCHEMA + "imputation where id=1111");
         table = this.query(sql.toString());
         Assert.assertEquals(0, table.getRowCount());
 

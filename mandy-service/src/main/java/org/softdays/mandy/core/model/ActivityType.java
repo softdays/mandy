@@ -1,3 +1,23 @@
+/*
+ * MANDY is a simple webapp to track man-day consumption on activities.
+ * 
+ * Copyright 2014, rpatriarche
+ *
+ * This file is part of MANDY software.
+ *
+ * MANDY is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * MANDY is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.softdays.mandy.core.model;
 
 import org.softdays.commons.jpa.converter.GenericPersistentEnum;
@@ -55,35 +75,50 @@ public enum ActivityType implements GenericPersistentEnum<Character> {
         this.description = desc;
     }
 
+    /**
+     * Returns an {@link ActivityType} from code.
+     *
+     * @param code
+     *            the code of the activity type
+     * @return the {@link ActivityType} matching given code.
+     */
     public static ActivityType fromCode(final Character code) {
-        if (code == null) {
-            return null;
-        }
+        ActivityType type;
+
         switch (code) {
             case 'A':
-                return ActivityType.ANA;
+                type = ActivityType.ANA;
+            break;
 
             case 'M':
-                return ActivityType.MOD;
+                type = ActivityType.MOD;
+            break;
 
             case 'F':
-                return ActivityType.FIX;
+                type = ActivityType.FIX;
+            break;
 
             case 'E':
-                return ActivityType.EVO;
+                type = ActivityType.EVO;
+            break;
 
             case 'I':
-                return ActivityType.INT;
+                type = ActivityType.INT;
+            break;
 
             case 'C':
-                return ActivityType.REU;
+                type = ActivityType.REU;
+            break;
 
             case 'U':
-                return ActivityType.UNS;
+                type = ActivityType.UNS;
+            break;
 
             default:
-                throw new IllegalArgumentException("value not supported");
+                throw new IllegalArgumentException("Code <" + code + "> not supported");
         }
+
+        return type;
     }
 
 }

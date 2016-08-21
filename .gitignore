@@ -10,7 +10,9 @@ release.properties
 **/bin/
 *.factorypath
 **/dist
+**/bower_components
 **/tmp
+**/.tmp
 **/node
 **/node_modules
 **/typings

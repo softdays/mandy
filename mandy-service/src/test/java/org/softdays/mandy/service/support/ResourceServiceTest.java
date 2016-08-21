@@ -55,8 +55,7 @@ public class ResourceServiceTest extends AbstractDbSetupTest {
         // Prepare
         final Operation operation = sequenceOf(CommonOperations.DELETE_ALL,
                 CommonOperations.INSERT_REFERENCE_ACTIVITIES,
-                CommonOperations.INSERT_REFERENCE_RESOURCES,
-                CommonOperations.INSERT_PREFERENCES,
+                CommonOperations.INSERT_REFERENCE_RESOURCES, CommonOperations.INSERT_PREFERENCES,
                 CommonOperations.INSERT_PREFERENCES_ACTIVITIES);
         final DbSetup dbSetup = this.createDbSetup(operation);
         dbSetupTracker.launchIfNecessary(dbSetup);
@@ -64,8 +63,7 @@ public class ResourceServiceTest extends AbstractDbSetupTest {
 
     @Test
     public void findByUidSouldReturnUserRpa() {
-        final ResourceDto user = this.resourceService
-                .findByUid(CommonOperations.UID_RPA);
+        final ResourceDto user = this.resourceService.findByUid(CommonOperations.UID_RPA);
         Assert.assertEquals(CommonOperations.ID_RPA, user.getResourceId());
     }
 
@@ -77,25 +75,24 @@ public class ResourceServiceTest extends AbstractDbSetupTest {
 
     @Test
     public void createNewResourceShouldCreatePreferencesAlso() {
-        final ITable tMax = this.query("select max(id) from mandy.resource");
+        final ITable tMax = this
+                .query("select max(id) from " + CommonOperations.DEFAULT_SCHEMA + "resource");
         Long lastInsertId = this.getFirstRowAsLong(tMax, "max(id)");
         final Long newUserId = new Long(++lastInsertId);
 
-        final ResourceDto user = this.resourceService.create("login",
-                "lastname", "firstname");
+        final ResourceDto user = this.resourceService.create("login", "lastname", "firstname");
 
         Assert.assertNotNull(user);
         Assert.assertEquals(newUserId, user.getResourceId());
         Assert.assertEquals(Role.ROLE_USER.name(), user.getRole());
 
         final StringBuilder sql = new StringBuilder(
-                "select * from mandy.preference").append(" where resource_id=")
-                .append(user.getResourceId());
+                "select * from " + CommonOperations.DEFAULT_SCHEMA + "preference")
+                        .append(" where resource_id=").append(user.getResourceId());
 
         final ITable table = this.query(sql.toString());
         Assert.assertEquals(1, table.getRowCount());
-        Assert.assertEquals(newUserId,
-                this.getFirstRowAsLong(table, "resource_id"));
+        Assert.assertEquals(newUserId, this.getFirstRowAsLong(table, "resource_id"));
         final Float value = this.getFirstRowAsFloat(table, "granularity");
         Assert.assertEquals(Quota.HALF.floatValue(), value);
     }
@@ -117,10 +114,9 @@ public class ResourceServiceTest extends AbstractDbSetupTest {
         Assert.assertNotNull(prefs);
         Assert.assertEquals(Quota.HALF.floatValue(), prefs.getGranularity());
         Assert.assertEquals(2, prefs.getActivitiesFilter().size());
-        Assert.assertTrue(prefs.getActivitiesFilter().contains(
-                CommonOperations.ACTIVITY_VIESCO_ID));
-        Assert.assertTrue(prefs.getActivitiesFilter().contains(
-                CommonOperations.ACTIVITY_LSUN_ID));
+        Assert.assertTrue(
+                prefs.getActivitiesFilter().contains(CommonOperations.ACTIVITY_VIESCO_ID));
+        Assert.assertTrue(prefs.getActivitiesFilter().contains(CommonOperations.ACTIVITY_LSUN_ID));
     }
 
     @Test
@@ -131,9 +127,9 @@ public class ResourceServiceTest extends AbstractDbSetupTest {
         Assert.assertEquals(2, prefs.getActivitiesFilter().size());
         Collections.reverse(prefs.getActivitiesFilter());
         this.resourceService.updateResourcePreferences(prefs);
-        final StringBuilder sql = new StringBuilder(
-                "select * from mandy.preference_activity where preference_id=")
-                .append(CommonOperations.ID_CHO);
+        final StringBuilder sql = new StringBuilder("select * from "
+                + CommonOperations.DEFAULT_SCHEMA + "preference_activity where preference_id=")
+                        .append(CommonOperations.ID_CHO);
         final ITable table = this.query(sql.toString());
         Assert.assertEquals(2, table.getRowCount());
         Assert.assertEquals(CommonOperations.ACTIVITY_LSUN_ID,
@@ -149,29 +145,25 @@ public class ResourceServiceTest extends AbstractDbSetupTest {
         Assert.assertNotNull(prefs);
         Assert.assertEquals(Quota.QUARTER.floatValue(), prefs.getGranularity());
         Assert.assertEquals(1, prefs.getActivitiesFilter().size());
-        Assert.assertTrue(prefs.getActivitiesFilter().contains(
-                CommonOperations.ACTIVITY_LSL_ID));
+        Assert.assertTrue(prefs.getActivitiesFilter().contains(CommonOperations.ACTIVITY_LSL_ID));
     }
 
     @Test
     public void updatePreferencesShouldModifyGranularity() {
-        final StringBuilder sql = new StringBuilder(
-                "select * from mandy.preference where resource_id=")
-                .append(CommonOperations.ID_CHO);
+        final StringBuilder sql = new StringBuilder("select * from "
+                + CommonOperations.DEFAULT_SCHEMA + "preference where resource_id=")
+                        .append(CommonOperations.ID_CHO);
         ITable table = this.query(sql.toString());
         try {
-            final Float value = ((Double) table.getValue(0, "granularity"))
-                    .floatValue();
+            final Float value = ((Double) table.getValue(0, "granularity")).floatValue();
             Assert.assertEquals(Quota.HALF.floatValue(), value);
         } catch (final DataSetException e) {
             Assert.fail(e.getMessage());
         }
 
-        final PreferencesDto userPrefs = new PreferencesDto(
-                CommonOperations.ID_CHO);
+        final PreferencesDto userPrefs = new PreferencesDto(CommonOperations.ID_CHO);
         userPrefs.setGranularity(Quota.QUARTER.floatValue());
-        final PreferencesDto dto = this.resourceService
-                .updateResourcePreferences(userPrefs);
+        final PreferencesDto dto = this.resourceService.updateResourcePreferences(userPrefs);
         Assert.assertNotNull(dto);
 
         table = this.query(sql.toString());
@@ -181,32 +173,27 @@ public class ResourceServiceTest extends AbstractDbSetupTest {
 
     @Test
     public void updatePreferencesShouldEnableSubActivities() {
-        final StringBuilder sql = new StringBuilder(
-                "select * from mandy.preference where resource_id=")
-                .append(CommonOperations.ID_CHO);
+        final StringBuilder sql = new StringBuilder("select * from "
+                + CommonOperations.DEFAULT_SCHEMA + "preference where resource_id=")
+                        .append(CommonOperations.ID_CHO);
         ITable table = this.query(sql.toString());
-        Assert.assertFalse(this.getFirstRowAsBoolean(table,
-                "enable_sub_activities"));
+        Assert.assertFalse(this.getFirstRowAsBoolean(table, "enable_sub_activities"));
 
-        final PreferencesDto userPrefs = new PreferencesDto(
-                CommonOperations.ID_CHO);
+        final PreferencesDto userPrefs = new PreferencesDto(CommonOperations.ID_CHO);
         userPrefs.setEnableSubActivities(true);
-        final PreferencesDto dto = this.resourceService
-                .updateResourcePreferences(userPrefs);
+        final PreferencesDto dto = this.resourceService.updateResourcePreferences(userPrefs);
         Assert.assertNotNull(dto);
 
         table = this.query(sql.toString());
-        final Boolean value = this.getFirstRowAsBoolean(table,
-                "enable_sub_activities");
+        final Boolean value = this.getFirstRowAsBoolean(table, "enable_sub_activities");
         Assert.assertTrue(value);
     }
 
     @Test
     public void updatePreferencesShouldUpdateActivitiesFilter() {
-        final StringBuilder sql = new StringBuilder(
-                "select * from mandy.preference_activity where preference_id=")
-                .append(CommonOperations.ID_LMO)
-                .append(" order by activity_id");
+        final StringBuilder sql = new StringBuilder("select * from "
+                + CommonOperations.DEFAULT_SCHEMA + "preference_activity where preference_id=")
+                        .append(CommonOperations.ID_LMO).append(" order by activity_id");
         ITable table = this.query(sql.toString());
         Assert.assertEquals(1, table.getRowCount());
         Long activityId = this.getValueAsLong(table, 0, "activity_id");
@@ -229,21 +216,17 @@ public class ResourceServiceTest extends AbstractDbSetupTest {
     }
 
     @Test
-    public void updatePreferencesShouldCreateActivitiesFilter()
-            throws DataSetException {
-        final StringBuilder sql = new StringBuilder(
-                "select * from mandy.preference_activity where preference_id=")
-                .append(CommonOperations.ID_RPA);
+    public void updatePreferencesShouldCreateActivitiesFilter() throws DataSetException {
+        final StringBuilder sql = new StringBuilder("select * from "
+                + CommonOperations.DEFAULT_SCHEMA + "preference_activity where preference_id=")
+                        .append(CommonOperations.ID_RPA);
         ITable table = this.query(sql.toString());
         Assert.assertEquals(0, table.getRowCount());
 
-        final PreferencesDto userPrefs = new PreferencesDto(
-                CommonOperations.ID_RPA);
-        userPrefs.setActivitiesFilter(Arrays.asList(
-                CommonOperations.ACTIVITY_CP_ID,
-                CommonOperations.ACTIVITY_EM_ID));
-        final PreferencesDto dto = this.resourceService
-                .updateResourcePreferences(userPrefs);
+        final PreferencesDto userPrefs = new PreferencesDto(CommonOperations.ID_RPA);
+        userPrefs.setActivitiesFilter(
+                Arrays.asList(CommonOperations.ACTIVITY_CP_ID, CommonOperations.ACTIVITY_EM_ID));
+        final PreferencesDto dto = this.resourceService.updateResourcePreferences(userPrefs);
         Assert.assertNotNull(dto);
 
         table = this.query(sql.toString());
@@ -256,17 +239,15 @@ public class ResourceServiceTest extends AbstractDbSetupTest {
 
     @Test
     public void updatePreferencesShouldCreatePreferenceBecauseThereIsNoPreferencesForThisUser() {
-        final StringBuilder sql = new StringBuilder(
-                "select * from mandy.preference where resource_id=")
-                .append(CommonOperations.ID_RPA);
+        final StringBuilder sql = new StringBuilder("select * from "
+                + CommonOperations.DEFAULT_SCHEMA + "preference where resource_id=")
+                        .append(CommonOperations.ID_RPA);
         ITable table = this.query(sql.toString());
         Assert.assertEquals(0, table.getRowCount());
 
-        final PreferencesDto userPrefs = new PreferencesDto(
-                CommonOperations.ID_RPA);
+        final PreferencesDto userPrefs = new PreferencesDto(CommonOperations.ID_RPA);
         userPrefs.setGranularity(Quota.QUARTER.floatValue());
-        final PreferencesDto dto = this.resourceService
-                .updateResourcePreferences(userPrefs);
+        final PreferencesDto dto = this.resourceService.updateResourcePreferences(userPrefs);
         Assert.assertNotNull(dto);
 
         Assert.assertEquals(CommonOperations.ID_RPA, dto.getResourceId());
@@ -281,14 +262,12 @@ public class ResourceServiceTest extends AbstractDbSetupTest {
 
     @Test
     public void updatePreferencesShouldNotDoAnythingBecauseThereIsNoChange() {
-        final StringBuilder sql = new StringBuilder(
-                "select * from mandy.preference where resource_id=")
-                .append(CommonOperations.ID_RPA);
+        final StringBuilder sql = new StringBuilder("select * from "
+                + CommonOperations.DEFAULT_SCHEMA + "preference where resource_id=")
+                        .append(CommonOperations.ID_RPA);
         final ITable table1 = this.query(sql.toString());
-        final PreferencesDto userPrefs = new PreferencesDto(
-                CommonOperations.ID_CHO);
-        final PreferencesDto dto = this.resourceService
-                .updateResourcePreferences(userPrefs);
+        final PreferencesDto userPrefs = new PreferencesDto(CommonOperations.ID_CHO);
+        final PreferencesDto dto = this.resourceService.updateResourcePreferences(userPrefs);
         Assert.assertNotNull(dto);
 
         final ITable table2 = this.query(sql.toString());

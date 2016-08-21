@@ -26,6 +26,7 @@ package org.softdays.mandy.core;
  * @author rpatriarche
  * @since 1.0.1
  */
+@FunctionalInterface
 public interface Identifiable {
 
     /**

@@ -37,7 +37,7 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.softdays.mandy.core.BaseEqualable;
+import org.softdays.mandy.core.AbstractEqualable;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,7 +55,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "PREFERENCE")
-public class Preference extends BaseEqualable {
+public class Preference extends AbstractEqualable {
 
     private static final long serialVersionUID = 1L;
 
@@ -82,7 +82,7 @@ public class Preference extends BaseEqualable {
     /**
      * Mapping comments:
      * 
-     * - Using OrderColumn annotation implies teh creation of a composite
+     * - Using OrderColumn annotation implies the creation of a composite
      * primary key on (preference_id, activity_order) causes by the List
      * semantic.
      * 
@@ -106,6 +106,12 @@ public class Preference extends BaseEqualable {
     @OrderColumn(name = "ACTIVITY_ORDER")
     private List<Activity> filteredActivities;
 
+    /**
+     * Instantiates a new preference.
+     *
+     * @param resource
+     *            the resource
+     */
     public Preference(final Resource resource) {
         this();
         this.setId(resource.getId());
@@ -113,24 +119,20 @@ public class Preference extends BaseEqualable {
     }
 
     @Override
-    public int hashCode() {
-        return new HashCodeBuilder().appendSuper(super.hashCode()).append(this.getResource())
-                .append(this.isEnableSubActivities()).append(this.getResource())
-                .append(this.getGranularity()).append(this.getFilteredActivities()).toHashCode();
+    protected void businessHashCode(final HashCodeBuilder hashCodeBuilder) {
+        hashCodeBuilder.append(this.getResource()).append(this.isEnableSubActivities())
+                .append(this.getGranularity()).append(this.getFilteredActivities());
+
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        Boolean status = this.equalsConsideringTechnicalLogic(obj);
-        if (status == null) {
-            final Preference pref = (Preference) obj;
-            status = new EqualsBuilder().appendSuper(this.equals(obj))
-                    .append(this.getResource(), pref.getResource())
-                    .append(this.isEnableSubActivities(), pref.isEnableSubActivities())
-                    .append(this.getGranularity(), pref.getGranularity())
-                    .append(this.getFilteredActivities(), pref.getFilteredActivities()).isEquals();
-        }
-        return status;
+    protected void businessEquals(final Object obj, final EqualsBuilder equalsBuilder) {
+        final Preference pref = (Preference) obj;
+        equalsBuilder.append(this.getResource(), pref.getResource())
+                .append(this.isEnableSubActivities(), pref.isEnableSubActivities())
+                .append(this.getGranularity(), pref.getGranularity())
+                .append(this.getFilteredActivities(), pref.getFilteredActivities());
+
     }
 
 }

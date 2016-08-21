@@ -1,8 +1,6 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
        http://www.springframework.org/schema/context 
@@ -24,6 +22,33 @@
 		<property name="password" value="${jdbc.password}" />
 	</bean>
 
+
+	<!-- Spring bean configuration. Tell Spring to bounce off BoneCP 
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+		<property name="targetDataSource" ref="connectionPool" />
+	</bean>
+	-->
+
+	<!-- BoneCP configuration 
+	<bean id="connectionPool" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driver}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="idleConnectionTestPeriodInMinutes" value="1" />
+		<property name="idleMaxAgeInMinutes" value="4" />
+		<property name="maxConnectionsPerPartition" value="10" />
+		<property name="minConnectionsPerPartition" value="2" />
+		<property name="partitionCount" value="1" />
+		<property name="acquireIncrement" value="2" />
+		<property name="statementsCacheSize" value="100" />
+		<property name="logStatementsEnabled" value="true" />
+		<property name="disableJMX" value="true" />
+	</bean>
+	-->
+
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="persistenceUnitName" value="Default" />
@@ -42,17 +67,15 @@
 	</bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
-	
-	<!--
-        Configures Spring Data JPA and sets the base package of my DAOs.
-    -->
-    <jpa:repositories base-package="org.softdays.mandy.dao"/>
-   
+
+	<!-- Configures Spring Data JPA and sets the base package of my DAOs. -->
+	<jpa:repositories base-package="org.softdays.mandy.dao" />
+
 
 	<bean name="databaseTester" class="org.dbunit.DataSourceDatabaseTester">
 		<constructor-arg ref="dataSource" />
 	</bean>
-	
-	
+
+
 
 </beans>

@@ -62,43 +62,25 @@ public class ResourceServiceImpl implements ResourceService {
         super();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.softdays.mandy.service.ResourceService#findByUid(java.lang.String)
-     */
     @Override
     public ResourceDto findByUid(final String uid) {
         final Resource res = this.resourceDao.findOneByUid(uid);
         return res == null ? null : this.resourceMapper.map(res);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.softdays.mandy.service.ResourceService#create(java.lang.String,
-     * java.lang.String, java.lang.String)
-     */
     @Override
     public ResourceDto create(final String uid, final String lastname, final String firstname) {
         final Resource res = this.resourceDao.save(new Resource(uid, lastname, firstname));
 
-        this.preferencesDao.save(new Preference(res));
+        Preference entity = new Preference(res);
+        this.preferencesDao.save(entity);
 
         return this.resourceMapper.map(res);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.softdays.mandy.service.ResourceService#findResourcePreferences(java
-     * .lang.Long)
-     */
     @Override
     public PreferencesDto findResourcePreferences(final Long resourceId) {
-        PreferencesDto dto = null;
+        PreferencesDto dto;
         // check if the user has custom preferences
         final Preference preferences = this.preferencesDao.findOne(resourceId);
         if (preferences == null) {

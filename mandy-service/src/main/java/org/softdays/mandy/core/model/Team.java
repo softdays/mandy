@@ -33,8 +33,8 @@ import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.softdays.mandy.core.BaseIdentifiable;
 import org.softdays.mandy.core.CoreConstants;
+import org.softdays.mandy.core.DefaultIdentifiable;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -52,7 +52,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "TEAM",
         uniqueConstraints = @UniqueConstraint(columnNames = { "CODE", "LABEL" }, name = "UK__TEAM"))
-public class Team extends BaseIdentifiable {
+public class Team extends DefaultIdentifiable {
 
     private static final long serialVersionUID = 1L;
 
@@ -73,21 +73,13 @@ public class Team extends BaseIdentifiable {
     private Set<Resource> resources;
 
     @Override
-    public int hashCode() {
-        return new HashCodeBuilder().appendSuper(super.hashCode()).append(this.getCode())
-                .append(this.getLabel()).toHashCode();
+    protected void businessHashCode(final HashCodeBuilder hashCodeBuilder) {
+        hashCodeBuilder.append(this.getCode()).append(this.getLabel());
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        Boolean status = this.equalsConsideringTechnicalLogic(obj);
-        if (status == null) {
-            final Team rhs = (Team) obj;
-
-            status = new EqualsBuilder().appendSuper(this.equals(obj))
-                    .append(this.getCode(), rhs.getCode()).append(this.getLabel(), rhs.getLabel())
-                    .isEquals();
-        }
-        return status;
+    protected void businessEquals(final Object obj, final EqualsBuilder equalsBuilder) {
+        final Team res = (Team) obj;
+        equalsBuilder.append(this.getCode(), res.getCode()).append(this.getLabel(), res.getLabel());
     }
 }

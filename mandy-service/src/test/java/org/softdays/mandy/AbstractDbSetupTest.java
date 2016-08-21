@@ -32,7 +32,6 @@ import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.ITable;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
-import org.softdays.mandy.config.SpringConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -43,7 +42,7 @@ import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.operation.Operation;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = SpringConfiguration.class)
+@ContextConfiguration("/test-context.xml")
 public abstract class AbstractDbSetupTest {
 
     public static final String RESULT_TABLE_NAME = "check";
@@ -59,14 +58,12 @@ public abstract class AbstractDbSetupTest {
     public static DbSetupTracker dbSetupTracker = new DbSetupTracker();
 
     public DbSetup createDbSetup(final Operation operation) {
-        return new DbSetup(new DataSourceDestination(this.dataSource),
-                operation);
+        return new DbSetup(new DataSourceDestination(this.dataSource), operation);
     }
 
     public void execute(final String sql) {
         try {
-            final Connection c = this.databaseTester.getConnection()
-                    .getConnection();
+            final Connection c = this.databaseTester.getConnection().getConnection();
             final Statement s = c.createStatement();
             s.executeUpdate(sql);
             s.close();
@@ -78,8 +75,7 @@ public abstract class AbstractDbSetupTest {
     public ITable query(final String sql) {
         ITable table = null;
         try {
-            table = this.databaseTester.getConnection().createQueryTable(
-                    RESULT_TABLE_NAME, sql);
+            table = this.databaseTester.getConnection().createQueryTable(RESULT_TABLE_NAME, sql);
             return table;
         } catch (final Exception e) {
             Assert.fail(e.getMessage());
@@ -100,11 +96,9 @@ public abstract class AbstractDbSetupTest {
         return this.getValueAsLong(table, 0, column);
     }
 
-    public Long getValueAsLong(final ITable table, final int rowIndex,
-            final String column) {
+    public Long getValueAsLong(final ITable table, final int rowIndex, final String column) {
         try {
-            final BigInteger bigInt = (BigInteger) table.getValue(rowIndex,
-                    column);
+            final BigInteger bigInt = (BigInteger) table.getValue(rowIndex, column);
             return Long.valueOf(bigInt.longValue());
         } catch (final DataSetException e) {
             Assert.fail(e.getMessage());

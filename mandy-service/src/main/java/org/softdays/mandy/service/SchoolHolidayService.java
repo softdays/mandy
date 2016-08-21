@@ -20,7 +20,7 @@
  */
 package org.softdays.mandy.service;
 
-import org.joda.time.DateTime;
+import java.time.LocalDate;
 
 /**
  * Provided by Index-Education.
@@ -29,6 +29,7 @@ import org.joda.time.DateTime;
  * @author rpatriarche
  * @since 1.0.0
  */
+@FunctionalInterface
 public interface SchoolHolidayService {
 
     /**
@@ -38,6 +39,6 @@ public interface SchoolHolidayService {
      *            the given date
      * @return true, if is school holiday
      */
-    boolean isSchoolHoliday(DateTime givenDate);
+    boolean isSchoolHoliday(LocalDate givenDate);
 
 }

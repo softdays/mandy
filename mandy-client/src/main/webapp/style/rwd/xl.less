@@ -1,0 +1,24 @@
+/* Extra large devices (wide screen) */
+@media only screen and (min-width: 1280px) {
+	
+	@height-fixed-datagrid-header-for-xxl-screen: 126px;
+    @header-cell-day-content-width-for-xxl-screen: 2.857142857142857em; /* 40:14 */
+	
+	#datagrid {	
+		.datagrid-table {
+			
+			.datagrid-table-header {
+			  height: @height-fixed-datagrid-header-for-xxl-screen;
+			  
+			  thead th.day > div {           
+                 width: 35px; /* pour éviter les différences de largeur entre cellules en fonction de l'empattement des caractères de la police */
+              }
+			  
+			}
+			
+			.datagrid-body {
+			  margin-top: @height-fixed-datagrid-header-for-xxl-screen;
+			}
+		}
+	}
+}

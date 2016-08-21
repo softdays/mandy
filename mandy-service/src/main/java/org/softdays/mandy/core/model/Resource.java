@@ -26,6 +26,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -34,8 +35,12 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.softdays.mandy.core.BaseIdentifiable;
+import org.softdays.mandy.core.DefaultIdentifiable;
 import org.softdays.mandy.core.CoreConstants;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Représente une personne en capacité d'imputer sur des activités.
@@ -43,9 +48,12 @@ import org.softdays.mandy.core.CoreConstants;
  * @author rpatriarche
  * @since 1.0.0
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "RESOURCE")
-public class Resource extends BaseIdentifiable {
+public class Resource extends DefaultIdentifiable {
 
     private static final long serialVersionUID = 1L;
 
@@ -71,16 +79,16 @@ public class Resource extends BaseIdentifiable {
     /**
      * Identifiant LDAP.
      */
-    @Column(nullable = false, length = CoreConstants.DB_UID_LENGTH)
+    @Column(name = "UID", nullable = false, length = CoreConstants.DB_UID_LENGTH)
     private String uid;
 
-    @Column(nullable = false, length = CoreConstants.DB_NAME_LENGTH)
+    @Column(name = "LAST_NAME", nullable = false, length = CoreConstants.DB_NAME_LENGTH)
     private String lastName;
 
-    @Column(nullable = false, length = CoreConstants.DB_NAME_LENGTH)
+    @Column(name = "FIRST_NAME", nullable = false, length = CoreConstants.DB_NAME_LENGTH)
     private String firstName;
 
-    @Column(columnDefinition = "varchar(25) not null default 'ROLE_USER'")
+    @Column(name = "ROLE", columnDefinition = "varchar(25) not null default 'ROLE_USER'")
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -88,21 +96,11 @@ public class Resource extends BaseIdentifiable {
     private Set<Imputation> imputations;
 
     @ManyToMany
-    @JoinTable(name = "TEAM_RESOURCE", joinColumns = { @JoinColumn(
-            name = "RESOURCE_ID") }, inverseJoinColumns = { @JoinColumn(
-            name = "TEAM_ID") })
-    @org.hibernate.annotations.ForeignKey(
-            name = "FK__TEAM_RESOURCE__RESOURCE",
-            inverseName = "FK__TEAM_RESOURCE__TEAM")
-    // for hbm2ddl
+    @JoinTable(name = "TEAM_RESOURCE", joinColumns = { @JoinColumn(name = "RESOURCE_ID") },
+            inverseJoinColumns = { @JoinColumn(name = "TEAM_ID") },
+            foreignKey = @ForeignKey(name = "FK__TEAM_RESOURCE__RESOURCE"),
+            inverseForeignKey = @ForeignKey(name = "FK__TEAM_RESOURCE__TEAM"))
     private Set<Team> teams;
-
-    /**
-     * Instantiates a new resource.
-     */
-    public Resource() {
-        super();
-    }
 
     /**
      * Instantiates a new resource.
@@ -114,8 +112,7 @@ public class Resource extends BaseIdentifiable {
      * @param firstname
      *            the firstname
      */
-    public Resource(final String uid, final String lastname,
-            final String firstname) {
+    public Resource(final String uid, final String lastname, final String firstname) {
         this();
         this.uid = uid;
         this.lastName = lastname;
@@ -123,146 +120,31 @@ public class Resource extends BaseIdentifiable {
         this.role = Role.ROLE_USER;
     }
 
+    /**
+     * Instantiates a new resource.
+     *
+     * @param id
+     *            the technical id
+     */
     public Resource(final Long id) {
         this.setId(id);
     }
 
-    /**
-     * Gets the uid.
-     * 
-     * @return the uid
-     */
-    public String getUid() {
-        return this.uid;
-    }
-
-    /**
-     * Sets the uid.
-     * 
-     * @param uid
-     *            the new uid
-     */
-    public void setUid(final String uid) {
-        this.uid = uid;
-    }
-
-    /**
-     * Gets the last name.
-     * 
-     * @return the last name
-     */
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    /**
-     * Sets the last name.
-     * 
-     * @param lastName
-     *            the new last name
-     */
-    public void setLastName(final String lastName) {
-        this.lastName = lastName;
-    }
-
-    /**
-     * Gets the first name.
-     * 
-     * @return the first name
-     */
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    /**
-     * Sets the first name.
-     * 
-     * @param firstName
-     *            the new first name
-     */
-    public void setFirstName(final String firstName) {
-        this.firstName = firstName;
-    }
-
-    /**
-     * Gets the role.
-     * 
-     * @return the role
-     */
-    public Role getRole() {
-        return this.role;
-    }
-
-    /**
-     * Sets the role.
-     * 
-     * @param role
-     *            the new role
-     */
-    public void setRole(final Role role) {
-        this.role = role;
-    }
-
-    /**
-     * Gets the teams.
-     * 
-     * @return the teams
-     */
-    public Set<Team> getTeams() {
-        return this.teams;
-    }
-
-    /**
-     * Sets the teams.
-     * 
-     * @param teams
-     *            the new teams
-     */
-    public void setTeams(final Set<Team> teams) {
-        this.teams = teams;
-    }
-
-    /**
-     * Gets the imputations.
-     * 
-     * @return the imputations
-     */
-    public Set<Imputation> getImputations() {
-        return this.imputations;
-    }
-
-    /**
-     * Sets the imputations.
-     * 
-     * @param imputations
-     *            the new imputations
-     */
-    public void setImputations(final Set<Imputation> imputations) {
-        this.imputations = imputations;
+    @Override
+    protected void businessHashCode(final HashCodeBuilder hashCodeBuilder) {
+        hashCodeBuilder.append(this.getUid()).append(this.getLastName()).append(this.getFirstName())
+                .append(this.getRole());
     }
 
     @Override
-    public int hashCode() {
-        return new HashCodeBuilder().appendSuper(super.hashCode())
-                .append(this.getUid()).append(this.getLastName())
-                .append(this.getFirstName()).append(this.getRole())
-                .toHashCode();
-    }
+    protected void businessEquals(final Object obj, final EqualsBuilder equalsBuilder) {
+        final Resource res = (Resource) obj;
 
-    @Override
-    public boolean equals(final Object obj) {
-        Boolean status = this.equalsConsideringTechnicalLogic(obj);
-        if (status == null) {
-            final Resource rhs = (Resource) obj;
+        equalsBuilder.appendSuper(this.equals(obj)).append(this.getUid(), res.getUid())
+                .append(this.getLastName(), res.getLastName())
+                .append(this.getFirstName(), res.getFirstName())
+                .append(this.getRole(), res.getRole());
 
-            status =
-                    new EqualsBuilder().appendSuper(this.equals(obj))
-                            .append(this.getUid(), rhs.getUid())
-                            .append(this.getLastName(), rhs.getLastName())
-                            .append(this.getFirstName(), rhs.getFirstName())
-                            .append(this.getRole(), rhs.getRole()).isEquals();
-        }
-        return status;
     }
 
 }

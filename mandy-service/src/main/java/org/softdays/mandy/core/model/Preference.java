@@ -37,7 +37,11 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.softdays.mandy.core.BaseEqualable;
+import org.softdays.mandy.core.AbstractEqualable;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * The user preferences entity.
@@ -46,9 +50,12 @@ import org.softdays.mandy.core.BaseEqualable;
  * @since 1.1.0
  * 
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "PREFERENCE")
-public class Preference extends BaseEqualable {
+public class Preference extends AbstractEqualable {
 
     private static final long serialVersionUID = 1L;
 
@@ -58,25 +65,24 @@ public class Preference extends BaseEqualable {
 
     @OneToOne
     @PrimaryKeyJoinColumn(name = "RESOURCE_ID")
-    @org.hibernate.annotations.ForeignKey(name = "FK__PREFERENCES__RESOURCE")
     private Resource resource;
 
     /**
      * Indicates if the user wants to use detailed or standard input mode.
      */
-    @Column(columnDefinition = "BIT NOT NULL DEFAULT 0")
+    @Column(name = "ENABLE_SUB_ACTIVITIES", columnDefinition = "BIT NOT NULL DEFAULT 0")
     private boolean enableSubActivities = false;
 
     /**
      * The user preference for imputation granularity. Must be multiple of 1.
      */
-    @Column(columnDefinition = "float NOT NULL default '0.5'")
+    @Column(name = "GRANULARITY", columnDefinition = "float NOT NULL default '0.5'")
     private Float granularity = Quota.HALF.floatValue();
 
     /**
      * Mapping comments:
      * 
-     * - Using OrderColumn annotation implies teh creation of a composite
+     * - Using OrderColumn annotation implies the creation of a composite
      * primary key on (preference_id, activity_order) causes by the List
      * semantic.
      * 
@@ -89,99 +95,44 @@ public class Preference extends BaseEqualable {
      * @see https://forum.hibernate.org/viewtopic.php?f=1&t=924496
      */
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "PREFERENCE_ACTIVITY",
+    @JoinTable(name = "PREFERENCE_ACTIVITY",
             // uniqueConstraints = @UniqueConstraint(
             // name = "UQ__PREFERENCE_ACTIVITY__PREFERENCE_ID__ACTIVITY_ID",
             // columnNames = { "PREFERENCE_ID", "ACTIVITY_ID" }),
             joinColumns = { @JoinColumn(name = "PREFERENCE_ID",
-                    foreignKey = @ForeignKey(
-                            name = "FK__PREFERENCE_ACTIVITY__PREFERENCE_ID")) },
+                    foreignKey = @ForeignKey(name = "FK__PREFERENCE_ACTIVITY__PREFERENCE_ID")) },
             inverseJoinColumns = { @JoinColumn(name = "ACTIVITY_ID",
-                    foreignKey = @ForeignKey(
-                            name = "FK__PREFERENCE_ACTIVITY__ACTIVITY_ID")) })
-    @org.hibernate.annotations.ForeignKey(
-            name = "FK__PREFERENCE_ACTIVITY__PREFERENCE",
-            inverseName = "FK__PREFERENCE_ACTIVITY__ACTIVITY")
+                    foreignKey = @ForeignKey(name = "FK__PREFERENCE_ACTIVITY__ACTIVITY_ID")) })
     @OrderColumn(name = "ACTIVITY_ORDER")
     private List<Activity> filteredActivities;
 
-    public Preference() {
-        super();
-    }
-
+    /**
+     * Instantiates a new preference.
+     *
+     * @param resource
+     *            the resource
+     */
     public Preference(final Resource resource) {
         this();
         this.setId(resource.getId());
         this.resource = resource;
     }
 
-    public Long getId() {
-        return this.id;
-    }
+    @Override
+    protected void businessHashCode(final HashCodeBuilder hashCodeBuilder) {
+        hashCodeBuilder.append(this.getResource()).append(this.isEnableSubActivities())
+                .append(this.getGranularity()).append(this.getFilteredActivities());
 
-    public void setId(final Long id) {
-        this.id = id;
-        this.resource = id == null ? null : new Resource(id);
-    }
-
-    public Resource getResource() {
-        return this.resource;
-    }
-
-    public void setResource(final Resource resource) {
-        this.resource = resource;
-        this.id = resource == null ? null : resource.getId();
-    }
-
-    public Float getGranularity() {
-        return this.granularity;
-    }
-
-    public void setGranularity(final Float granularity) {
-        this.granularity = granularity;
-    }
-
-    public boolean isEnableSubActivities() {
-        return enableSubActivities;
-    }
-
-    public void setEnableSubActivities(final boolean status) {
-        this.enableSubActivities = status;
-    }
-
-    public List<Activity> getFilteredActivities() {
-        return this.filteredActivities;
-    }
-
-    public void setFilteredActivities(final List<Activity> filteredActivities) {
-        this.filteredActivities = filteredActivities;
     }
 
     @Override
-    public int hashCode() {
-        return new HashCodeBuilder().appendSuper(super.hashCode())
-                .append(this.getResource())
-                .append(this.isEnableSubActivities())
-                .append(this.getResource()).append(this.getGranularity())
-                .append(this.getFilteredActivities()).toHashCode();
-    }
+    protected void businessEquals(final Object obj, final EqualsBuilder equalsBuilder) {
+        final Preference pref = (Preference) obj;
+        equalsBuilder.append(this.getResource(), pref.getResource())
+                .append(this.isEnableSubActivities(), pref.isEnableSubActivities())
+                .append(this.getGranularity(), pref.getGranularity())
+                .append(this.getFilteredActivities(), pref.getFilteredActivities());
 
-    @Override
-    public boolean equals(final Object obj) {
-        Boolean status = this.equalsConsideringTechnicalLogic(obj);
-        if (status == null) {
-            final Preference pref = (Preference) obj;
-            status = new EqualsBuilder()
-                    .appendSuper(this.equals(obj))
-                    .append(this.getResource(), pref.getResource())
-                    .append(this.isEnableSubActivities(),
-                            pref.isEnableSubActivities())
-                    .append(this.getGranularity(), pref.getGranularity())
-                    .append(this.getFilteredActivities(),
-                            pref.getFilteredActivities()).isEquals();
-        }
-        return status;
     }
 
 }

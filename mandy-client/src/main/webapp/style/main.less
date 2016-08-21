@@ -1,0 +1,529 @@
+/* Mandy stylesheet */
+@import url( '//fonts.googleapis.com/css?family=Leckerli+One');
+@sides-padding: @grid-gutter-width / 2;
+@color-light-grey: #2E2E2E;
+@color-light-purple: #D8CEF6;
+@color-light-green: #D8F6CE;
+@color-light-blue: #A9E2F3;
+@color-light-orange: #FFD7AF;
+@color-grey: #ccc;
+@color-orange: #FF7F00;
+@color-blue-c1: #7CCCE2;
+@color-blue-c2: #54AEC7;
+@color-month-current: @color-light-blue;
+@color-month-next: @color-grey;
+@color-table-row-hover: @color-blue-c1;
+@color-table-cell-hover: @color-blue-c2;
+@datagrid-border: 1px solid @color-light-grey;
+@env2px: 0.1428571428571429em;
+@env3px: 0.2142857142857143em;
+@env5px: 0.3571428571428571em;
+@env20px: 1.428571428571429em;
+@env27px: 1.928571428571429em;
+@btn-radio-quota-width: 100% / 6;
+@font-size-xs: 0.8em;
+@font-size-sm: 0.9em;
+@font-size-lg: 1.0em;
+@height-fixed-header: 111px;
+@height-fixed-datagrid-header: 146px;
+@height-fixed-datagrid-header-view-day: 82px;
+@width-column-activities: 100px;
+@header-cell-day-content-width: 2.357142857142857em;
+
+body {
+    font-size: 14px;
+}
+
+a[disabled] {
+    pointer-events: none;
+    cursor: default;
+}
+
+.noSelect () {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.ng-cloak,
+.x-ng-cloak,
+[data-ng-cloak],
+[ng-cloak],
+[ng\:cloak],
+[x-ng-cloak] {
+    display: none !important;
+}
+
+.row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.container-fluid > .row:first-child {
+    position: fixed !important;
+    position: static;
+    height: @height-fixed-header;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    padding: 0 @sides-padding;
+    background-color: white;
+}
+
+.container-fluid > .row:last-child {
+    margin-top: @height-fixed-header;
+    z-index: 1;
+}
+
+.header {
+    .header-title {
+        float: left;
+
+        h1 {
+            font-family: 'Leckerli One', cursive;
+
+            span {
+                color: @gray;
+                font-style: italic;
+                font-size: 0.4em;
+                margin-left: 0.7142857142857143em;
+                font-family: @font-family-base;
+            }
+        }
+    }
+
+    .header-user {
+        float: right;
+        margin-right: 5px;
+
+        & > * {
+            display: inline-block;
+        }
+
+        span.glyphicon {
+            width: 16px;
+            position: relative;
+            top: 2px;
+        }
+
+        .username {
+            position: relative;
+            top: 1px;
+        }
+
+        .label {
+            padding: 3px 3px 2px;
+        }
+    }
+}
+
+.nav {
+    li.disabled {
+        cursor: not-allowed;
+
+        a {
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+    }
+}
+
+#datagrid {
+    line-height: normal;
+
+    .table-hover tbody tr:hover td,
+    .table-hover tbody tr:hover th {
+        background-color: @color-table-row-hover;
+    }
+
+    .datagrid-table {
+        .datagrid-table-header {
+            position: fixed !important;
+            top: @height-fixed-header;
+            height: @height-fixed-datagrid-header;
+            left: 0;
+            z-index: 2;
+            background-color: white;
+            padding: 20px @sides-padding 0;
+
+            thead {
+                th:first-child {
+                    border: 1px solid white;
+                    border-right: 1px solid @table-border-color;
+                }
+
+                tr:last-child {
+                    th:first-child {
+                        border-bottom: 1px solid @table-border-color;
+                    }
+                }
+
+                tr:first-child {
+                    > th:first-child {
+                        width: @width-column-activities;
+                        border-right: 1px solid white;
+                    }
+
+                    > th:last-child {
+                        padding: 0 0 7px;
+                        border: 1px solid white;
+                        border-bottom: 1px solid @table-border-color;
+                    }
+                }
+
+                .datagrid-toolbar {
+                    width: 100%;
+
+                    .btn-toolbar {
+                        margin: 0;
+
+                        > div.btn-group-justified {
+                            margin: 0;
+                        }
+
+                        #datagrid-current-month {
+                            background-color: @color-month-current;
+                            text-transform: uppercase;
+                        }
+                    }
+                }
+
+                tr.weeks {
+                    > th:nth-child(n + 2) {
+                        background-color: @table-bg-accent;
+                    }
+                }
+
+                th.day {
+                    text-align: center;
+                    background-color: @color-month-next;
+
+                    &.current-month {
+                        background-color: @color-month-current;
+                    }
+
+                    > div {
+                        margin: auto;
+                        width: 34px;
+                        height: 100%;
+
+                        > .day-value {
+                            display: inline-block;
+                            width: 17px;
+                            margin-right: 2px;
+                        }
+
+                        > .completeness {
+                            margin-left: 2px;
+                        }
+                    }
+                }
+            }
+
+            table {
+                margin-bottom: 0;
+            }
+        }
+
+        .datagrid-body {
+            margin-top: @height-fixed-datagrid-header;
+            z-index: 1;
+        }
+
+        table {
+            table-layout: fixed;
+
+            tbody {
+                tr:first-child > td:first-child {
+                    width: @width-column-activities;
+                }
+
+                tr {
+                    height: 20px;
+                }
+
+                td {
+                    padding: @env2px @env3px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    text-align: center;
+                    padding: 0;
+                    height: 100%;
+                    .noSelect ();
+
+                    &.activity {
+                        text-align: left;
+                        padding-left: 3px;
+                        vertical-align: middle;
+                    }
+
+                    &.selected {
+                        font-weight: bold;
+
+                        div {
+                            border: 2px solid black;
+                            border-radius: 4px;
+                        }
+                    }
+
+                    &.imputation:hover {
+                        background-color: @color-table-cell-hover;
+                    }
+
+                    div {
+                        width: 100%;
+                        height: 100%;
+                        position: relative;
+                        border: 2px solid transparent;
+                    }
+                }
+            }
+
+            tfoot {
+                tr {
+                    td {
+                        font-style: italic;
+                        padding-right: @env2px;
+                        font-size: @font-size-xs;
+                        text-align: right;
+                        padding-right: @env5px;
+                    }
+                }
+            }
+        }
+    }
+
+    .datagrid-table-view-day {
+        .datagrid-table-header-view-day {
+            position: fixed !important;
+            top: @height-fixed-header;
+            height: @height-fixed-datagrid-header-view-day;
+            width: 100%;
+            left: 0;
+            z-index: 2;
+            background-color: white;
+            padding: 5px @sides-padding 0;
+
+            thead {
+                tr:first-child > th {
+                    border: 1px solid white;
+                    border-bottom: 1px solid @table-border-color;
+
+                    .btn-toolbar {
+                        margin-left: -10px;
+                    }
+                }
+
+                tr:last-child > th {
+                    font-weight: bold;
+                    background-color: @color-month-current;
+                    text-align: center;
+                }
+            }
+        }
+
+        table.datagrid-body-view-day {
+            table-layout: fixed;
+            margin-top: @height-fixed-datagrid-header-view-day;
+
+            tbody {
+                tr:first-child > td:first-child {
+                    width: @width-column-activities;
+                }
+
+                td:first-child {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    padding: 0 3px;
+                    height: 50px;
+                }
+
+                td {
+                    height: 100%;
+                    padding: 0 8px;
+                    vertical-align: middle;
+
+                    > div.btn-group {
+                        margin-left: auto;
+                        margin-right: auto;
+                        max-width: 250px;
+                    }
+                }
+
+                .imputation-toolbar {
+                    width: 100%;
+                    padding: 0 @env5px;
+
+                    .slider-container {
+                        margin-right: 45px;
+                    }
+
+                    .btn-group {
+                        float: right;
+                    }
+                }
+            }
+        }
+
+        .datagrid-body-view-day-detailed {
+            margin-top: @height-fixed-datagrid-header-view-day;
+        }
+
+        .blockUI.blockMsg {
+            h1 {
+                font-size: 1.3em;
+                font-weight: bold;
+            }
+
+            span.glyphicon {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 0.9em;
+                font-style: italic;
+            }
+        }
+    }
+}
+
+#error {
+    margin-top: 25px;
+
+    .alert {
+        #stack {
+            h1,
+            h3,
+            hr,
+            p {
+                display: none;
+            }
+        }
+    }
+
+    #stack-expander {
+        button:focus {
+            outline: 0;
+        }
+
+        button {
+            padding-left: 0;
+        }
+
+        .btn-link:focus,
+        .btn-link:hover {
+            text-decoration: none;
+        }
+    }
+}
+
+#view-loading {
+    margin: 25px;
+}
+
+md-datagrid-slider {
+    width: 100%;
+    display: block;
+
+    .progress {
+        position: relative;
+        top: 4px;
+        height: 25px;
+        margin: 0 45px;
+
+        .progress-bar {
+            line-height: 27px;
+            font-size: @env20px;
+            font-weight: bold;
+            padding-left: @env5px;
+            min-width: 3em;
+        }
+    }
+
+    .btn {
+        display: block;
+    }
+
+    .btn.minus {
+        float: left;
+    }
+
+    .btn.plus {
+        float: right;
+    }
+}
+
+#imputation-details {
+    .modal-body {
+        .row {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        textarea {
+            resize: none;
+        }
+    }
+}
+
+#preferences {
+    padding-top: 20px;
+
+    input[type='email'] {
+        width: 400px;
+    }
+
+    .pref-toggle {
+        .alert {
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+    }
+
+    .disabled {
+        cursor: not-allowed;
+    }
+
+    .pref-notif-freq {
+        div.btn-group > button:first-child {
+            width: 132px;
+        }
+    }
+
+    .pref-activity > label.disabled,
+    div.toggle[disabled='disabled '] * {
+        cursor: not-allowed;
+    }
+
+    .pref-activity {
+        line-height: @env27px;
+        margin-top: 2px;
+        margin-bottom: 2px;
+
+        & > * {
+            vertical-align: middle;
+        }
+
+        & > label {
+            font-weight: normal;
+
+            .pref-activity-label {
+                margin-left: 3px;
+
+                &.strike {
+                    text-decoration: line-through;
+                }
+            }
+        }
+    }
+}
+@import "rwd/xxs.less";
+@import "rwd/xs.less";
+@import "rwd/md.less";
+@import "rwd/xl.less";

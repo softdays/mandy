@@ -20,61 +20,23 @@
  */
 package org.softdays.mandy.dto;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * The Class CredentialsDto.
  * 
  * @author rpatriarche
  * @since 1.0.0
  */
+@Getter
+@Setter
+@NoArgsConstructor
 public class CredentialsDto {
 
     private String login;
 
     private String password;
-
-    /**
-     * Instantiates a new credentials dto.
-     */
-    public CredentialsDto() {
-        super();
-    }
-
-    /**
-     * Gets the login.
-     * 
-     * @return the login
-     */
-    public String getLogin() {
-        return this.login;
-    }
-
-    /**
-     * Sets the login.
-     * 
-     * @param login
-     *            the new login
-     */
-    public void setLogin(final String login) {
-        this.login = login;
-    }
-
-    /**
-     * Gets the password.
-     * 
-     * @return the password
-     */
-    public String getPassword() {
-        return this.password;
-    }
-
-    /**
-     * Sets the password.
-     * 
-     * @param password
-     *            the new password
-     */
-    public void setPassword(final String password) {
-        this.password = password;
-    }
 
 }

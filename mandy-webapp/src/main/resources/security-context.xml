@@ -2,11 +2,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:s="http://www.springframework.org/schema/security"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
         http://www.springframework.org/schema/context 
-        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/context/spring-context-4.3.xsd
         http://www.springframework.org/schema/security 
-        http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+        http://www.springframework.org/schema/security/spring-security-4.1.xsd">
 
 	<!-- URLs accessibles sans authentification -->
 	<s:http pattern="/api/application.wadl" security="none" />
@@ -21,7 +21,7 @@
 		<s:form-login />
 
 		<!-- Retour sur la page de login après déconnexion -->
-		<s:logout delete-cookies="JSESSIONID" logout-success-url="/" />
+		<s:logout delete-cookies="JSESSIONID" logout-success-url="/login" />
 
 		<!-- Permet de fixer le problème de mise en cache de la page de logout 
 			si celle-ci avait déjà été chargé par le browser -->

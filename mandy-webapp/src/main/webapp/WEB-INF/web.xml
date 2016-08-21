@@ -3,6 +3,7 @@
 	see implementation details http://jersey.java.net/nonav/documentation/latest/jax-rs.html#d4e194 -->
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	metadata-complete="true"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
 	<context-param>
@@ -19,11 +20,11 @@
 		<param-name>spring.profiles.active</param-name>
 		<param-value>${mandy.environment}</param-value>
 	</context-param>
-	
+
 	<context-param>
-        <param-name>spring.profiles.default</param-name>
-        <param-value>prod</param-value>
-    </context-param>
+		<param-name>spring.profiles.default</param-name>
+		<param-value>prod</param-value>
+	</context-param>
 
 	<context-param>
 		<param-name>log4jConfigLocation</param-name>
@@ -49,27 +50,21 @@
 	</listener>
 
 	<servlet>
-		<servlet-name>jersey-spring</servlet-name>
-		<servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
-		<!-- Any root resource classes or provider classes declared by Spring (in 
-			the XML configuration or by auto-wiring) will be automatically registered. 
-			It is possible to intermix Spring and non-Spring registration of classes 
-			by additionally using the normal Jersey-based registration mechanisms using 
-			the com.sun.jersey.config.property.packages property : <init-param> <param-name>com.sun.jersey.config.property.packages</param-name> 
-			<param-value>org.softdays.mandy.web.resources</param-value> </init-param> -->
+		<servlet-name>jersey</servlet-name>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+
+		<!-- Register JAX-RS Application, if needed. -->
 		<init-param>
-			<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
-			<param-value>true</param-value>
+			<param-name>javax.ws.rs.Application</param-name>
+			<param-value>org.softdays.mandy.web.config.JerseyConfig</param-value>
 		</init-param>
+
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>jersey-spring</servlet-name>
+		<servlet-name>jersey</servlet-name>
 		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 
-	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-	</welcome-file-list>
 </web-app>

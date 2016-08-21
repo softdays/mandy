@@ -60,7 +60,8 @@ public class ActivityServiceTest extends AbstractDbSetupTest {
 
     @Test
     public void checkCurrentData() {
-        final ITable table = this.query("select * from mandy.activity");
+        final ITable table = this
+                .query("select * from " + CommonOperations.DEFAULT_SCHEMA + "activity");
         // 2 abs + 5 sco + 1 gfc + 1 no rattachée à une team
         Assert.assertEquals(9, table.getRowCount());
     }
@@ -69,36 +70,48 @@ public class ActivityServiceTest extends AbstractDbSetupTest {
     public void getActivitiesForRpa() {
         // mark this test as read-only test
         dbSetupTracker.skipNextLaunch();
-        final ITable table = this
-                .query("select * from mandy.activity where category<>'"
-                        + ActivityCategory.PROJECT.getId() + "'");
+        final ITable table = this.query("select * from " + CommonOperations.DEFAULT_SCHEMA
+                + "activity where category<>'" + ActivityCategory.PROJECT.getPk() + "'");
         Assert.assertEquals(2, table.getRowCount());
 
         final List<ActivityDto> activities = this.activityService
                 .getActivities(CommonOperations.ID_RPA);
         Assert.assertEquals(8, activities.size()); // 2 abs + 1 gfc + 5 sco = 8
         // check first
-        Assert.assertEquals(CommonOperations.ACTIVITY_CP_LABEL,
-                activities.get(0).getLongLabel());
-        Assert.assertEquals(ActivityCategory.ABSENCE.getId(), activities.get(0)
-                .getCategory());
-        Assert.assertEquals(ActivityType.UNS.getId(), activities.get(0)
-                .getType());
+        Assert.assertEquals(CommonOperations.ACTIVITY_CP_LABEL, activities.get(0).getLongLabel());
+        Assert.assertEquals(ActivityCategory.ABSENCE.getPk(), activities.get(0).getCategory());
+        Assert.assertEquals(ActivityType.UNS.getPk(), activities.get(0).getType());
         // check last
         int lastIndex = activities.size() - 1;
-        Assert.assertEquals(CommonOperations.ACTIVITY_LSUN_LABEL, activities
-                .get(lastIndex).getLongLabel());
-        Assert.assertEquals(ActivityType.UNS.getId(), activities.get(lastIndex)
-                .getType());;
+        Assert.assertEquals(CommonOperations.ACTIVITY_LSUN_LABEL,
+                activities.get(lastIndex).getLongLabel());
+        Assert.assertEquals(ActivityType.UNS.getPk(), activities.get(lastIndex).getType());;
     }
 
     @Test
     public void getActivitiesForUnkwown() {
         // mark this test as read-only test
         dbSetupTracker.skipNextLaunch();
-        final List<ActivityDto> activities = this.activityService
-                .getActivities(0L);
+        final List<ActivityDto> activities = this.activityService.getActivities(0L);
         Assert.assertEquals(2, activities.size());
+    }
+
+    @Test
+    public void createSubActivity() {
+        ActivityDto activityDto = new ActivityDto();
+        activityDto.setCategory('O');
+        activityDto.setType('A');
+        String shortLabel = "sco. complexes";
+        activityDto.setShortLabel(shortLabel);
+        activityDto.setLongLabel("Analyse scolarités complexes");
+        activityDto.setParentActivityId(CommonOperations.ACTIVITY_LSUN_ID);
+        ActivityDto created = this.activityService.createSubActivity(activityDto);
+        Assert.assertNotNull(created.getId());
+        final ITable table = this.query(
+                "select * from " + CommonOperations.DEFAULT_SCHEMA + "activity where SHORT_LABEL='"
+                        + shortLabel + "' and parent_id=" + CommonOperations.ACTIVITY_LSUN_ID);
+        Assert.assertEquals(1, table.getRowCount());
+
     }
 
 }

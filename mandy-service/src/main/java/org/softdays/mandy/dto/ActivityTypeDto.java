@@ -20,62 +20,24 @@
  */
 package org.softdays.mandy.dto;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * The Class ActivityTypeDto.
  * 
  * @author rpatriarche
  * @since 1.0.0
  */
+@Getter
+@Setter
+@NoArgsConstructor
 public class ActivityTypeDto {
 
     private String name;
 
     private String description;
-
-    /**
-     * Instantiates a new activity type dto.
-     */
-    public ActivityTypeDto() {
-        super();
-    }
-
-    /**
-     * Gets the name.
-     * 
-     * @return the name
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * Sets the name.
-     * 
-     * @param name
-     *            the new name
-     */
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    /**
-     * Gets the description.
-     * 
-     * @return the description
-     */
-    public String getDescription() {
-        return this.description;
-    }
-
-    /**
-     * Sets the description.
-     * 
-     * @param description
-     *            the new description
-     */
-    public void setDescription(final String description) {
-        this.description = description;
-    }
 
     /*
      * (non-Javadoc)

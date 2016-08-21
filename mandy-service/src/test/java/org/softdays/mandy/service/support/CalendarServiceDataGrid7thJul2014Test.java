@@ -21,13 +21,13 @@
 
 package org.softdays.mandy.service.support;
 
+import java.time.LocalDate;
+
 import javax.annotation.PostConstruct;
 
-import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.softdays.mandy.config.SpringConfiguration;
 import org.softdays.mandy.dto.calendar.DataGridDto;
 import org.softdays.mandy.dto.calendar.WeekDto;
 import org.softdays.mandy.service.CalendarService;
@@ -36,13 +36,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = SpringConfiguration.class)
+@ContextConfiguration("/test-context.xml")
 public class CalendarServiceDataGrid7thJul2014Test {
 
     @Autowired
     private CalendarService calendarService;
 
-    private final DateTime givenDate = new DateTime(2014, 7, 19, 0, 0);
+    private final LocalDate givenDate = LocalDate.of(2014, 7, 19);
 
     private DataGridDto grid;
 
@@ -78,14 +78,14 @@ public class CalendarServiceDataGrid7thJul2014Test {
 
     @Test
     public void checkFirstDayOfTheDataGrid() {
-        Assert.assertEquals(new DateTime(2014, 7, 7, 0, 0).toDate(), this.grid
-                .getWeeks().get(0).getDays().get(0).getDate());
+        Assert.assertEquals(LocalDate.of(2014, 7, 7),
+                this.grid.getWeeks().get(0).getDays().get(0).getDate());
     }
 
     @Test
     public void checkLastDayOfTheDataGrid() {
-        Assert.assertEquals(new DateTime(2014, 8, 1, 0, 0).toDate(), this.grid
-                .getWeeks().get(3).getDays().get(4).getDate());
+        Assert.assertEquals(LocalDate.of(2014, 8, 1),
+                this.grid.getWeeks().get(3).getDays().get(4).getDate());
     }
 
 }

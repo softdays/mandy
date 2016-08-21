@@ -20,7 +20,7 @@
  */
 package org.softdays.mandy.core.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,14 +28,17 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.softdays.mandy.core.BaseIdentifiable;
+import org.hibernate.annotations.Type;
+import org.softdays.mandy.core.DefaultIdentifiable;
 import org.softdays.mandy.core.CoreConstants;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Une imputation permet de tracer la charge des ressources sur les activités.
@@ -45,49 +48,36 @@ import org.softdays.mandy.core.CoreConstants;
  * @author rpatriarche
  * @since 1.0.0
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "IMPUTATION", uniqueConstraints = @UniqueConstraint(
-        columnNames = { "ACTIVITY_ID", "RESOURCE_ID", "DATE" }))
-public class Imputation extends BaseIdentifiable {
+        columnNames = { "ACTIVITY_ID", "RESOURCE_ID", "DATE" }, name = "UK__IMPUTATION"))
+public class Imputation extends DefaultIdentifiable {
 
     private static final long serialVersionUID = 1L;
 
     @ManyToOne
-    @JoinColumn(
-            name = "ACTIVITY_ID",
-            updatable = false,
-            nullable = false,
+    @JoinColumn(name = "ACTIVITY_ID", updatable = false, nullable = false,
             foreignKey = @ForeignKey(name = "FK__IMPUTATION__ACTIVITY"))
-    @org.hibernate.annotations.ForeignKey(name = "FK__IMPUTATION__ACTIVITY")
-    // for hbm2ddl
     private Activity activity;
 
     @ManyToOne
-    @JoinColumn(
-            name = "RESOURCE_ID",
-            updatable = false,
-            nullable = false,
+    @JoinColumn(name = "RESOURCE_ID", updatable = false, nullable = false,
             foreignKey = @ForeignKey(name = "FK__IMPUTATION__RESOURCE"))
-    @org.hibernate.annotations.ForeignKey(name = "FK__IMPUTATION__RESOURCE")
     // for hbm2ddl
     private Resource resource;
 
-    @Column(nullable = false, updatable = false)
-    @Temporal(TemporalType.DATE)
-    private Date date;
+    @Column(name = "DATE", nullable = false, updatable = false)
+    @Type(type = "org.hibernate.type.LocalDateType")
+    private LocalDate date;
 
-    @Column(nullable = false)
+    @Column(name = "QUOTA", nullable = false)
     private Float quota;
 
-    @Column(length = CoreConstants.DB_DESCRIPTION_LENGTH)
+    @Column(name = "COMMENT", length = CoreConstants.DB_DESCRIPTION_LENGTH)
     private String comment;
-
-    /**
-     * Instantiates a new imputation.
-     */
-    public Imputation() {
-        super();
-    }
 
     /**
      * Instantiates a new imputation.
@@ -100,120 +90,18 @@ public class Imputation extends BaseIdentifiable {
         this.setId(imputationId);
     }
 
-    /**
-     * Gets the activity.
-     * 
-     * @return the activity
-     */
-    public Activity getActivity() {
-        return this.activity;
-    }
-
-    /**
-     * Sets the activity.
-     * 
-     * @param activity
-     *            the new activity
-     */
-    public void setActivity(final Activity activity) {
-        this.activity = activity;
-    }
-
-    /**
-     * Gets the date.
-     * 
-     * @return the date
-     */
-    public Date getDate() {
-        return (Date) this.date.clone();
-    }
-
-    /**
-     * Sets the date.
-     * 
-     * @param date
-     *            the new date
-     */
-    public void setDate(final Date date) {
-        this.date = (Date) date.clone();
-    }
-
-    /**
-     * Gets the resource.
-     * 
-     * @return the resource
-     */
-    public Resource getResource() {
-        return this.resource;
-    }
-
-    /**
-     * Sets the resource.
-     * 
-     * @param resource
-     *            the new resource
-     */
-    public void setResource(final Resource resource) {
-        this.resource = resource;
-    }
-
-    /**
-     * Gets the quota.
-     * 
-     * @return the quota
-     */
-    public Float getQuota() {
-        return this.quota;
-    }
-
-    /**
-     * Sets the quota.
-     * 
-     * @param quota
-     *            the new quota
-     */
-    public void setQuota(final Float quota) {
-        this.quota = quota;
-    }
-
-    /**
-     * Gets the comment.
-     * 
-     * @return the comment
-     */
-    public String getComment() {
-        return this.comment;
-    }
-
-    /**
-     * Sets the comment.
-     * 
-     * @param comment
-     *            the new comment
-     */
-    public void setComment(final String comment) {
-        this.comment = comment;
+    @Override
+    protected void businessHashCode(final HashCodeBuilder hashCodeBuilder) {
+        hashCodeBuilder.append(this.getActivity()).append(this.getComment()).append(this.getDate())
+                .append(this.getQuota()).append(this.getResource()).toHashCode();
     }
 
     @Override
-    public int hashCode() {
-        return new HashCodeBuilder().appendSuper(super.hashCode())
-                .append(this.getActivity()).append(this.getComment())
-                .append(this.getDate()).append(this.getQuota())
-                .append(this.getResource()).toHashCode();
+    protected void businessEquals(final Object obj, final EqualsBuilder equalsBuilder) {
+        final Imputation i = (Imputation) obj;
+        equalsBuilder.append(this.getActivity(), i.getActivity())
+                .append(this.getComment(), i.getComment()).append(this.getDate(), i.getDate());
+
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        Boolean status = this.equalsConsideringTechnicalLogic(obj);
-        if (status == null) {
-            final Imputation rhs = (Imputation) obj;
-            status =
-                    new EqualsBuilder().appendSuper(this.equals(obj))
-                            .append(this.getActivity(), rhs.getActivity())
-                            .append(this.getComment(), rhs.getComment())
-                            .append(this.getDate(), rhs.getDate()).isEquals();
-        }
-        return status;
-    }
 }

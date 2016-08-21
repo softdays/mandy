@@ -21,13 +21,13 @@
 
 package org.softdays.mandy.dto.calendar;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
-import org.codehaus.jackson.annotate.JsonManagedReference;
-import org.joda.time.DateTime;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * Contains the working weeks of the month to which belongs the given date.
@@ -49,7 +49,7 @@ public class DataGridDto {
      */
     public DataGridDto() {
         super();
-        this.weeks = new ArrayList<WeekDto>();
+        this.weeks = new ArrayList<>();
     }
 
     /**
@@ -58,10 +58,9 @@ public class DataGridDto {
      * @param base
      *            the base
      */
-    public DataGridDto(final Date base) {
-        final DateTime date = new DateTime(base);
-        this.year = date.toString("yyyy");
-        this.month = date.toString("MM");
+    public DataGridDto(final LocalDate base) {
+        this.year = base.format(DateTimeFormatter.ofPattern("yyyy"));
+        this.month = base.format(DateTimeFormatter.ofPattern("MM"));
     }
 
     /**

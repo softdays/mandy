@@ -21,7 +21,7 @@
 
 package org.softdays.mandy.dao;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.softdays.mandy.core.model.Imputation;
@@ -58,8 +58,7 @@ public interface ImputationDao extends JpaRepository<Imputation, Long> {
             + "join fetch i.activity a " + "where r.id=:resourceId "
             + "and (i.date between :startDate and :endDate) "
             + "order by a.position asc, i.date asc")
-    List<Imputation> findByResourceAndDateRange(
-            @Param("resourceId") Long userId,
-            @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    List<Imputation> findByResourceAndDateRange(@Param("resourceId") Long userId,
+            @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
 }

@@ -20,15 +20,22 @@
  */
 package org.softdays.mandy.dto.recap;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * The Class RecapDto.
  * 
  * @author repatriarche
  */
+@Getter
+@Setter
+@NoArgsConstructor
 public class RecapDto {
-	
-	private PeriodBoundDto start;
-	
-	private PeriodBoundDto end;
+
+    private PeriodBoundDto start;
+
+    private PeriodBoundDto end;
 
 }

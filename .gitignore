@@ -8,3 +8,11 @@ pom.xml.releaseBackup
 release.properties
 *.iml
 **/bin/
+*.factorypath
+**/dist
+**/bower_components
+**/tmp
+**/.tmp
+**/node
+**/node_modules
+**/typings

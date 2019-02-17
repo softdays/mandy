@@ -62,10 +62,10 @@ function browserSyncInit(baseDir, browser) {
         value = value.replace('/mandy?', '/?');
         value = value.replace(/\/mandy$/, '/');
         return value;
-      })
+      });
       replaceHeader(proxyRes.headers, 'set-cookie', function(value) {
-        return value.replace('/mandy/', '/');
-      })
+        return value.replace('/mandy/', '/').replace('/mandy', '/');
+      });
     }
   });
 

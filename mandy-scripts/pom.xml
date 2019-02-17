@@ -24,8 +24,8 @@
                      <databases>
                          <database>
                              <driverClassName>com.mysql.jdbc.Driver</driverClassName>
-                             <userName>root</userName>
-                             <password />
+                             <userName>mandy</userName>
+                             <password>mandy</password>
                              <url>jdbc:mysql://localhost:3306/mandy</url>
                              <schemaNames>mandy</schemaNames>
                          </database>

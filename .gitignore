@@ -16,3 +16,4 @@ release.properties
 **/node
 **/node_modules
 **/typings
+/.apt_generated_tests/

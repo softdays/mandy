@@ -7,9 +7,7 @@
   },
   "scripts": {
     "test": "gulp test",
-    "serve": "parallelshell \"npm run serve-bilan\" \"npm run serve-gp2\"",
-    "serve-bilan": "gulp serve",
-    "serve-gp2": "cd ../third-party/gp2/gp2-webapp && gulp serve"
+    "serve": "gulp serve"
   },
   "devDependencies": {
     "browser-sync": "~2.9.11",
